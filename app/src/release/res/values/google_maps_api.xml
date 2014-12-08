@@ -1,0 +1,16 @@
+<resources>
+    <string name="google_maps_key_instructions" templateMergeStrategy="replace"><!--
+
+    To get one, follow this link, follow the directions and press "Create" at the end:
+
+https://console.developers.google.com/flows/enableapi?apiid=maps_android_backend&keyType=CLIENT_SIDE_ANDROID&r=40:8A:46:03:3A:DD:F7:3E:82:CC:FE:1F:81:40:9F:D2:A3:6D:C1:36%3Bcom.tekdi.foodmap
+
+    You can also add your credentials to an existing key, using this line:
+    40:8A:46:03:3A:DD:F7:3E:82:CC:FE:1F:81:40:9F:D2:A3:6D:C1:36;com.tekdi.foodmap
+
+    Once you have your key (it starts with "AIza"), replace the "google_maps_key"
+    string in this file.
+    --></string>
+
+    <string name="google_maps_key" templateMergeStrategy="preserve">AIzaSyDD6_iVu33qPm_A-DPHuQE_wHfqkGvT9dU</string>
+</resources>

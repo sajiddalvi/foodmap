@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">FoodMap</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="serve_button_text">Serve Local Food</string>
+    <string name="find_button_text">Find Local Food</string>
+    <string name="title_activity_serve">Serve Food</string>
+    <string name="title_activity_find">Find Food</string>
+    <string name="server_name_label_string">Name</string>
+    <string name="server_phone_number_text">Phone</string>
+    <string name="phone_label_text">Phone</string>
+    <string name="server_address_label">Address</string>
+    <string name="server_cusine_label_text">Cuisine</string>
+    <string name="server_setup_button_text">Setup Server</string>
+
+</resources>
