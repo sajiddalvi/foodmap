@@ -3,7 +3,6 @@ package com.tekdi.foodmap;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
@@ -21,9 +20,14 @@ import java.util.List;
 class ListServersEndpointAsyncTask extends AsyncTask<Void, Void, List<ServeFoodEntity>> {
     private static ServeFoodEntityApi myApiService = null;
     private Context context;
+    private FindActivity caller;
 
-    ListServersEndpointAsyncTask(Context context) {
-        this.context = context;
+    //ListServersEndpointAsyncTask(Context context) {
+    //    this.context = context;
+    //}
+
+    ListServersEndpointAsyncTask(FindActivity caller) {
+        this.caller = caller;
     }
 
     @Override
@@ -55,7 +59,8 @@ class ListServersEndpointAsyncTask extends AsyncTask<Void, Void, List<ServeFoodE
         Log.v("sajid","finished executing listservers");
         for (ServeFoodEntity q : result) {
             Log.v("sajid","name="+q.getName());
-            Toast.makeText(context, q.getName(), Toast.LENGTH_LONG).show();
+            caller.setupServers(result);
+
         }
     }
 }

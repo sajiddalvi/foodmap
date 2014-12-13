@@ -1,16 +1,23 @@
 package com.tekdi.foodmap;
 
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.tekdi.foodmap.backend.serveFoodEntityApi.model.ServeFoodEntity;
+
+import java.util.List;
 
 public class FindActivity extends FragmentActivity {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
+    private List<ServeFoodEntity> servers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,5 +71,29 @@ public class FindActivity extends FragmentActivity {
      */
     private void setUpMap() {
         mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
+    }
+
+    public void setupServers(List<ServeFoodEntity> result) {
+        for (ServeFoodEntity q : result) {
+            Double lat = Double.parseDouble(q.getLatitude());
+            Double lng = Double.parseDouble(q.getLongitude());
+            LatLng currentLocation = new LatLng(lat,lng);
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 14));
+
+            BitmapDescriptor flag=null;
+            if (q.getCuisine().equalsIgnoreCase("indian")) {
+                flag = BitmapDescriptorFactory.fromResource(R.drawable.indian_flag);
+            }
+            else if (q.getCuisine().equalsIgnoreCase("italian")) {
+                    flag = BitmapDescriptorFactory.fromResource(R.drawable.italy_flag);
+            }
+
+
+            mMap.addMarker(new MarkerOptions().position(new LatLng(currentLocation.latitude, currentLocation.longitude))
+                    .title(q.getName())
+                    .snippet(q.getCuisine())
+                    .icon(flag));
+        }
+
     }
 }
