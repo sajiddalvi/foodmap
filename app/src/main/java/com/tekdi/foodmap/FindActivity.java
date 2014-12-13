@@ -17,6 +17,9 @@ public class FindActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find);
         setUpMapIfNeeded();
+
+        new ListServersEndpointAsyncTask(this).execute();
+
     }
 
     @Override
