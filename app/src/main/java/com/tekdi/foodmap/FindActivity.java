@@ -1,8 +1,14 @@
 package com.tekdi.foodmap;
 
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesClient;
+import com.google.android.gms.location.LocationClient;
+import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -14,10 +20,15 @@ import com.tekdi.foodmap.backend.serveFoodEntityApi.model.ServeFoodEntity;
 
 import java.util.List;
 
-public class FindActivity extends FragmentActivity {
+public class FindActivity extends FragmentActivity implements
+        GooglePlayServicesClient.ConnectionCallbacks,
+        GooglePlayServicesClient.OnConnectionFailedListener,
+        LocationListener {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private List<ServeFoodEntity> servers;
+    private LocationClient mLocationClient;
+    private Location mCurrentLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +36,7 @@ public class FindActivity extends FragmentActivity {
         setContentView(R.layout.activity_find);
         setUpMapIfNeeded();
 
-        new ListServersEndpointAsyncTask(this).execute();
+        mLocationClient = new LocationClient(this, this, this);
 
     }
 
@@ -34,6 +45,28 @@ public class FindActivity extends FragmentActivity {
         super.onResume();
         setUpMapIfNeeded();
     }
+
+
+    /*
+     * Called when the Activity becomes visible.
+     */
+    @Override
+    protected void onStart() {
+        super.onStart();
+        // Connect the client.
+        mLocationClient.connect();
+    }
+
+    /*
+     * Called when the Activity is no longer visible.
+     */
+    @Override
+    protected void onStop() {
+        // Disconnecting the client invalidates it.
+        mLocationClient.disconnect();
+        super.onStop();
+    }
+
 
     /**
      * Sets up the map if it is possible to do so (i.e., the Google Play services APK is correctly
@@ -56,10 +89,6 @@ public class FindActivity extends FragmentActivity {
             // Try to obtain the map from the SupportMapFragment.
             mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
                     .getMap();
-            // Check if we were successful in obtaining the map.
-            if (mMap != null) {
-                setUpMap();
-            }
         }
     }
 
@@ -69,8 +98,19 @@ public class FindActivity extends FragmentActivity {
      * <p/>
      * This should only be called once and when we are sure that {@link #mMap} is not null.
      */
-    private void setUpMap() {
+    private void setUpMap(Location location) {
         mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
+
+        if (location != null) {
+            mMap.addMarker(new MarkerOptions().position(new LatLng(location.getLatitude(), location.getLongitude())).title("Marker"));
+            LatLng currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 13));
+
+            new ListServersEndpointAsyncTask(this).execute();
+
+        }
+        else
+            mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
     }
 
     public void setupServers(List<ServeFoodEntity> result) {
@@ -78,7 +118,6 @@ public class FindActivity extends FragmentActivity {
             Double lat = Double.parseDouble(q.getLatitude());
             Double lng = Double.parseDouble(q.getLongitude());
             LatLng currentLocation = new LatLng(lat,lng);
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 14));
 
             BitmapDescriptor flag=null;
             if (q.getCuisine().equalsIgnoreCase("indian")) {
@@ -95,5 +134,86 @@ public class FindActivity extends FragmentActivity {
                     .icon(flag));
         }
 
+    }
+
+    /*
+ * Called by Location Services when the request to connect the
+ * client finishes successfully. At this point, you can
+ * request the current location or start periodic updates
+ */
+    @Override
+    public void onConnected(Bundle dataBundle) {
+        // Display the connection status
+
+        mCurrentLocation = mLocationClient.getLastLocation();
+        setUpMap(mCurrentLocation);
+        Toast.makeText(this, "Connected " + mCurrentLocation.getLatitude() + "," + mCurrentLocation.getLongitude(), Toast.LENGTH_SHORT).show();
+
+    }
+
+    /*
+     * Called by Location Services if the connection to the
+     * location client drops because of an error.
+     */
+    @Override
+    public void onDisconnected() {
+        // Display the connection status
+        Toast.makeText(this, "Disconnected. Please re-connect.",
+                Toast.LENGTH_SHORT).show();
+    }
+
+    /*
+     * Called by Location Services if the attempt to
+     * Location Services fails.
+     */
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        /*
+         * Google Play services can resolve some errors it detects.
+         * If the error has a resolution, try sending an Intent to
+         * start a Google Play services activity that can resolve
+         * error.
+         */
+        if (connectionResult.hasResolution()) {
+            // Sajid try {
+            // Start an Activity that tries to resolve the error
+
+                /* Sajid - compile error can't resole CONNECTION_FAILURE_RESOLUTION_REQUEST
+                 * connectionResult.startResolutionForResult(
+                 *       this,
+                 *       CONNECTION_FAILURE_RESOLUTION_REQUEST);
+                 */
+
+            Toast.makeText(this, "CONNECTION_FAILURE_RESOLUTION_REQUEST",
+                    Toast.LENGTH_SHORT).show();
+
+                /*
+                 * Thrown if Google Play services canceled the original
+                 * PendingIntent
+                 */
+            // Sajid} catch (IntentSender.SendIntentException e) {
+            // Sajid    // Log the error
+            // Sajid    e.printStackTrace();
+            // Sajid}
+        } else {
+            /*
+             * If no resolution is available, display a dialog to the
+             * user with the error.
+             */
+            //Sajid showErrorDialog(connectionResult.getErrorCode());
+        }
+    }
+
+    // Define the callback method that receives location updates
+    @Override
+    public void onLocationChanged(Location location) {
+        // Report to the UI that the location was updated
+        String msg = "Updated Location: " +
+                Double.toString(location.getLatitude()) + "," +
+                Double.toString(location.getLongitude());
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+        mCurrentLocation.setLatitude(location.getLatitude());
+        mCurrentLocation.setLongitude(location.getLongitude());
+        setUpMap(mCurrentLocation);
     }
 }

@@ -37,7 +37,9 @@ class ServeFoodEntityEndpointAsyncTask extends AsyncTask<Pair<Context, ServeFood
         ServeFoodEntity server = params[0].second;
 
         try {
-            myApiService.insertServeFoodEntity(server).execute();
+            ServeFoodEntity serveFoodEntity =myApiService.insertServeFoodEntity(server).execute();
+            Prefs.setServerIdPref(context,serveFoodEntity.getId().toString());
+
             return "success";
         } catch (IOException e) {
             return e.getMessage();
