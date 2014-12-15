@@ -55,7 +55,12 @@
 
         <activity
             android:name=".AddMenuActivity"
-            android:label="@string/title_activity_menu" >
+            android:label="@string/title_activity_add_menu" >
+        </activity>
+
+        <activity
+            android:name=".ListMenuActivity"
+            android:label="@string/title_activity_list_menu" >
         </activity>
 
         <receiver

@@ -81,6 +81,11 @@ public class ServeActivity extends Activity {
         Intent intent = new Intent(this, AddMenuActivity.class);
         startActivity(intent);
     }
+
+    public void onMenuListButtonClick(View v) {
+        Intent intent = new Intent(this, ListMenuActivity.class);
+        startActivity(intent);
+    }
 }
 
 

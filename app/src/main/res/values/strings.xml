@@ -17,12 +17,15 @@
 
     <string name="title_activity_find">Find Food</string>
 
-    <string name="title_activity_menu">Add Menu</string>
+    <string name="title_activity_add_menu">Add Menu</string>
     <string name="menu_name_label">Name</string>
     <string name="menu_description_label">Description</string>
     <string name="menu_quantity_label">Quantity</string>
     <string name="menu_price_label">Price</string>
     <string name="menu_add_button">Add Menu</string>
+    <string name="menu_list_button">List Menu</string>
+    <string name="title_activity_list_menu">List Menu</string>
+
 
     <string name="preference_file_key">com.tekdi.foodmap.info</string>
     <string name="preference_server_id_key">preference_file_server_id</string>

@@ -20,7 +20,7 @@ public class AddMenuActivity extends Activity {
         setContentView(R.layout.activty_menu);
     }
 
-    public void onMenuAddaButtonClick(View v) {
+    public void onMenuAddButtonClick(View v) {
         EditText editText = (EditText) findViewById(R.id.menu_name_text);
         String name = editText.getText().toString();
 
