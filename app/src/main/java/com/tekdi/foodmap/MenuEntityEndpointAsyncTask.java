@@ -9,19 +9,19 @@ import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 import com.google.api.client.googleapis.services.AbstractGoogleClientRequest;
 import com.google.api.client.googleapis.services.GoogleClientRequestInitializer;
-import com.tekdi.foodmap.backend.serveFoodEntityApi.ServeFoodEntityApi;
-import com.tekdi.foodmap.backend.serveFoodEntityApi.model.ServeFoodEntity;
+import com.tekdi.foodmap.backend.menuEntityApi.MenuEntityApi;
+import com.tekdi.foodmap.backend.menuEntityApi.model.MenuEntity;
 
 import java.io.IOException;
 
-class ServeFoodEntityEndpointAsyncTask extends AsyncTask<Pair<Context, ServeFoodEntity>, Void, String> {
-    private static ServeFoodEntityApi myApiService = null;
+class MenuEntityEndpointAsyncTask extends AsyncTask<Pair<Context, MenuEntity>, Void, String> {
+    private static MenuEntityApi myApiService = null;
     private Context context;
 
     @Override
-    protected String doInBackground(Pair<Context, ServeFoodEntity>... params) {
+    protected String doInBackground(Pair<Context, MenuEntity>... params) {
         if(myApiService == null) {  // Only do this once
-            ServeFoodEntityApi.Builder builder = new ServeFoodEntityApi.Builder(AndroidHttp.newCompatibleTransport(),
+            MenuEntityApi.Builder builder = new MenuEntityApi.Builder(AndroidHttp.newCompatibleTransport(),
                     new AndroidJsonFactory(), null)
                     .setRootUrl("https://tekdi-foodmap.appspot.com/_ah/api/")
                     .setGoogleClientRequestInitializer(new GoogleClientRequestInitializer() {
@@ -34,13 +34,11 @@ class ServeFoodEntityEndpointAsyncTask extends AsyncTask<Pair<Context, ServeFood
         }
 
         context = params[0].first;
-        ServeFoodEntity server = params[0].second;
+        MenuEntity menu = params[0].second;
 
         try {
-            ServeFoodEntity serveFoodEntity =myApiService.insertServeFoodEntity(server).execute();
-            Prefs.setServerIdPref(context,serveFoodEntity.getId().toString());
-
-            return "added server";
+            MenuEntity menuEntity =myApiService.insert(menu).execute();
+            return "added menu";
         } catch (IOException e) {
             return e.getMessage();
         }

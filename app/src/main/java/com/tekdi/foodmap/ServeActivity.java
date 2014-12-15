@@ -2,6 +2,7 @@ package com.tekdi.foodmap;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -74,6 +75,11 @@ public class ServeActivity extends Activity {
         }
 
         new ServeFoodEntityEndpointAsyncTask().execute(new Pair<Context, ServeFoodEntity>(this, server));
+    }
+
+    public void onMenuAddButtonClick(View v) {
+        Intent intent = new Intent(this, AddMenuActivity.class);
+        startActivity(intent);
     }
 }
 

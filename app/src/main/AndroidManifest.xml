@@ -53,6 +53,11 @@
             android:label="@string/title_activity_find" >
         </activity>
 
+        <activity
+            android:name=".AddMenuActivity"
+            android:label="@string/title_activity_menu" >
+        </activity>
+
         <receiver
             android:name=".GcmBroadcastReceiver"
             android:permission="com.google.android.c2dm.permission.SEND" >
