@@ -1,24 +1,27 @@
 package com.tekdi.foodmap;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Pair;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import com.tekdi.foodmap.backend.serveFoodEntityApi.model.ServeFoodEntity;
 
 import java.io.IOException;
 import java.util.List;
 
-public class ServeActivity extends Activity {
+public class ServeActivity extends ActionBarActivity {
 
     private ProgressBar mActivityIndicator;
 
@@ -28,6 +31,34 @@ public class ServeActivity extends Activity {
         setContentView(R.layout.activity_serve);
         mActivityIndicator =
                 (ProgressBar) findViewById(R.id.address_progress);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_serve, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_search) {
+            Toast.makeText(this, item + " selected", Toast.LENGTH_LONG).show();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     public void onServerSetupButtonClick(View v) {

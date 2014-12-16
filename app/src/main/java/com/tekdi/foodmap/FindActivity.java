@@ -1,8 +1,10 @@
 package com.tekdi.foodmap;
 
+import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -15,20 +17,38 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.tekdi.foodmap.backend.serveFoodEntityApi.model.ServeFoodEntity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class FindActivity extends FragmentActivity implements
         GooglePlayServicesClient.ConnectionCallbacks,
         GooglePlayServicesClient.OnConnectionFailedListener,
+        GoogleMap.OnMarkerClickListener,
+        GoogleMap.OnInfoWindowClickListener,
         LocationListener {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private List<ServeFoodEntity> servers;
     private LocationClient mLocationClient;
     private Location mCurrentLocation;
+
+    class ServeMap
+    {
+        ServeFoodEntity s;
+        Marker m;
+
+        ServeMap(ServeFoodEntity s, Marker m)
+        {
+            this.s = s;
+            this.m = m;
+        }
+    }
+
+    private List<ServeMap> smList = new ArrayList();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +109,9 @@ public class FindActivity extends FragmentActivity implements
             // Try to obtain the map from the SupportMapFragment.
             mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
                     .getMap();
+
+            mMap.setOnMarkerClickListener(this);
+            mMap.setOnInfoWindowClickListener(this);
         }
     }
 
@@ -128,12 +151,13 @@ public class FindActivity extends FragmentActivity implements
             }
 
 
-            mMap.addMarker(new MarkerOptions().position(new LatLng(currentLocation.latitude, currentLocation.longitude))
+            Marker m = mMap.addMarker(new MarkerOptions().position(new LatLng(currentLocation.latitude, currentLocation.longitude))
                     .title(q.getName())
                     .snippet(q.getCuisine())
                     .icon(flag));
-        }
 
+            smList.add(new ServeMap(q,m));
+        }
     }
 
     /*
@@ -148,7 +172,6 @@ public class FindActivity extends FragmentActivity implements
         mCurrentLocation = mLocationClient.getLastLocation();
         setUpMap(mCurrentLocation);
         Toast.makeText(this, "Connected " + mCurrentLocation.getLatitude() + "," + mCurrentLocation.getLongitude(), Toast.LENGTH_SHORT).show();
-
     }
 
     /*
@@ -216,4 +239,26 @@ public class FindActivity extends FragmentActivity implements
         mCurrentLocation.setLongitude(location.getLongitude());
         setUpMap(mCurrentLocation);
     }
+
+    @Override
+    public boolean onMarkerClick(final Marker marker) {
+        for (ServeMap sm : smList) {
+            if (sm.m.equals(marker)) {
+                Log.v("sajid", "Found marker " + sm.s.getName());
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        for (ServeMap sm : smList) {
+            if (sm.m.equals(marker)) {
+                Log.v("sajid", "Found info marker " + sm.s.getName());
+                Intent intent = new Intent(this, ListMenuActivity.class);
+                startActivity(intent);
+            }
+        }
+    }
 }
+
