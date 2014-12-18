@@ -156,4 +156,50 @@ public class MenuEntityEndpoint {
             throw new NotFoundException("Could not find MenuEntity with ID: " + id);
         }
     }
+
+    /**
+     * List all entities.
+     *
+     * @param cursor used for pagination to determine which page to return
+     * @param limit  the maximum number of entries to return
+     * @return a response that encapsulates the result list and the next page token/cursor
+     */
+    @ApiMethod(
+            name = "listForServer",
+            path = "menuEntityForServer/{serverId}",
+            httpMethod = ApiMethod.HttpMethod.GET)
+    public CollectionResponse<MenuEntity> listForServer(@Named("serverId") Long serverId,
+                                                        @Nullable @Named("cursor") String cursor,
+                                                        @Nullable @Named("limit") Integer limit)
+            throws NotFoundException {
+
+        logger.info("listforServer with ID: " + serverId);
+/*
+        Query<MenuEntity> q = ofy().load().type(MenuEntity.class);
+        q = q.
+        q = q.filter("serverId >", 0);
+        List<MenuEntity> foos = q.list();
+
+        logger.info("listing foos3");
+        for (MenuEntity element : foos) {
+            logger.info("xx=>"+element.getName());
+        }
+
+*/
+
+        limit = limit == null ? DEFAULT_LIST_LIMIT : limit;
+        Query<MenuEntity> query = ofy().load().type(MenuEntity.class).filter("serverId", serverId).limit(limit);
+
+        if (cursor != null) {
+            query = query.startAt(Cursor.fromWebSafeString(cursor));
+            logger.info("cursor not null");
+        }
+        QueryResultIterator<MenuEntity> queryIterator = query.iterator();
+        List<MenuEntity> menuEntityList = new ArrayList<MenuEntity>(limit);
+        while (queryIterator.hasNext()) {
+            menuEntityList.add(queryIterator.next());
+            logger.info("menuitem ");
+        }
+        return CollectionResponse.<MenuEntity>builder().setItems(menuEntityList).setNextPageToken(queryIterator.getCursor().toWebSafeString()).build();
+    }
 }

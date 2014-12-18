@@ -1,7 +1,9 @@
 package com.tekdi.foodmap;
 
 import android.app.ListActivity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -19,7 +21,20 @@ public class ListMenuActivity extends ListActivity {
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
 
-        new ListMenuEndpointAsyncTask(this).execute();
+        Intent intent = getIntent();
+
+        String fName = intent.getStringExtra("fname");
+
+        Long serverId = intent.getLongExtra("serverId",0);
+
+        if (serverId != 0) {
+            Log.v("sajid","executing listmenu");
+            ListMenuEndpointAsyncTask l = new ListMenuEndpointAsyncTask(this);
+            l.setServerId(serverId);
+            l.execute();
+        }
+
+       // new ListMenuEndpointAsyncTask(this).execute();
 
     }
 

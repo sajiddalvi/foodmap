@@ -114,7 +114,9 @@ public class ServeActivity extends ActionBarActivity {
     }
 
     public void onMenuListButtonClick(View v) {
+        String serverId = Prefs.getServeIdPref(this);
         Intent intent = new Intent(this, ListMenuActivity.class);
+        intent.putExtra("serverId", Long.parseLong(serverId));
         startActivity(intent);
     }
 }

@@ -19,10 +19,14 @@ class ListMenuEndpointAsyncTask extends AsyncTask<Void, Void, List<MenuEntity>> 
     private static MenuEntityApi myApiService = null;
     private Context context;
     private ListMenuActivity caller;
-
+    private Long serverId;
 
     ListMenuEndpointAsyncTask(ListMenuActivity caller) {
         this.caller = caller;
+    }
+
+    public void setServerId(Long serverId) {
+        this.serverId = serverId;
     }
 
     @Override
@@ -43,7 +47,8 @@ class ListMenuEndpointAsyncTask extends AsyncTask<Void, Void, List<MenuEntity>> 
 
         try {
             Log.v("sajid","executing list menu");
-            return myApiService.list().execute().getItems();
+            return myApiService.listForServer(serverId).execute().getItems();
+            //return myApiService.list().execute().getItems();
         } catch (IOException e) {
             return Collections.EMPTY_LIST;
         }
@@ -52,6 +57,10 @@ class ListMenuEndpointAsyncTask extends AsyncTask<Void, Void, List<MenuEntity>> 
     @Override
     protected void onPostExecute(List<MenuEntity> result) {
         Log.v("sajid","finished executing list menu");
+        if (result == null) {
+            Log.v("sajid", "result is null");
+            return;
+        }
         for (MenuEntity q : result) {
             Log.v("sajid","name="+q.getName());
             caller.showMenu(result);

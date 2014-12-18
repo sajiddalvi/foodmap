@@ -255,7 +255,11 @@ public class FindActivity extends FragmentActivity implements
         for (ServeMap sm : smList) {
             if (sm.m.equals(marker)) {
                 Log.v("sajid", "Found info marker " + sm.s.getName());
+                Long serverId = sm.s.getId();
+
                 Intent intent = new Intent(this, ListMenuActivity.class);
+                intent.putExtra("serverId", serverId);
+
                 startActivity(intent);
             }
         }
