@@ -16,7 +16,8 @@
             <param-value>com.tekdi.foodmap.backend.RegistrationEndpoint,
                 com.tekdi.foodmap.backend.MessagingEndpoint,
                 com.tekdi.foodmap.backend.ServeFoodEntityEndpoint,
-                com.tekdi.foodmap.backend.MenuEntityEndpoint</param-value>
+                com.tekdi.foodmap.backend.MenuEntityEndpoint,
+                com.tekdi.foodmap.backend.OrderEntityEndpoint</param-value>
         </init-param>
     </servlet>
     <servlet-mapping>

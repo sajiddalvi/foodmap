@@ -2,6 +2,7 @@ package com.tekdi.foodmap;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -57,6 +58,10 @@ class GcmRegistrationAsyncTask extends AsyncTask<Context, Void, String> {
             // The request to your server should be authenticated if your app
             // is using accounts.
             regService.register(regId).execute();
+
+            Log.v("sajid","setting regId "+regId);
+
+            Prefs.setDeviceIdRegPref(context,regId);
 
         } catch (IOException ex) {
             ex.printStackTrace();

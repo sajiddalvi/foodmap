@@ -10,7 +10,6 @@ import com.google.api.client.googleapis.services.AbstractGoogleClientRequest;
 import com.google.api.client.googleapis.services.GoogleClientRequestInitializer;
 import com.tekdi.foodmap.backend.menuEntityApi.MenuEntityApi;
 import com.tekdi.foodmap.backend.menuEntityApi.model.MenuEntity;
-
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;

@@ -11,6 +11,7 @@ import com.googlecode.objectify.annotation.Id;
 public class ServeFoodEntity {
     @Id
     Long id;
+    private String serverRegId;
     private String name;
     private String phone;
     private String address;
@@ -20,6 +21,10 @@ public class ServeFoodEntity {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public void setServerRegId(String serverRegId) {
+        this.serverRegId = serverRegId;
     }
 
     public void setAddress(String address) {
@@ -44,6 +49,10 @@ public class ServeFoodEntity {
 
     public Long getId() {
         return id;
+    }
+
+    public String getServerRegId() {
+        return serverRegId;
     }
 
     public String getAddress() {

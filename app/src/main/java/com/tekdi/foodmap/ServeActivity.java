@@ -1,11 +1,12 @@
 package com.tekdi.foodmap;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,7 +22,7 @@ import com.tekdi.foodmap.backend.serveFoodEntityApi.model.ServeFoodEntity;
 import java.io.IOException;
 import java.util.List;
 
-public class ServeActivity extends ActionBarActivity {
+public class ServeActivity extends Activity {
 
     private ProgressBar mActivityIndicator;
 
@@ -85,6 +86,8 @@ public class ServeActivity extends ActionBarActivity {
         server.setCuisine(cuisine);
         server.setName(name);
         server.setPhone(phone);
+        Log.v("sajid","sajid getting reg id "+Prefs.getDeviceRegIdPref(this));
+        server.setServerRegId(Prefs.getDeviceRegIdPref(this));
 
         Geocoder coder = new Geocoder(this);
         List<Address> addresses;
@@ -120,5 +123,3 @@ public class ServeActivity extends ActionBarActivity {
         startActivity(intent);
     }
 }
-
-

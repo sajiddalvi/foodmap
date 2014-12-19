@@ -52,12 +52,10 @@
             android:name=".FindActivity"
             android:label="@string/title_activity_find" >
         </activity>
-
         <activity
             android:name=".AddMenuActivity"
             android:label="@string/title_activity_add_menu" >
         </activity>
-
         <activity
             android:name=".ListMenuActivity"
             android:label="@string/title_activity_list_menu" >
@@ -68,9 +66,11 @@
             android:permission="com.google.android.c2dm.permission.SEND" >
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+
                 <category android:name="com.tekdi.foodmap" />
             </intent-filter>
         </receiver>
+
         <service android:name=".GcmIntentService" />
 
     </application>
