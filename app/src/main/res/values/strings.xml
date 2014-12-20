@@ -24,6 +24,7 @@
     <string name="preference_file_key">com.tekdi.foodmap.info</string>
     <string name="preference_server_id_key">preference_file_server_id</string>
     <string name="order_menu">Order</string>
+    <string name="order_confirm">Confirm</string>
     <string name="title_activity_order">OrderActivity</string>
 
 </resources>

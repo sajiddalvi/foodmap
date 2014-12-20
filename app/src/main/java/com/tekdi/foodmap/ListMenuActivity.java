@@ -12,18 +12,19 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.tekdi.foodmap.backend.menuEntityApi.model.MenuEntity;
-import com.tekdi.foodmap.backend.orderEntityApi.model.OrderEntity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by fsd017 on 12/14/14.
  */
-public class ListMenuActivity extends ListActivity {
+public class ListMenuActivity extends ListActivity implements Serializable {
 
     private Long serverId;
     private ArrayList<MenuEntity> menuList = new ArrayList<MenuEntity>();
+    private ArrayList<ParcelableOrder> orderList = new ArrayList<ParcelableOrder>();
 
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -71,14 +72,21 @@ public class ListMenuActivity extends ListActivity {
 
         MenuEntity m = menuList.get(position);
 
-        OrderEntity o = new OrderEntity();
+        ParcelableOrder p = new ParcelableOrder();
+        p.menuId = m.getId();
+        p.finderDevRegId = Prefs.getDeviceRegIdPref(this);
+        p.serverId = m.getServerId();
+        p.orderState = 0;
+        p.name = m.getName();
+        p.description = m.getDescription();
+        p.quantity = 1;
+        p.price = m.getPrice();
 
-        o.setMenuId(m.getId());
-        o.setServerId(m.getServerId());
-        o.setFinderDevRegId(Prefs.getDeviceRegIdPref(this));
-        o.setOrderState(0); // order initiated
+        orderList.add(p);
 
-
+        Intent intent = new Intent(this, OrderActivity.class);
+        intent.putParcelableArrayListExtra("com.tekdi.foodmap.ParcelableOrder", orderList);
+        startActivity(intent);
 
 
 /*

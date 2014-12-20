@@ -60,6 +60,10 @@
             android:name=".ListMenuActivity"
             android:label="@string/title_activity_list_menu" >
         </activity>
+        <activity
+            android:name=".OrderActivity"
+            android:label="@string/title_activity_order" >
+        </activity>
 
         <receiver
             android:name=".GcmBroadcastReceiver"
