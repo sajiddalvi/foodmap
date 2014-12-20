@@ -4,9 +4,11 @@ import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiNamespace;
 import com.google.api.server.spi.config.Nullable;
+import com.google.api.server.spi.response.NotFoundException;
 import com.google.api.server.spi.response.CollectionResponse;
 import com.google.appengine.api.datastore.Cursor;
 import com.google.appengine.api.datastore.QueryResultIterator;
+import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.cmd.Query;
 
 import java.util.ArrayList;
@@ -35,17 +37,37 @@ public class ServeFoodEntityEndpoint {
 
     private static final Logger logger = Logger.getLogger(ServeFoodEntityEndpoint.class.getName());
 
+    static {
+        // Typically you would register this inside an OfyServive wrapper. See: https://code.google.com/p/objectify-appengine/wiki/BestPractices
+        ObjectifyService.register(ServeFoodEntity.class);
+    }
+
     /**
      * This method gets the <code>ServeFoodEntity</code> object associated with the specified <code>id</code>.
      *
      * @param id The id of the object to be returned.
      * @return The <code>ServeFoodEntity</code> associated with <code>id</code>.
      */
+    /*
     @ApiMethod(name = "getServeFoodEntity")
     public ServeFoodEntity getServeFoodEntity(@Named("id") Long id) {
         // TODO: Implement this function
         logger.info("Calling getServeFoodEntity method");
         return null;
+    }
+    */
+
+    @ApiMethod(
+            name = "get",
+            path = "serveFoodEntity/{id}",
+            httpMethod = ApiMethod.HttpMethod.GET)
+    public ServeFoodEntity get(@Named("id") Long id) throws NotFoundException {
+        logger.info("Getting ServeFoodEntity with ID: " + id);
+        ServeFoodEntity serveFoodEntityEntity = ObjectifyService.ofy().load().type(ServeFoodEntity.class).id(id).now();
+        if (serveFoodEntityEntity == null) {
+            throw new NotFoundException("Could not find MenuEntity with ID: " + id);
+        }
+        return serveFoodEntityEntity;
     }
 
     /**
@@ -56,7 +78,6 @@ public class ServeFoodEntityEndpoint {
      */
     @ApiMethod(name = "insertServeFoodEntity")
     public ServeFoodEntity insertServeFoodEntity(ServeFoodEntity serveFoodEntity) {
-        // TODO: Implement this function
         logger.info("Calling insertServeFoodEntity method for "+serveFoodEntity.getName());
         ofy().save().entity(serveFoodEntity).now();
 

@@ -1,5 +1,9 @@
 package com.tekdi.foodmap.backend;
 
+import com.google.android.gcm.server.Constants;
+import com.google.android.gcm.server.Message;
+import com.google.android.gcm.server.Result;
+import com.google.android.gcm.server.Sender;
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiNamespace;
@@ -42,6 +46,9 @@ public class OrderEntityEndpoint {
 
     private static final int DEFAULT_LIST_LIMIT = 20;
 
+    private static final String API_KEY = "AIzaSyCOM1CLtGXykSpyPpqNzMJMeR5JSzSWrxI" ;//System.getProperty("gcm.api.key");
+
+
     static {
         // Typically you would register this inside an OfyServive wrapper. See: https://code.google.com/p/objectify-appengine/wiki/BestPractices
         ObjectifyService.register(OrderEntity.class);
@@ -82,6 +89,34 @@ public class OrderEntityEndpoint {
         // If your client provides the ID then you should probably use PUT instead.
         ofy().save().entity(orderEntity).now();
         logger.info("Created OrderEntity with ID: " + orderEntity.getId());
+
+        ServeFoodEntity s = findServer(orderEntity.getServerId());
+        logger.info("Send order to "+s.getServerRegId());
+
+        Sender sender = new Sender(API_KEY);
+        Message msg = new Message.Builder().addData("message", orderEntity.getId().toString()).build();
+
+        RegistrationRecord record =
+                OfyService.ofy().load().type(RegistrationRecord.class).filter("regId",s.getServerRegId() ).first().now();
+
+        try {
+            Result result = sender.send(msg, record.getRegId(), 5);
+
+            if (result.getMessageId() != null) {
+                logger.info("Message sent to " + record.getRegId());
+            } else {
+                String error = result.getErrorCodeName();
+                if (error.equals(Constants.ERROR_NOT_REGISTERED)) {
+                    logger.warning("Registration Id " + record.getRegId() + " no longer registered with GCM, removing from datastore");
+                } else {
+                    logger.warning("Error when sending message : " + error);
+                }
+            }
+
+        } catch (java.io.IOException e) {
+            logger.info ("Could not send order ");
+
+        }
 
         return ofy().load().entity(orderEntity).now();
     }
@@ -155,5 +190,11 @@ public class OrderEntityEndpoint {
         } catch (com.googlecode.objectify.NotFoundException e) {
             throw new NotFoundException("Could not find OrderEntity with ID: " + id);
         }
+    }
+
+    private ServeFoodEntity findServer(Long serverId) {
+
+            ServeFoodEntity s = ofy().load().type(ServeFoodEntity.class).id(serverId).now();
+            return s;
     }
 }
