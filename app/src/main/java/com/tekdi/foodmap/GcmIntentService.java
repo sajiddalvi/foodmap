@@ -1,10 +1,13 @@
 package com.tekdi.foodmap;
 
 import android.app.IntentService;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -37,7 +40,31 @@ public class GcmIntentService extends IntentService {
                 showToast(extras.getString("message"));
                 Log.v("sajid",extras.getString("message"));
 
-                
+                NotificationCompat.Builder mBuilder =
+                        new NotificationCompat.Builder(this)
+                                .setSmallIcon(R.drawable.notification_icon)
+                                .setContentTitle("Foodmap:new order")
+                                .setContentText("order number "+extras.toString());
+
+                Intent resultIntent = new Intent(this, OrderActivity.class);
+                PendingIntent resultPendingIntent =
+                        PendingIntent.getActivity(
+                                this,
+                                0,
+                                resultIntent,
+                                PendingIntent.FLAG_UPDATE_CURRENT
+                        );
+
+                mBuilder.setContentIntent(resultPendingIntent);
+
+                // Sets an ID for the notification
+                int mNotificationId = 001;
+                // Gets an instance of the NotificationManager service
+                NotificationManager mNotifyMgr =
+                        (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                // Builds the notification and issues it.
+                mNotifyMgr.notify(mNotificationId, mBuilder.build());
+
             }
         }
         GcmBroadcastReceiver.completeWakefulIntent(intent);
