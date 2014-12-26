@@ -26,10 +26,18 @@ public class ListOrderActivity extends ListActivity {
 
         Intent intent = getIntent();
 
-        String orderStr = intent.getStringExtra("orderId");
+        String orderId = intent.getStringExtra("orderId");
+        String menuId = intent.getStringExtra("menuId");
+        String finder = intent.getStringExtra("finder");
+        String state = intent.getStringExtra("state");
+
         serverId = Long.parseLong(Prefs.getServeIdPref(this));
 
-        Log.v("sajid","ListOrderActivity:order_str="+orderStr);
+        Log.v("sajid","ListOrderActivity:orderId="+orderId+","
+                       + "menuId="+menuId+","
+                       + "finder="+finder+","
+                       + "state="+state
+                        );
 
         if (serverId != 0) {
             Log.v("sajid","executing listorder");

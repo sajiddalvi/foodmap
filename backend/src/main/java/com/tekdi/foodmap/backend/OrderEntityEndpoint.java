@@ -94,7 +94,17 @@ public class OrderEntityEndpoint {
         logger.info("Send order to "+s.getServerRegId());
 
         Sender sender = new Sender(API_KEY);
-        Message msg = new Message.Builder().addData("message", orderEntity.getId().toString()).build();
+
+        Message msg = new Message.Builder()
+                .addData("orderId", orderEntity.getId().toString())
+                .addData("menuId", orderEntity.getMenuId().toString())
+                .addData("finder", orderEntity.getFinderDevRegId().toString())
+                .addData("state", orderEntity.getOrderState().toString())
+                .build();
+
+
+
+        //Message msg = new Message.Builder().addData("message", orderEntity.toString()).build();
 
         RegistrationRecord record =
                 OfyService.ofy().load().type(RegistrationRecord.class).filter("regId",s.getServerRegId() ).first().now();

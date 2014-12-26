@@ -37,17 +37,21 @@ public class GcmIntentService extends IntentService {
             if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) {
                 Logger.getLogger("GCM_RECEIVED").log(Level.INFO, extras.toString());
 
-                showToast(extras.getString("message"));
-                Log.v("sajid",extras.getString("message"));
+                showToast(extras.getString("orderId"));
+                Log.v("sajid",extras.getString("orderId"));
 
                 NotificationCompat.Builder mBuilder =
                         new NotificationCompat.Builder(this)
                                 .setSmallIcon(R.drawable.notification_icon)
                                 .setContentTitle("Foodmap:new order")
-                                .setContentText("order number "+extras.getString("message"));
+                                .setContentText("order number "+extras.getString("orderId"));
 
                 Intent resultIntent = new Intent(this, ListOrderActivity.class);
-                resultIntent.putExtra("orderId",extras.getString("message"));
+                resultIntent.putExtra("orderId",extras.getString("orderId"));
+                resultIntent.putExtra("menuId",extras.getString("menuId"));
+                resultIntent.putExtra("finder", extras.getString("finder"));
+                resultIntent.putExtra("state",extras.getString("state"));
+
                 PendingIntent resultPendingIntent =
                         PendingIntent.getActivity(
                                 this,
