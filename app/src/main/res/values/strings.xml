@@ -26,5 +26,8 @@
     <string name="order_menu">Order</string>
     <string name="order_confirm">Confirm</string>
     <string name="title_activity_order">OrderActivity</string>
+    <string name="title_activity_list_order">ListOrderActivity</string>
+    <string name="order_list_refresh">Refresh</string>
+
 
 </resources>

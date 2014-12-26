@@ -44,9 +44,10 @@ public class GcmIntentService extends IntentService {
                         new NotificationCompat.Builder(this)
                                 .setSmallIcon(R.drawable.notification_icon)
                                 .setContentTitle("Foodmap:new order")
-                                .setContentText("order number "+extras.toString());
+                                .setContentText("order number "+extras.getString("message"));
 
-                Intent resultIntent = new Intent(this, OrderActivity.class);
+                Intent resultIntent = new Intent(this, ListOrderActivity.class);
+                resultIntent.putExtra("orderId",extras.getString("message"));
                 PendingIntent resultPendingIntent =
                         PendingIntent.getActivity(
                                 this,
@@ -54,6 +55,8 @@ public class GcmIntentService extends IntentService {
                                 resultIntent,
                                 PendingIntent.FLAG_UPDATE_CURRENT
                         );
+
+                Log.v("sajid","sending notifictaion for ListOrderActivity "+extras.getString("message"));
 
                 mBuilder.setContentIntent(resultPendingIntent);
 

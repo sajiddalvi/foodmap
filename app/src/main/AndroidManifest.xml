@@ -64,7 +64,10 @@
             android:name=".OrderActivity"
             android:label="@string/title_activity_order" >
         </activity>
-
+        <activity
+            android:name=".ListOrderActivity"
+            android:label="@string/title_activity_list_order" >
+        </activity>
         <receiver
             android:name=".GcmBroadcastReceiver"
             android:permission="com.google.android.c2dm.permission.SEND" >

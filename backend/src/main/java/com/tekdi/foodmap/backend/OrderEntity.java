@@ -2,6 +2,7 @@ package com.tekdi.foodmap.backend;
 
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
+import com.googlecode.objectify.annotation.Index;
 
 /**
  * Created by fsd017 on 12/19/14.
@@ -12,8 +13,9 @@ public class OrderEntity {
 
     @Id
     Long id;
-
+    @Index
     Long menuId;
+    @Index
     Long serverId;
     String finderDevRegId;
     Integer orderState;

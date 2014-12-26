@@ -197,4 +197,38 @@ public class OrderEntityEndpoint {
             ServeFoodEntity s = ofy().load().type(ServeFoodEntity.class).id(serverId).now();
             return s;
     }
+
+    /**
+     * List all entities.
+     *
+     * @param cursor used for pagination to determine which page to return
+     * @param limit  the maximum number of entries to return
+     * @return a response that encapsulates the result list and the next page token/cursor
+     */
+    @ApiMethod(
+            name = "listForServer",
+            path = "orderEntityForServer/{serverId}",
+            httpMethod = ApiMethod.HttpMethod.GET)
+    public CollectionResponse<OrderEntity> listForServer(@Named("serverId") Long serverId,
+                                                        @Nullable @Named("cursor") String cursor,
+                                                        @Nullable @Named("limit") Integer limit)
+            throws NotFoundException {
+
+        logger.info("listforServer with ID: " + serverId);
+
+        limit = limit == null ? DEFAULT_LIST_LIMIT : limit;
+        Query<OrderEntity> query = ofy().load().type(OrderEntity.class).filter("serverId", serverId).limit(limit);
+
+        if (cursor != null) {
+            query = query.startAt(Cursor.fromWebSafeString(cursor));
+            logger.info("cursor not null");
+        }
+        QueryResultIterator<OrderEntity> queryIterator = query.iterator();
+        List<OrderEntity> orderEntityList = new ArrayList<OrderEntity>(limit);
+        while (queryIterator.hasNext()) {
+            orderEntityList.add(queryIterator.next());
+        }
+
+        return CollectionResponse.<OrderEntity>builder().setItems(orderEntityList).setNextPageToken(queryIterator.getCursor().toWebSafeString()).build();
+    }
 }
