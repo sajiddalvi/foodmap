@@ -1,9 +1,11 @@
 package com.tekdi.foodmap;
 
 import android.app.ListActivity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,24 +28,40 @@ public class ListOrderActivity extends ListActivity {
 
         Intent intent = getIntent();
 
-        String orderId = intent.getStringExtra("orderId");
-        String menuId = intent.getStringExtra("menuId");
+        Long orderId = Long.parseLong(intent.getStringExtra("orderId"));
+        Long orderServerId = Long.parseLong(intent.getStringExtra("serverId"));
+        Long menuId = Long.parseLong(intent.getStringExtra("menuId"));
         String finder = intent.getStringExtra("finder");
-        String state = intent.getStringExtra("state");
+        Integer state = Integer.parseInt(intent.getStringExtra("state"));
 
         serverId = Long.parseLong(Prefs.getServeIdPref(this));
 
         Log.v("sajid","ListOrderActivity:orderId="+orderId+","
+                       + "orderServerId="+orderServerId+","
                        + "menuId="+menuId+","
                        + "finder="+finder+","
                        + "state="+state
                         );
 
-        if (serverId != 0) {
-            Log.v("sajid","executing listorder");
+        if (serverId == orderServerId) {
+            Log.v("sajid","executing server listorder");
             ListOrdersEndpointAsyncTask l = new ListOrdersEndpointAsyncTask(this);
             l.setServerId(serverId);
             l.execute();
+        } else {
+            Log.v("sajid","executing finder listorder");
+            int limit = 10;
+            List<OrderEntity> ol = new ArrayList<OrderEntity>(limit);
+
+            OrderEntity order = new OrderEntity();
+            order.setId(orderId);
+            order.setServerId(orderServerId);
+            order.setMenuId(menuId);
+            order.setFinderDevRegId(finder);
+            order.setOrderState(state);
+            ol.add(order);
+
+            showOrder(ol);
         }
     }
 
@@ -63,6 +81,14 @@ public class ListOrderActivity extends ListActivity {
         switch(item.getItemId()) {
             case R.id.order_list_refresh:
                 Log.v("sajid","Refresh List Order");
+                if (serverId != 0) {
+                    Log.v("sajid","refreshing listorder");
+                    ListOrdersEndpointAsyncTask task = new ListOrdersEndpointAsyncTask(this);
+                    task.setServerId(serverId);
+                    task.execute();
+                }
+
+                break;
 
         }
         return super.onOptionsItemSelected(item);
@@ -72,12 +98,12 @@ public class ListOrderActivity extends ListActivity {
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
 
-        if (serverId != 0) {
-            Log.v("sajid","refreshing listorder");
-            ListOrdersEndpointAsyncTask task = new ListOrdersEndpointAsyncTask(this);
-            task.setServerId(serverId);
-            task.execute();
-        }
+        Log.v("sajid","confirming order");
+
+        OrderEntity selectedOrder = orderList.get(position);
+
+        new ConfirmOrderEndpointAsyncTask().execute(new Pair<Context, OrderEntity>(this, selectedOrder));
+
 
         /*
         String item = (String) getListAdapter().getItem(position);

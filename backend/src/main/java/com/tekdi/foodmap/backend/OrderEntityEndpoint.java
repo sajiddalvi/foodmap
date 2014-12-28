@@ -96,12 +96,13 @@ public class OrderEntityEndpoint {
         Sender sender = new Sender(API_KEY);
 
         Message msg = new Message.Builder()
+                .addData("myMessageType", "new_order_to_server")
                 .addData("orderId", orderEntity.getId().toString())
+                .addData("serverId", orderEntity.getServerId().toString())
                 .addData("menuId", orderEntity.getMenuId().toString())
                 .addData("finder", orderEntity.getFinderDevRegId().toString())
                 .addData("state", orderEntity.getOrderState().toString())
                 .build();
-
 
 
         //Message msg = new Message.Builder().addData("message", orderEntity.toString()).build();
@@ -147,8 +148,45 @@ public class OrderEntityEndpoint {
     public OrderEntity update(@Named("id") Long id, OrderEntity orderEntity) throws NotFoundException {
         // TODO: You should validate your ID parameter against your resource's ID here.
         checkExists(id);
+
+
+        Sender sender = new Sender(API_KEY);
+
+        Message msg = new Message.Builder()
+                .addData("myMessageType", "confirm_order_to_finder")
+                .addData("orderId", orderEntity.getId().toString())
+                .addData("serverId", orderEntity.getServerId().toString())
+                .addData("menuId", orderEntity.getMenuId().toString())
+                .addData("finder", orderEntity.getFinderDevRegId().toString())
+                .addData("state", orderEntity.getOrderState().toString())
+                .build();
+
+        try {
+            Result result = sender.send(msg, orderEntity.getFinderDevRegId(), 5);
+
+            if (result.getMessageId() != null) {
+                logger.info("Message sent to " + orderEntity.getFinderDevRegId());
+            } else {
+                String error = result.getErrorCodeName();
+                if (error.equals(Constants.ERROR_NOT_REGISTERED)) {
+                    orderEntity.setOrderState(-1);
+                    logger.warning("Registration Id " + orderEntity.getFinderDevRegId() + " no longer registered with GCM, removing from datastore");
+                } else {
+                    orderEntity.setOrderState(-2);
+                    logger.warning("Error when sending message : " + error);
+                }
+
+            }
+
+        } catch (java.io.IOException e) {
+            orderEntity.setOrderState(-3);
+            logger.info ("Could not send order ");
+
+        }
+
         ofy().save().entity(orderEntity).now();
         logger.info("Updated OrderEntity: " + orderEntity);
+
         return ofy().load().entity(orderEntity).now();
     }
 
