@@ -7,11 +7,12 @@
     <string name="serve_button_text">Serve Local Food</string>
     <string name="find_button_text">Find Local Food</string>
     <string name="title_activity_serve">Serve Food</string>
+    <string name="title_activity_edit_server">Edit Server</string>
     <string name="server_name_label">Name</string>
     <string name="server_phone_label">Phone</string>
     <string name="server_address_label">Address</string>
     <string name="server_cusine_label">Cuisine</string>
-    <string name="server_setup_button">Setup Server</string>
+    <string name="server_setup_button">Edit Server</string>
     <string name="title_activity_find">Find Food</string>
     <string name="title_activity_add_menu">Add Menu</string>
     <string name="menu_name_label">Name</string>
@@ -25,6 +26,7 @@
     <string name="preference_server_id_key">preference_file_server_id</string>
     <string name="order_menu">Order</string>
     <string name="order_confirm">Confirm</string>
+    <string name="done">Done</string>
     <string name="title_activity_order">OrderActivity</string>
     <string name="title_activity_list_order">ListOrderActivity</string>
     <string name="order_list_refresh">Refresh</string>

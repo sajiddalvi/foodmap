@@ -13,17 +13,18 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if (Prefs.getServeIdPref(this) !=  "") {
-            Intent intent = new Intent(this, ServeActivity.class);
-            startActivity(intent);
-        }
-
         new GcmRegistrationAsyncTask().execute(this);
     }
 
     public void onServeButtonClick(View v) {
-        Intent intent = new Intent(this, ServeActivity.class);
-        startActivity(intent);
+
+        if (Prefs.getServeIdPref(this) == "") {
+            Intent intent = new Intent(this, EditServerActivity.class);
+            startActivity(intent);
+        } else {
+            Intent intent = new Intent(this, ServeActivity.class);
+            startActivity(intent);
+        }
     }
 
     public void onFindButtonClick(View v) {

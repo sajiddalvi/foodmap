@@ -1,7 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" tools:context=".MainActivity"
-    android:gravity="center_horizontal">
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
 
     <LinearLayout
         android:orientation="vertical"
@@ -21,13 +21,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/menu_name_label"
-                android:id="@+id/menu_name_label" />
+                android:text="@string/server_name_label"
+                android:id="@+id/server_name_label" />
 
             <EditText
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/menu_name_text" />
+                android:id="@+id/server_name_text" />
 
         </LinearLayout>
 
@@ -41,34 +41,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/menu_description_label"
-                android:id="@+id/menu_description_label" />
+                android:text="@string/server_phone_label"
+                android:id="@+id/server_phone_label" />
 
             <EditText
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/menu_description_text" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/menu_quantity_label"
-                android:id="@+id/menu_quantity_label" />
-
-            <EditText
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:inputType="phone"
                 android:ems="10"
-                android:id="@+id/menu_quantity_text" />
+                android:id="@+id/server_phone_text" />
+
         </LinearLayout>
 
         <LinearLayout
@@ -81,15 +63,56 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/menu_price_label"
-                android:id="@+id/menu_price_label" />
+                android:text="@string/server_address_label"
+                android:id="@+id/server_address_label" />
 
             <EditText
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/menu_price_text" />
+                android:inputType="textPostalAddress"
+                android:ems="10"
+                android:id="@+id/server_address_text" />
         </LinearLayout>
 
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/server_cusine_label"
+                android:id="@+id/server_cusine_label" />
+
+            <RadioGroup
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/cuisineRadioGroup">
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Italian"
+                    android:id="@+id/italianRadioButton" />
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Indian"
+                    android:id="@+id/indianRadioButton" />
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="American"
+                    android:id="@+id/americanRadioButton" />
+
+            </RadioGroup>
+
+        </LinearLayout>
 
         <LinearLayout
             android:orientation="horizontal"
@@ -100,9 +123,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/done"
-                android:id="@+id/menu_add_button"
+                android:id="@+id/server_setup_button"
                 android:layout_marginTop="20dp"
-                android:onClick="onMenuAddButtonClick" />
+                android:onClick="onServerSetupButtonClick" />
         </LinearLayout>
 
     </LinearLayout>
