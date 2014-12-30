@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -41,6 +40,7 @@ public class ListMenuActivity extends ListActivity implements Serializable {
             l.setServerId(serverId);
             l.execute();
         }
+
     }
 
     @Override
@@ -88,21 +88,18 @@ public class ListMenuActivity extends ListActivity implements Serializable {
         intent.putParcelableArrayListExtra("com.tekdi.foodmap.ParcelableOrder", orderList);
         startActivity(intent);
 
-
-/*
-            String serverId = Prefs.getServeIdPref(this);
-            Intent intent = new Intent(this, OrderActivity.class);
-        intent.putExtra("serverId", Long.parseLong(serverId));
-            intent.putExtra("serverId", Long.parseLong(serverId));
-            startActivity(intent);
-*/
-
     }
 
     public void showMenu(List<MenuEntity> result) {
-        ArrayList<String> values = new ArrayList<String>();;
+        ArrayList<String> values = new ArrayList<String>();
 
+        ArrayList<MenuEntity>menuEntities = new ArrayList<MenuEntity>();
 
+        for (MenuEntity q : result) {
+            menuEntities.add(q);
+        }
+
+/*
         for (MenuEntity q : result) {
             menuList.add(q);
             values.add(q.getName());
@@ -110,6 +107,13 @@ public class ListMenuActivity extends ListActivity implements Serializable {
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1, values);
+        setListAdapter(adapter);
+
+*/
+
+        ListMenuRowAdapter adapter = new ListMenuRowAdapter(this, R.layout.list_menu_row,
+                menuEntities);
+
         setListAdapter(adapter);
 
     }
