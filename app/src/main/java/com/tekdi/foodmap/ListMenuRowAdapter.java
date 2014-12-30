@@ -56,7 +56,7 @@ public class ListMenuRowAdapter extends ArrayAdapter<MenuEntity> {
         MenuEntity myList = data.get(position);
 
         holder.name.setText(myList.getName());
-        holder.quantity.setText(myList.getQuantity().toString());
+        holder.quantity.setText(myList.getQuantity().toString()+" left");
         String currency_symbol = "$";
         holder.price.setText(currency_symbol + myList.getPrice().toString());
         holder.description.setText(myList.getDescription());

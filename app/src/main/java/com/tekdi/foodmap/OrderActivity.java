@@ -27,10 +27,7 @@ public class OrderActivity extends ListActivity {
 
             Intent i = this.getIntent();
 
-
-
-             orders = i.getParcelableArrayListExtra("com.tekdi.foodmap.ParcelableOrder");
-
+            orders = i.getParcelableArrayListExtra("com.tekdi.foodmap.ParcelableOrder");
 
             Log.v("sajid","in order activity size = "+orders.size());
 

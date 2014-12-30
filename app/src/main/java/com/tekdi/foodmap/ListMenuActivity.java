@@ -67,26 +67,45 @@ public class ListMenuActivity extends ListActivity implements Serializable {
 
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
-        String item = (String) getListAdapter().getItem(position);
-        Toast.makeText(this, item + " selected", Toast.LENGTH_LONG).show();
 
-        MenuEntity m = menuList.get(position);
+        if (serverId != 0) {
 
-        ParcelableOrder p = new ParcelableOrder();
-        p.menuId = m.getId();
-        p.finderDevRegId = Prefs.getDeviceRegIdPref(this);
-        p.serverId = m.getServerId();
-        p.orderState = 0;
-        p.name = m.getName();
-        p.description = m.getDescription();
-        p.quantity = 1;
-        p.price = m.getPrice();
+            MenuEntity m = menuList.get(position);
 
-        orderList.add(p);
+            ParcelableMenu p = new ParcelableMenu();
+            p.menuId = m.getId();
+            p.serverId = m.getServerId();
+            p.name = m.getName();
+            p.description = m.getDescription();
+            p.quantity = m.getQuantity();
+            p.price = m.getPrice();
 
-        Intent intent = new Intent(this, OrderActivity.class);
-        intent.putParcelableArrayListExtra("com.tekdi.foodmap.ParcelableOrder", orderList);
-        startActivity(intent);
+            Intent intent = new Intent(this, EditMenuActivity.class);
+            intent.putExtra("com.tekdi.foodmap.ParcelableMenu", p);
+            startActivity(intent);
+
+        } else {
+            String item = (String) getListAdapter().getItem(position);
+            Toast.makeText(this, item + " selected", Toast.LENGTH_LONG).show();
+
+            MenuEntity m = menuList.get(position);
+
+            ParcelableOrder p = new ParcelableOrder();
+            p.menuId = m.getId();
+            p.finderDevRegId = Prefs.getDeviceRegIdPref(this);
+            p.serverId = m.getServerId();
+            p.orderState = 0;
+            p.name = m.getName();
+            p.description = m.getDescription();
+            p.quantity = 1;
+            p.price = m.getPrice();
+
+            orderList.add(p);
+
+            Intent intent = new Intent(this, OrderActivity.class);
+            intent.putParcelableArrayListExtra("com.tekdi.foodmap.ParcelableOrder", orderList);
+            startActivity(intent);
+        }
 
     }
 
@@ -99,12 +118,12 @@ public class ListMenuActivity extends ListActivity implements Serializable {
             menuEntities.add(q);
         }
 
-/*
+
         for (MenuEntity q : result) {
             menuList.add(q);
-            values.add(q.getName());
+            //values.add(q.getName());
         }
-
+/*
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1, values);
         setListAdapter(adapter);
