@@ -26,30 +26,36 @@ public class ListOrderActivity extends ListActivity {
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
 
+        Log.v("sajid","ListOrderActivity onCreate");
+
         Intent intent = getIntent();
 
-        Long orderId = Long.parseLong(intent.getStringExtra("orderId"));
-        Long orderServerId = Long.parseLong(intent.getStringExtra("serverId"));
-        Long menuId = Long.parseLong(intent.getStringExtra("menuId"));
-        String finder = intent.getStringExtra("finder");
-        Integer state = Integer.parseInt(intent.getStringExtra("state"));
-
+        String intentSeverId = intent.getStringExtra("serverId");
+        Long orderServerId = Long.parseLong(intentSeverId);
         serverId = Long.parseLong(Prefs.getServeIdPref(this));
 
-        Log.v("sajid","ListOrderActivity:orderId="+orderId+","
+        if (serverId.equals(orderServerId)) {
+            Log.v("sajid", "executing server listorder for "+serverId.toString());
+            ListOrdersEndpointAsyncTask l = new ListOrdersEndpointAsyncTask(this);
+            l.setServerId(serverId);
+            l.execute();
+        } else {
+            Log.v("sajid","executing finder listorder");
+
+            Long orderId = Long.parseLong(intent.getStringExtra("orderId"));
+            Long menuId = Long.parseLong(intent.getStringExtra("menuId"));
+            String finder = intent.getStringExtra("finder");
+            Integer state = Integer.parseInt(intent.getStringExtra("state"));
+
+
+            Log.v("sajid","ListOrderActivity:orderId="+orderId+","
                        + "orderServerId="+orderServerId+","
                        + "menuId="+menuId+","
                        + "finder="+finder+","
                        + "state="+state
                         );
 
-        if (serverId == orderServerId) {
-            Log.v("sajid","executing server listorder");
-            ListOrdersEndpointAsyncTask l = new ListOrdersEndpointAsyncTask(this);
-            l.setServerId(serverId);
-            l.execute();
-        } else {
-            Log.v("sajid","executing finder listorder");
+
             int limit = 10;
             List<OrderEntity> ol = new ArrayList<OrderEntity>(limit);
 
@@ -141,6 +147,7 @@ public class ListOrderActivity extends ListActivity {
     public void showOrder(List<OrderEntity> result) {
         ArrayList<String> values = new ArrayList<String>();
 
+        Log.v("sajid","showing order list");
 
         for (OrderEntity q : result) {
             orderList.add(q);

@@ -3,6 +3,7 @@ package com.tekdi.foodmap;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -63,6 +64,14 @@ public class ServeActivity extends Activity {
         String serverId = Prefs.getServeIdPref(this);
         Intent intent = new Intent(this, ListMenuActivity.class);
         intent.putExtra("serverId", Long.parseLong(serverId));
+        startActivity(intent);
+    }
+
+    public void onOrderListButtonClick(View v) {
+        Log.v("sajid","onOrderListButtonClick");
+        String serverId = Prefs.getServeIdPref(this);
+        Intent intent = new Intent(this, ListOrderActivity.class);
+        intent.putExtra("serverId", serverId);
         startActivity(intent);
     }
 }

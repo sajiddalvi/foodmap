@@ -22,11 +22,15 @@ class ListOrdersEndpointAsyncTask extends AsyncTask<Void, Void, List<OrderEntity
     private Long serverId;
 
     ListOrdersEndpointAsyncTask(ListOrderActivity caller) {
+
         this.caller = caller;
+        Log.v("sajid","in ListOrdersEndpointAsyncTask setting up caller");
     }
 
     public void setServerId(Long serverId) {
+
         this.serverId = serverId;
+        Log.v("sajid","setting serverId = "+serverId.toString());
     }
 
     @Override
@@ -50,6 +54,7 @@ class ListOrdersEndpointAsyncTask extends AsyncTask<Void, Void, List<OrderEntity
             return myApiService.listForServer(serverId).execute().getItems();
             //return myApiService.list().execute().getItems();
         } catch (IOException e) {
+            Log.v("sajid", "executing list order returned empty list");
             return Collections.EMPTY_LIST;
         }
     }

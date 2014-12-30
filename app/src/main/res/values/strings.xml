@@ -21,6 +21,7 @@
     <string name="menu_price_label">Price</string>
     <string name="menu_add_button">Add Menu</string>
     <string name="menu_list_button">List Menu</string>
+    <string name="order_list_button">List Orders</string>
     <string name="title_activity_list_menu">List Menu</string>
     <string name="title_activity_edit_menu">Edit Menu</string>
     <string name="preference_file_key">com.tekdi.foodmap.info</string>
