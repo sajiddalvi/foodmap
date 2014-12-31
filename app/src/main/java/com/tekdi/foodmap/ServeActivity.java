@@ -71,7 +71,7 @@ public class ServeActivity extends Activity {
         Log.v("sajid","onOrderListButtonClick");
         String serverId = Prefs.getServeIdPref(this);
         Intent intent = new Intent(this, ListOrderActivity.class);
-        intent.putExtra("serverId", serverId);
+        intent.putExtra("serverId", Long.parseLong(serverId));
         startActivity(intent);
     }
 }

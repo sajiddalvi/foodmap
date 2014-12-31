@@ -17,6 +17,7 @@ public class OrderEntity {
     Long menuId;
     @Index
     Long serverId;
+    @Index
     String finderDevRegId;
     Integer orderState;
 

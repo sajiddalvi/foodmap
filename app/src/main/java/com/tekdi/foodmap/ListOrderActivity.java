@@ -19,9 +19,11 @@ import java.util.List;
 
 public class ListOrderActivity extends ListActivity {
 
-    private Long serverId;
+    private Boolean iAmServer = Boolean.FALSE;
+    private Long myServerId;
+    private String finderDevRegId = "";
+
     private ArrayList<OrderEntity> orderList = new ArrayList<OrderEntity>();
-    //private ArrayList<ParcelableOrder> orderList = new ArrayList<ParcelableOrder>();
 
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -29,45 +31,35 @@ public class ListOrderActivity extends ListActivity {
         Log.v("sajid","ListOrderActivity onCreate");
 
         Intent intent = getIntent();
+        String intentServerIdStr = intent.getStringExtra("serverId");
+        Long intentServerId =new Long(0);
 
-        String intentSeverId = intent.getStringExtra("serverId");
-        Long orderServerId = Long.parseLong(intentSeverId);
-        serverId = Long.parseLong(Prefs.getServeIdPref(this));
+        if (!(intentServerIdStr.equals("")))
+            intentServerId = Long.parseLong(intentServerIdStr);
 
-        if (serverId.equals(orderServerId)) {
-            Log.v("sajid", "executing server listorder for "+serverId.toString());
+        String myServerIdStr = Prefs.getServeIdPref(this);
+        if (myServerIdStr.equals(""))
+            iAmServer = Boolean.FALSE;
+        else {
+            myServerId = Long.parseLong(myServerIdStr);
+            if (myServerId.equals(intentServerId))
+                iAmServer = Boolean.TRUE;
+        }
+
+        if (iAmServer) {
+            Log.v("sajid", "executing server listorder for "+intentServerId.toString());
             ListOrdersEndpointAsyncTask l = new ListOrdersEndpointAsyncTask(this);
-            l.setServerId(serverId);
+            l.setServerId(myServerId);
             l.execute();
         } else {
             Log.v("sajid","executing finder listorder");
-
-            Long orderId = Long.parseLong(intent.getStringExtra("orderId"));
-            Long menuId = Long.parseLong(intent.getStringExtra("menuId"));
-            String finder = intent.getStringExtra("finder");
-            Integer state = Integer.parseInt(intent.getStringExtra("state"));
-
-
-            Log.v("sajid","ListOrderActivity:orderId="+orderId+","
-                       + "orderServerId="+orderServerId+","
-                       + "menuId="+menuId+","
-                       + "finder="+finder+","
-                       + "state="+state
-                        );
-
-
-            int limit = 10;
-            List<OrderEntity> ol = new ArrayList<OrderEntity>(limit);
-
-            OrderEntity order = new OrderEntity();
-            order.setId(orderId);
-            order.setServerId(orderServerId);
-            order.setMenuId(menuId);
-            order.setFinderDevRegId(finder);
-            order.setOrderState(state);
-            ol.add(order);
-
-            showOrder(ol);
+            finderDevRegId = Prefs.getDeviceRegIdPref(this);
+            if (!(finderDevRegId.equals(""))) {
+                ListFinderOrdersEndpointAsyncTask l =
+                        new ListFinderOrdersEndpointAsyncTask(this);
+                l.setFinderDevRegId(finderDevRegId);
+                l.execute();
+            }
         }
     }
 
@@ -86,12 +78,19 @@ public class ListOrderActivity extends ListActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
             case R.id.order_list_refresh:
-                Log.v("sajid","Refresh List Order");
-                if (serverId != 0) {
-                    Log.v("sajid","refreshing listorder");
-                    ListOrdersEndpointAsyncTask task = new ListOrdersEndpointAsyncTask(this);
-                    task.setServerId(serverId);
-                    task.execute();
+                if (iAmServer) {
+                    Log.v("sajid", "refreshing server listorder for "+myServerId);
+                    ListOrdersEndpointAsyncTask l = new ListOrdersEndpointAsyncTask(this);
+                    l.setServerId(myServerId);
+                    l.execute();
+                } else {
+                    Log.v("sajid","refreshing finder listorder");
+                    if (!(finderDevRegId.equals(""))) {
+                        ListFinderOrdersEndpointAsyncTask l =
+                                new ListFinderOrdersEndpointAsyncTask(this);
+                        l.setFinderDevRegId(finderDevRegId);
+                        l.execute();
+                    }
                 }
 
                 break;
@@ -103,45 +102,11 @@ public class ListOrderActivity extends ListActivity {
 
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
-
-        Log.v("sajid","confirming order");
-
-        OrderEntity selectedOrder = orderList.get(position);
-
-        new ConfirmOrderEndpointAsyncTask().execute(new Pair<Context, OrderEntity>(this, selectedOrder));
-
-
-        /*
-        String item = (String) getListAdapter().getItem(position);
-        Toast.makeText(this, item + " selected", Toast.LENGTH_LONG).show();
-
-        MenuEntity m = menuList.get(position);
-
-        ParcelableOrder p = new ParcelableOrder();
-        p.menuId = m.getId();
-        p.finderDevRegId = Prefs.getDeviceRegIdPref(this);
-        p.serverId = m.getServerId();
-        p.orderState = 0;
-        p.name = m.getName();
-        p.description = m.getDescription();
-        p.quantity = 1;
-        p.price = m.getPrice();
-
-        orderList.add(p);
-
-        Intent intent = new Intent(this, OrderActivity.class);
-        intent.putParcelableArrayListExtra("com.tekdi.foodmap.ParcelableOrder", orderList);
-        startActivity(intent);
-*/
-
-/*
-            String serverId = Prefs.getServeIdPref(this);
-            Intent intent = new Intent(this, OrderActivity.class);
-        intent.putExtra("serverId", Long.parseLong(serverId));
-            intent.putExtra("serverId", Long.parseLong(serverId));
-            startActivity(intent);
-*/
-
+        if (iAmServer) {
+            Log.v("sajid", "confirming order");
+            OrderEntity selectedOrder = orderList.get(position);
+            new ConfirmOrderEndpointAsyncTask().execute(new Pair<Context, OrderEntity>(this, selectedOrder));
+        }
     }
 
     public void showOrder(List<OrderEntity> result) {

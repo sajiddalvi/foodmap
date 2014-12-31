@@ -8,7 +8,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.tekdi.foodmap.backend.menuEntityApi.model.MenuEntity;
 
@@ -58,8 +57,9 @@ public class ListMenuActivity extends ListActivity implements Serializable {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
             case R.id.order_menu:
-                Log.v("sajid","Start Order");
-
+                Intent intent = new Intent(this, OrderActivity.class);
+                intent.putParcelableArrayListExtra("com.tekdi.foodmap.ParcelableOrder", orderList);
+                startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -68,25 +68,8 @@ public class ListMenuActivity extends ListActivity implements Serializable {
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
 
-        if (serverId != 0) {
-
-            MenuEntity m = menuList.get(position);
-
-            ParcelableMenu p = new ParcelableMenu();
-            p.menuId = m.getId();
-            p.serverId = m.getServerId();
-            p.name = m.getName();
-            p.description = m.getDescription();
-            p.quantity = m.getQuantity();
-            p.price = m.getPrice();
-
-            Intent intent = new Intent(this, EditMenuActivity.class);
-            intent.putExtra("com.tekdi.foodmap.ParcelableMenu", p);
-            startActivity(intent);
-
-        } else {
-            String item = (String) getListAdapter().getItem(position);
-            Toast.makeText(this, item + " selected", Toast.LENGTH_LONG).show();
+        String myServerIdStr = Prefs.getServeIdPref(this);
+        if (myServerIdStr.equals("")) {
 
             MenuEntity m = menuList.get(position);
 
@@ -105,6 +88,22 @@ public class ListMenuActivity extends ListActivity implements Serializable {
             Intent intent = new Intent(this, OrderActivity.class);
             intent.putParcelableArrayListExtra("com.tekdi.foodmap.ParcelableOrder", orderList);
             startActivity(intent);
+        } else {
+
+            MenuEntity m = menuList.get(position);
+
+            ParcelableMenu p = new ParcelableMenu();
+            p.menuId = m.getId();
+            p.serverId = m.getServerId();
+            p.name = m.getName();
+            p.description = m.getDescription();
+            p.quantity = m.getQuantity();
+            p.price = m.getPrice();
+
+            Intent intent = new Intent(this, EditMenuActivity.class);
+            intent.putExtra("com.tekdi.foodmap.ParcelableMenu", p);
+            startActivity(intent);
+
         }
 
     }

@@ -279,4 +279,31 @@ public class OrderEntityEndpoint {
 
         return CollectionResponse.<OrderEntity>builder().setItems(orderEntityList).setNextPageToken(queryIterator.getCursor().toWebSafeString()).build();
     }
+
+    @ApiMethod(
+            name = "listForFinder",
+            path = "orderEntityForFinder/{finderDevRegId}",
+            httpMethod = ApiMethod.HttpMethod.GET)
+    public CollectionResponse<OrderEntity> listForFinder(@Named("finderDevRegId") String finderDevRegId,
+                                                         @Nullable @Named("cursor") String cursor,
+                                                         @Nullable @Named("limit") Integer limit)
+            throws NotFoundException {
+
+        logger.info("listforFinder with ID: " + finderDevRegId);
+
+        limit = limit == null ? DEFAULT_LIST_LIMIT : limit;
+        Query<OrderEntity> query = ofy().load().type(OrderEntity.class).filter("finderDevRegId", finderDevRegId).limit(limit);
+
+        if (cursor != null) {
+            query = query.startAt(Cursor.fromWebSafeString(cursor));
+            logger.info("cursor not null");
+        }
+        QueryResultIterator<OrderEntity> queryIterator = query.iterator();
+        List<OrderEntity> orderEntityList = new ArrayList<OrderEntity>(limit);
+        while (queryIterator.hasNext()) {
+            orderEntityList.add(queryIterator.next());
+        }
+
+        return CollectionResponse.<OrderEntity>builder().setItems(orderEntityList).setNextPageToken(queryIterator.getCursor().toWebSafeString()).build();
+    }
 }
