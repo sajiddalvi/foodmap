@@ -259,6 +259,7 @@ public class FindActivity extends FragmentActivity implements
 
                 Intent intent = new Intent(this, ListMenuActivity.class);
                 intent.putExtra("serverId", serverId);
+                intent.putExtra("serverName", sm.s.getName());
 
                 startActivity(intent);
             }

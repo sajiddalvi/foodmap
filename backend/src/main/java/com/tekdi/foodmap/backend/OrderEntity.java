@@ -19,6 +19,7 @@ public class OrderEntity {
     Long serverId;
     @Index
     String finderDevRegId;
+    String serverName;
     Integer orderState;
     String menuName;
     Integer quantity;
@@ -40,6 +41,8 @@ public class OrderEntity {
         return finderDevRegId;
     }
 
+    public String getServerName() { return serverName; }
+
     public Integer getOrderState() {
         return orderState;
     }
@@ -49,6 +52,7 @@ public class OrderEntity {
     public Integer getQuantity() { return quantity; }
 
     public Float getPrice() { return price; }
+
 
     public void setId(Long id) {
         this.id = id;
@@ -65,6 +69,8 @@ public class OrderEntity {
     public void setFinderDevRegId(String finderDevRegId) {
         this.finderDevRegId = finderDevRegId;
     }
+
+    public void setServerName(String serverName) { this.serverName = serverName; }
 
     public void setOrderState(Integer orderState) {
         this.orderState = orderState;

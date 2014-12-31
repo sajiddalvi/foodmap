@@ -21,17 +21,19 @@ import java.util.List;
 public class ListMenuActivity extends ListActivity implements Serializable {
 
     private Long serverId;
+    private String serverName;
     private ArrayList<MenuEntity> menuList = new ArrayList<MenuEntity>();
     private ArrayList<ParcelableOrder> orderList = new ArrayList<ParcelableOrder>();
 
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
 
+        menuList.clear();
+
         Intent intent = getIntent();
-
-        String fName = intent.getStringExtra("fname");
-
         serverId = intent.getLongExtra("serverId",0);
+        serverName = intent.getStringExtra("serverName");
+
 
         if (serverId != 0) {
             Log.v("sajid","executing listmenu");
@@ -77,6 +79,7 @@ public class ListMenuActivity extends ListActivity implements Serializable {
             p.menuId = m.getId();
             p.finderDevRegId = Prefs.getDeviceRegIdPref(this);
             p.serverId = m.getServerId();
+            p.serverName = serverName;
             p.orderState = 0;
             p.name = m.getName();
             p.description = m.getDescription();
@@ -84,6 +87,8 @@ public class ListMenuActivity extends ListActivity implements Serializable {
             p.price = m.getPrice();
 
             orderList.add(p);
+
+            Log.v("sajid","ListMenuActivity:onClick severName ="+serverName);
 
             Intent intent = new Intent(this, OrderActivity.class);
             intent.putParcelableArrayListExtra("com.tekdi.foodmap.ParcelableOrder", orderList);
@@ -109,28 +114,15 @@ public class ListMenuActivity extends ListActivity implements Serializable {
     }
 
     public void showMenu(List<MenuEntity> result) {
-        ArrayList<String> values = new ArrayList<String>();
 
-        ArrayList<MenuEntity>menuEntities = new ArrayList<MenuEntity>();
-
-        for (MenuEntity q : result) {
-            menuEntities.add(q);
-        }
-
+        menuList.clear();
 
         for (MenuEntity q : result) {
             menuList.add(q);
-            //values.add(q.getName());
         }
-/*
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, values);
-        setListAdapter(adapter);
-
-*/
 
         ListMenuRowAdapter adapter = new ListMenuRowAdapter(this, R.layout.list_menu_row,
-                menuEntities);
+                menuList);
 
         setListAdapter(adapter);
 

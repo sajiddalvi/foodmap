@@ -10,6 +10,7 @@ public class ParcelableOrder implements Parcelable {
     Long menuId;
     Long serverId;
     String finderDevRegId;
+    String serverName;
     Integer orderState;
     String name;
     String description;
@@ -22,6 +23,7 @@ public class ParcelableOrder implements Parcelable {
         this.menuId = in.readLong();
         this.serverId = in.readLong();
         this.finderDevRegId = in.readString();
+        this.serverName = in.readString();
         this.orderState = in.readInt();
         this.name = in.readString();
         this.description = in.readString();
@@ -33,6 +35,7 @@ public class ParcelableOrder implements Parcelable {
         dest.writeLong(menuId);
         dest.writeLong(serverId);
         dest.writeString(finderDevRegId);
+        dest.writeString(serverName);
         dest.writeInt(orderState);
         dest.writeString(name);
         dest.writeString(description);

@@ -9,7 +9,6 @@ import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.tekdi.foodmap.backend.orderEntityApi.model.OrderEntity;
@@ -109,18 +108,22 @@ public class ListOrderActivity extends ListActivity {
         }
     }
 
+
     public void showOrder(List<OrderEntity> result) {
-        ArrayList<String> values = new ArrayList<String>();
 
         Log.v("sajid","showing order list");
 
+        orderList.clear();
+        
         for (OrderEntity q : result) {
             orderList.add(q);
-            values.add(q.getMenuId().toString());
         }
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, values);
+        ListOrderRowAdapter adapter = new ListOrderRowAdapter(this, R.layout.list_order_row,
+                orderList);
+
+        adapter.setIAmServer(iAmServer);
+
         setListAdapter(adapter);
 
     }

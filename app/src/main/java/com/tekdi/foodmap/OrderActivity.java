@@ -8,7 +8,6 @@ import android.util.Log;
 import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
 
 import com.tekdi.foodmap.backend.orderEntityApi.model.OrderEntity;
 
@@ -19,6 +18,7 @@ import java.util.ArrayList;
  */
 public class OrderActivity extends ListActivity {
     private ArrayList<ParcelableOrder>orders;
+    private ArrayList<OrderEntity>orderList = new ArrayList<OrderEntity>();
 
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -29,14 +29,20 @@ public class OrderActivity extends ListActivity {
 
             orders = i.getParcelableArrayListExtra("com.tekdi.foodmap.ParcelableOrder");
 
-            Log.v("sajid","in order activity size = "+orders.size());
+            OrderEntity o = new OrderEntity();
+            o.setMenuId(orders.get(0).menuId);
+            o.setServerId(orders.get(0).serverId);
+            o.setFinderDevRegId(orders.get(0).finderDevRegId);
+            o.setServerName(orders.get(0).serverName);
+            o.setOrderState(0);
+            o.setMenuName(orders.get(0).name);
+            o.setPrice(orders.get(0).price);
+            o.setQuantity(orders.get(0).quantity);
 
-            for(int index = 0; index < orders.size(); index++){
-                Log.v("sajid","index="+index);
-                Log.v("sajid","menuId="+orders.get(index).menuId);
-            }
+            orderList.add(o);
 
             showOrder();
+
         } catch(Exception e){
             e.printStackTrace();
         }
@@ -63,10 +69,13 @@ public class OrderActivity extends ListActivity {
                 o.setMenuId(orders.get(0).menuId);
                 o.setServerId(orders.get(0).serverId);
                 o.setFinderDevRegId(orders.get(0).finderDevRegId);
+                o.setServerName(orders.get(0).serverName);
                 o.setOrderState(0);
                 o.setMenuName(orders.get(0).name);
                 o.setPrice(orders.get(0).price);
                 o.setQuantity(orders.get(0).quantity);
+
+                Log.v("sajid","OrderActivity:onConfirm serverName="+o.getServerName());
 
                 new OrderEndpointAsyncTask().execute(new Pair<Context, OrderEntity>(this, o));
 
@@ -78,15 +87,10 @@ public class OrderActivity extends ListActivity {
 
 
     public void showOrder() {
-        ArrayList<String> values = new ArrayList<String>();
 
+        ListOrderRowAdapter adapter = new ListOrderRowAdapter(this, R.layout.list_order_row,
+                orderList);
 
-        for (ParcelableOrder o : orders) {
-            values.add(o.name);
-        }
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, values);
         setListAdapter(adapter);
 
     }
