@@ -51,9 +51,7 @@ public class GcmIntentService extends IntentService {
                 Intent resultIntent = new Intent(this, ListOrderActivity.class);
                 resultIntent.putExtra("orderId",extras.getString("orderId"));
                 resultIntent.putExtra("serverId",extras.getString("serverId"));
-                resultIntent.putExtra("menuId",extras.getString("menuId"));
                 resultIntent.putExtra("finder", extras.getString("finder"));
-                resultIntent.putExtra("state",extras.getString("state"));
 
                 PendingIntent resultPendingIntent =
                         PendingIntent.getActivity(
@@ -63,7 +61,7 @@ public class GcmIntentService extends IntentService {
                                 PendingIntent.FLAG_UPDATE_CURRENT
                         );
 
-                Log.v("sajid","sending notifictaion for ListOrderActivity "+extras.getString("message"));
+                Log.v("sajid","sending notification for ListOrderActivity "+extras.getString("message"));
 
                 mBuilder.setContentIntent(resultPendingIntent);
 

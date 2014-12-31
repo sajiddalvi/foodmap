@@ -64,6 +64,9 @@ public class OrderActivity extends ListActivity {
                 o.setServerId(orders.get(0).serverId);
                 o.setFinderDevRegId(orders.get(0).finderDevRegId);
                 o.setOrderState(0);
+                o.setMenuName(orders.get(0).name);
+                o.setPrice(orders.get(0).price);
+                o.setQuantity(orders.get(0).quantity);
 
                 new OrderEndpointAsyncTask().execute(new Pair<Context, OrderEntity>(this, o));
 

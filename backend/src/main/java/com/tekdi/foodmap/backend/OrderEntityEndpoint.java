@@ -99,9 +99,7 @@ public class OrderEntityEndpoint {
                 .addData("myMessageType", "new_order_to_server")
                 .addData("orderId", orderEntity.getId().toString())
                 .addData("serverId", orderEntity.getServerId().toString())
-                .addData("menuId", orderEntity.getMenuId().toString())
                 .addData("finder", orderEntity.getFinderDevRegId().toString())
-                .addData("state", orderEntity.getOrderState().toString())
                 .build();
 
 
@@ -156,9 +154,7 @@ public class OrderEntityEndpoint {
                 .addData("myMessageType", "confirm_order_to_finder")
                 .addData("orderId", orderEntity.getId().toString())
                 .addData("serverId", orderEntity.getServerId().toString())
-                .addData("menuId", orderEntity.getMenuId().toString())
                 .addData("finder", orderEntity.getFinderDevRegId().toString())
-                .addData("state", orderEntity.getOrderState().toString())
                 .build();
 
         try {

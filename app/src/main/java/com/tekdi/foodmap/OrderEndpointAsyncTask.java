@@ -37,7 +37,7 @@ class OrderEndpointAsyncTask extends AsyncTask<Pair<Context, OrderEntity>, Void,
         OrderEntity order = params[0].second;
 
         try {
-            OrderEntity orderEntity =myApiService.insert(order).execute();
+            OrderEntity orderEntity = myApiService.insert(order).execute();
             return "added order";
         } catch (IOException e) {
             return e.getMessage();
