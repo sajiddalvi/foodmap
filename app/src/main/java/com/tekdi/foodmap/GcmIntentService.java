@@ -52,6 +52,7 @@ public class GcmIntentService extends IntentService {
                 resultIntent.putExtra("orderId",extras.getString("orderId"));
                 resultIntent.putExtra("serverId",extras.getString("serverId"));
                 resultIntent.putExtra("finder", extras.getString("finder"));
+                resultIntent.putExtra("notificationId", 861);
 
                 PendingIntent resultPendingIntent =
                         PendingIntent.getActivity(
@@ -66,7 +67,7 @@ public class GcmIntentService extends IntentService {
                 mBuilder.setContentIntent(resultPendingIntent);
 
                 // Sets an ID for the notification
-                int mNotificationId = 001;
+                int mNotificationId = 861;
                 // Gets an instance of the NotificationManager service
                 NotificationManager mNotifyMgr =
                         (NotificationManager) getSystemService(NOTIFICATION_SERVICE);

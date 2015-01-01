@@ -1,6 +1,7 @@
 package com.tekdi.foodmap;
 
 import android.app.ListActivity;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -31,6 +32,14 @@ public class ListOrderActivity extends ListActivity {
 
         Intent intent = getIntent();
         String intentServerIdStr = intent.getStringExtra("serverId");
+        Integer notificationId = intent.getIntExtra("notificationId",0);
+
+        if (notificationId == 861) {
+            NotificationManager mNotifyMgr =
+                    (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            mNotifyMgr.cancel(861);
+        }
+
         Long intentServerId =new Long(0);
 
         if (!(intentServerIdStr.equals("")))
@@ -77,21 +86,7 @@ public class ListOrderActivity extends ListActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
             case R.id.order_list_refresh:
-                if (iAmServer) {
-                    Log.v("sajid", "refreshing server listorder for "+myServerId);
-                    ListOrdersEndpointAsyncTask l = new ListOrdersEndpointAsyncTask(this);
-                    l.setServerId(myServerId);
-                    l.execute();
-                } else {
-                    Log.v("sajid","refreshing finder listorder");
-                    if (!(finderDevRegId.equals(""))) {
-                        ListFinderOrdersEndpointAsyncTask l =
-                                new ListFinderOrdersEndpointAsyncTask(this);
-                        l.setFinderDevRegId(finderDevRegId);
-                        l.execute();
-                    }
-                }
-
+                refreshOrder();
                 break;
 
         }
@@ -104,17 +99,34 @@ public class ListOrderActivity extends ListActivity {
         if (iAmServer) {
             Log.v("sajid", "confirming order");
             OrderEntity selectedOrder = orderList.get(position);
-            new ConfirmOrderEndpointAsyncTask().execute(new Pair<Context, OrderEntity>(this, selectedOrder));
+            new ConfirmOrderEndpointAsyncTask(this).execute(new Pair<Context, OrderEntity>(this, selectedOrder));
         }
     }
 
+
+    public void refreshOrder() {
+        if (iAmServer) {
+            Log.v("sajid", "refreshing server listorder for "+myServerId);
+            ListOrdersEndpointAsyncTask l = new ListOrdersEndpointAsyncTask(this);
+            l.setServerId(myServerId);
+            l.execute();
+        } else {
+            Log.v("sajid","refreshing finder listorder");
+            if (!(finderDevRegId.equals(""))) {
+                ListFinderOrdersEndpointAsyncTask l =
+                        new ListFinderOrdersEndpointAsyncTask(this);
+                l.setFinderDevRegId(finderDevRegId);
+                l.execute();
+            }
+        }
+    }
 
     public void showOrder(List<OrderEntity> result) {
 
         Log.v("sajid","showing order list");
 
         orderList.clear();
-        
+
         for (OrderEntity q : result) {
             orderList.add(q);
         }
