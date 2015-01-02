@@ -17,6 +17,11 @@ import java.io.IOException;
 class MenuEntityEndpointAsyncTask extends AsyncTask<Pair<Context, MenuEntity>, Void, String> {
     private static MenuEntityApi myApiService = null;
     private Context context;
+    private AddMenuActivity caller;
+
+    MenuEntityEndpointAsyncTask(AddMenuActivity caller) {
+        this.caller = caller;
+    }
 
     @Override
     protected String doInBackground(Pair<Context, MenuEntity>... params) {
@@ -47,5 +52,6 @@ class MenuEntityEndpointAsyncTask extends AsyncTask<Pair<Context, MenuEntity>, V
     @Override
     protected void onPostExecute(String result) {
         Toast.makeText(context, result, Toast.LENGTH_LONG).show();
+        caller.doneAddingMenu();
     }
 }

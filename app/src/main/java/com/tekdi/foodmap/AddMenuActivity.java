@@ -44,7 +44,12 @@ public class AddMenuActivity extends Activity {
             menu.setServerId(Long.parseLong(serverId));
         }
 
-        new MenuEntityEndpointAsyncTask().execute(new Pair<Context, MenuEntity>(this, menu));
+        new MenuEntityEndpointAsyncTask(this).execute(new Pair<Context, MenuEntity>(this, menu));
 
     }
+
+    public void doneAddingMenu() {
+        finish();
+    }
+
 }

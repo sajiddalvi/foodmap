@@ -8,7 +8,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 public class ServeActivity extends Activity {
 
@@ -38,12 +37,6 @@ public class ServeActivity extends Activity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
-        }
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_search) {
-            Toast.makeText(this, item + " selected", Toast.LENGTH_LONG).show();
             return true;
         }
 

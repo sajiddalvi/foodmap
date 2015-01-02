@@ -4,9 +4,13 @@ import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
 
 import com.tekdi.foodmap.backend.menuEntityApi.model.MenuEntity;
@@ -24,6 +28,7 @@ public class ListMenuActivity extends ListActivity implements Serializable {
     private String serverName;
     private ArrayList<MenuEntity> menuList = new ArrayList<MenuEntity>();
     private ArrayList<ParcelableOrder> orderList = new ArrayList<ParcelableOrder>();
+    ListMenuRowAdapter adapter = null;
 
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -34,42 +39,55 @@ public class ListMenuActivity extends ListActivity implements Serializable {
         serverId = intent.getLongExtra("serverId",0);
         serverName = intent.getStringExtra("serverName");
 
+        registerForContextMenu(getListView());
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
         if (serverId != 0) {
             Log.v("sajid","executing listmenu");
             ListMenuEndpointAsyncTask l = new ListMenuEndpointAsyncTask(this);
             l.setServerId(serverId);
             l.execute();
         }
-
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_list, menu);
-        return true;
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_list, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
+
         return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
         switch(item.getItemId()) {
-            case R.id.order_menu:
+            case R.id.action_new:
+                /*
                 Intent intent = new Intent(this, OrderActivity.class);
                 intent.putParcelableArrayListExtra("com.tekdi.foodmap.ParcelableOrder", orderList);
                 startActivity(intent);
+                */
+                Intent intent = new Intent(this, AddMenuActivity.class);
+                startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
+
     }
 
 
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
 
+        /*
         String myServerIdStr = Prefs.getServeIdPref(this);
         if (myServerIdStr.equals("")) {
 
@@ -110,7 +128,44 @@ public class ListMenuActivity extends ListActivity implements Serializable {
             startActivity(intent);
 
         }
+        */
+    }
 
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v,
+                                    ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.context_menu, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+        switch (item.getItemId()) {
+            case R.id.menu_edit:
+
+                MenuEntity m = menuList.get(info.position);
+
+                ParcelableMenu p = new ParcelableMenu();
+                p.menuId = m.getId();
+                p.serverId = m.getServerId();
+                p.name = m.getName();
+                p.description = m.getDescription();
+                p.quantity = m.getQuantity();
+                p.price = m.getPrice();
+
+                Intent intent = new Intent(this, EditMenuActivity.class);
+                intent.putExtra("com.tekdi.foodmap.ParcelableMenu", p);
+                startActivity(intent);
+
+                return true;
+            case R.id.menu_delete:
+
+                return true;
+            default:
+                return super.onContextItemSelected(item);
+        }
     }
 
     public void showMenu(List<MenuEntity> result) {
@@ -121,10 +176,10 @@ public class ListMenuActivity extends ListActivity implements Serializable {
             menuList.add(q);
         }
 
-        ListMenuRowAdapter adapter = new ListMenuRowAdapter(this, R.layout.list_menu_row,
+        adapter = new ListMenuRowAdapter(this, R.layout.list_menu_row,
                 menuList);
 
         setListAdapter(adapter);
-
     }
+
 }

@@ -34,6 +34,10 @@
     <string name="order_list_refresh">Refresh</string>
     <string name="currency_symbol">$</string>
     <string name="list_order_button_text">Check Order</string>
+    <string name="action_accept_menu">Select Menu Item</string>
+    <string name="action_new_menu">Add Menu Item</string>
+    <string name="action_edit_menu">Edit Menu Item</string>
+    <string name="action_remove_menu">Remove Menu Item</string>
 
 
 </resources>

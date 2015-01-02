@@ -80,8 +80,12 @@ public class EditMenuActivity extends Activity {
                 menu.setServerId(Long.parseLong(serverId));
             }
 
-            new MenuEntityEditEndpointAsyncTask().execute(new Pair<Context, MenuEntity>(this, menu));
+            new MenuEntityEditEndpointAsyncTask(this).execute(new Pair<Context, MenuEntity>(this, menu));
 
+        }
+
+        public void doneEditingMenu() {
+            finish();
         }
     }
 
