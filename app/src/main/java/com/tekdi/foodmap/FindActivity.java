@@ -143,11 +143,17 @@ public class FindActivity extends FragmentActivity implements
             LatLng currentLocation = new LatLng(lat,lng);
 
             BitmapDescriptor flag=null;
-            if (q.getCuisine().equalsIgnoreCase("indian")) {
+
+            if (q.getCuisine() == null) {
+                flag = BitmapDescriptorFactory.fromResource(R.drawable.ic_launcher);
+            }
+            else if (q.getCuisine().equalsIgnoreCase("indian")) {
                 flag = BitmapDescriptorFactory.fromResource(R.drawable.indian_flag);
             }
             else if (q.getCuisine().equalsIgnoreCase("italian")) {
                     flag = BitmapDescriptorFactory.fromResource(R.drawable.italy_flag);
+            } else {
+                flag = BitmapDescriptorFactory.fromResource(R.drawable.ic_launcher);
             }
 
 

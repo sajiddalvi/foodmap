@@ -8,9 +8,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.util.Pair;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
+import android.widget.Spinner;
 
 import com.tekdi.foodmap.backend.serveFoodEntityApi.model.ServeFoodEntity;
 
@@ -20,14 +22,28 @@ import java.util.List;
 /**
  * Created by fsd017 on 12/27/14.
  */
-public class EditServerActivity extends Activity {
+public class EditServerActivity extends Activity implements OnItemSelectedListener {
+
+    private String cuisineSelected = "";
+    private Long serverId;
+    private Boolean addingNewServer = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_server);
+
+        Spinner spinner = (Spinner) findViewById(R.id.cuisine_spinner);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.cuisine_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(this);
+
+
         if (Prefs.getServeIdPref(this) == "") {
             setTitle("Add Server");
+            addingNewServer = true;
         } else {
             EditText editText = (EditText) findViewById(R.id.server_name_text);
             editText.setText(Prefs.getSERVER_NAME_PREF(this));
@@ -35,19 +51,19 @@ public class EditServerActivity extends Activity {
             editText.setText(Prefs.getSERVER_PHONE_PREF(this));
             editText = (EditText) findViewById(R.id.server_address_text);
             editText.setText(Prefs.getSERVER_ADDRESS_PREF(this));
-            RadioGroup radioCuisineGroup = (RadioGroup) findViewById(R.id.cuisineRadioGroup);
             String cuisine = Prefs.getSERVER_CUISINE_PREF(this);
-
-            int i;
-            for (i=0; i<radioCuisineGroup.getChildCount();i++ ) {
-                RadioButton r = (RadioButton)radioCuisineGroup.getChildAt(i);
-                Log.v("sajid",cuisine+","+r.getText().toString());
-                if (cuisine.equals(r.getText().toString())) {
-                    r.setChecked(true);
-                    break;
-                }
-            }
+            serverId = Long.parseLong(Prefs.getServeIdPref(this));
+            spinner.setSelection(adapter.getPosition(cuisine));
         }
+    }
+
+    public void onItemSelected(AdapterView<?> parent, View view,
+                               int pos, long id) {
+        cuisineSelected = parent.getItemAtPosition(pos).toString();
+    }
+
+    public void onNothingSelected(AdapterView<?> parent) {
+        // Another interface callback
     }
 
     public void onServerSetupButtonClick(View v) {
@@ -61,22 +77,10 @@ public class EditServerActivity extends Activity {
         editText = (EditText) findViewById(R.id.server_address_text);
         String address = editText.getText().toString();
 
-        String cuisine = "";
-
-        RadioGroup radioCuisineGroup = (RadioGroup) findViewById(R.id.cuisineRadioGroup);
-        int selectedId = radioCuisineGroup.getCheckedRadioButtonId();
-        RadioButton radioCuisineButton = (RadioButton) findViewById(selectedId);
-        if (radioCuisineButton != null)
-            cuisine = radioCuisineButton.getText().toString();
-
-        Prefs.setSERVER_NAME_PREF(this, name);
-        Prefs.setSERVER_PHONE_PREF(this, phone);
-        Prefs.setSERVER_ADDRESS_PREF(this, address);
-        Prefs.setSERVER_CUISINE_PREF(this, cuisine);
-
         ServeFoodEntity server = new ServeFoodEntity();
+        server.setId(serverId);
         server.setAddress(address);
-        server.setCuisine(cuisine);
+        server.setCuisine(cuisineSelected);
         server.setName(name);
         server.setPhone(phone);
         Log.v("sajid", "sajid getting reg id " + Prefs.getDeviceRegIdPref(this));
@@ -101,7 +105,23 @@ public class EditServerActivity extends Activity {
             }
         }
 
-        new ServeFoodEntityEndpointAsyncTask().execute(new Pair<Context, ServeFoodEntity>(this, server));
+        if (addingNewServer)
+            new ServeFoodEntityEndpointAsyncTask(this).execute(new Pair<Context, ServeFoodEntity>(this, server));
+        else
+            new ServeFoodEntityEditEndpointAsyncTask(this).execute(new Pair<Context, ServeFoodEntity>(this, server));
+    }
+
+    public void doneEditingServer(ServeFoodEntity result) {
+        if (result != null) {
+            Prefs.setServerIdPref(this, result.getId().toString());
+            Prefs.setSERVER_NAME_PREF(this, result.getName());
+            Prefs.setSERVER_PHONE_PREF(this, result.getPhone());
+            Prefs.setSERVER_ADDRESS_PREF(this, result.getAddress());
+            Prefs.setSERVER_CUISINE_PREF(this, result.getCuisine());
+        } else {
+            Log.v("sajid","EditServerActivity : failed to setup server");
+        }
+        finish();
     }
 
 }

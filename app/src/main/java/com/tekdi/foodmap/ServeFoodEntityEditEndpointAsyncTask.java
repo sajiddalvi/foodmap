@@ -15,12 +15,17 @@ import com.tekdi.foodmap.backend.serveFoodEntityApi.model.ServeFoodEntity;
 
 import java.io.IOException;
 
-class ServeFoodEntityEndpointAsyncTask extends AsyncTask<Pair<Context, ServeFoodEntity>, Void, ServeFoodEntity> {
+/**
+ * Created by fsd017 on 1/2/15.
+ */
+
+class ServeFoodEntityEditEndpointAsyncTask extends AsyncTask<Pair<Context, ServeFoodEntity>, Void, ServeFoodEntity> {
     private static ServeFoodEntityApi myApiService = null;
     private Context context;
     private EditServerActivity caller;
 
-    ServeFoodEntityEndpointAsyncTask(EditServerActivity caller) {
+
+    ServeFoodEntityEditEndpointAsyncTask(EditServerActivity caller) {
         this.caller = caller;
     }
 
@@ -43,12 +48,12 @@ class ServeFoodEntityEndpointAsyncTask extends AsyncTask<Pair<Context, ServeFood
         ServeFoodEntity server = params[0].second;
 
         try {
-            ServeFoodEntity serveFoodEntity =myApiService.insertServeFoodEntity(server).execute();
-            Prefs.setServerIdPref(context,serveFoodEntity.getId().toString());
+            ServeFoodEntity serveFoodEntity =myApiService.update(server.getId(), server).execute();
             return serveFoodEntity;
         } catch (IOException e) {
             Log.v("sajid",e.getMessage());
             return null;
+
         }
     }
 

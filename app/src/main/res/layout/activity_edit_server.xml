@@ -87,30 +87,12 @@
                 android:text="@string/server_cusine_label"
                 android:id="@+id/server_cusine_label" />
 
-            <RadioGroup
-                android:layout_width="wrap_content"
+            <Spinner
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/cuisineRadioGroup">
+                android:id="@+id/cuisine_spinner"
+                />
 
-                <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Italian"
-                    android:id="@+id/italianRadioButton" />
-
-                <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Indian"
-                    android:id="@+id/indianRadioButton" />
-
-                <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="American"
-                    android:id="@+id/americanRadioButton" />
-
-            </RadioGroup>
 
         </LinearLayout>
 

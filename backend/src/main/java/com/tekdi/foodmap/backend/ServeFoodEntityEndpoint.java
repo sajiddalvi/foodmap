@@ -65,7 +65,7 @@ public class ServeFoodEntityEndpoint {
         logger.info("Getting ServeFoodEntity with ID: " + id);
         ServeFoodEntity serveFoodEntityEntity = ObjectifyService.ofy().load().type(ServeFoodEntity.class).id(id).now();
         if (serveFoodEntityEntity == null) {
-            throw new NotFoundException("Could not find MenuEntity with ID: " + id);
+            throw new NotFoundException("Could not find ServeFoodEntity with ID: " + id);
         }
         return serveFoodEntityEntity;
     }
@@ -85,6 +85,35 @@ public class ServeFoodEntityEndpoint {
     }
 
 
+
+    /**
+     * Updates an existing {@code ServeFoodEntity}.
+     *
+     * @param id         the ID of the entity to be updated
+     * @param serverFoodEntity the desired state of the entity
+     * @return the updated version of the entity
+     * @throws NotFoundException if the {@code id} does not correspond to an existing
+     *                           {@code ServeFoodEntity}
+     */
+    @ApiMethod(
+            name = "update",
+            path = "serverFoodEntity/{id}",
+            httpMethod = ApiMethod.HttpMethod.PUT)
+    public ServeFoodEntity update(@Named("id") Long id, ServeFoodEntity serverFoodEntity) throws NotFoundException {
+        // TODO: You should validate your ID parameter against your resource's ID here.
+        checkExists(id);
+        ObjectifyService.ofy().save().entity(serverFoodEntity).now();
+        logger.info("Updated ServerFoodEntity: " + serverFoodEntity);
+        return ObjectifyService.ofy().load().entity(serverFoodEntity).now();
+    }
+
+    private void checkExists(Long id) throws NotFoundException {
+        try {
+            ObjectifyService.ofy().load().type(ServeFoodEntity.class).id(id).safe();
+        } catch (com.googlecode.objectify.NotFoundException e) {
+            throw new NotFoundException("Could not find ServeFoodEntity with ID: " + id);
+        }
+    }
     /**
      * Return a collection of servers
      *
