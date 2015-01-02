@@ -40,9 +40,11 @@ public class ListOrderActivity extends ListActivity {
             mNotifyMgr.cancel(861);
         }
 
+        Log.v("sajid","intentServerIdStr="+intentServerIdStr);
+
         Long intentServerId =new Long(0);
 
-        if (!(intentServerIdStr.equals("")))
+        if ((intentServerIdStr != null)&&(!(intentServerIdStr.equals(""))))
             intentServerId = Long.parseLong(intentServerIdStr);
 
         String myServerIdStr = Prefs.getServeIdPref(this);
