@@ -1,9 +1,11 @@
 package com.tekdi.foodmap;
 
 import android.app.ListActivity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Pair;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
@@ -71,23 +73,17 @@ public class ListMenuActivity extends ListActivity implements Serializable {
 
         switch(item.getItemId()) {
             case R.id.action_new:
-                /*
-                Intent intent = new Intent(this, OrderActivity.class);
-                intent.putParcelableArrayListExtra("com.tekdi.foodmap.ParcelableOrder", orderList);
-                startActivity(intent);
-                */
                 Intent intent = new Intent(this, AddMenuActivity.class);
                 startActivity(intent);
+                break;
         }
         return super.onOptionsItemSelected(item);
 
     }
 
-
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
 
-        /*
         String myServerIdStr = Prefs.getServeIdPref(this);
         if (myServerIdStr.equals("")) {
 
@@ -111,24 +107,7 @@ public class ListMenuActivity extends ListActivity implements Serializable {
             Intent intent = new Intent(this, OrderActivity.class);
             intent.putParcelableArrayListExtra("com.tekdi.foodmap.ParcelableOrder", orderList);
             startActivity(intent);
-        } else {
-
-            MenuEntity m = menuList.get(position);
-
-            ParcelableMenu p = new ParcelableMenu();
-            p.menuId = m.getId();
-            p.serverId = m.getServerId();
-            p.name = m.getName();
-            p.description = m.getDescription();
-            p.quantity = m.getQuantity();
-            p.price = m.getPrice();
-
-            Intent intent = new Intent(this, EditMenuActivity.class);
-            intent.putExtra("com.tekdi.foodmap.ParcelableMenu", p);
-            startActivity(intent);
-
         }
-        */
     }
 
     @Override
@@ -162,6 +141,11 @@ public class ListMenuActivity extends ListActivity implements Serializable {
                 return true;
             case R.id.menu_delete:
 
+                MenuEntity menu = menuList.get(info.position);
+
+                new MenuEntityDeleteEndpointAsyncTask(this).execute(new Pair<Context, MenuEntity>(this, menu));
+
+
                 return true;
             default:
                 return super.onContextItemSelected(item);
@@ -180,6 +164,16 @@ public class ListMenuActivity extends ListActivity implements Serializable {
                 menuList);
 
         setListAdapter(adapter);
+    }
+
+    public void doneDeletingMenu() {
+        if (serverId != 0) {
+            Log.v("sajid","executing listmenu after delete");
+            ListMenuEndpointAsyncTask l = new ListMenuEndpointAsyncTask(this);
+            l.setServerId(serverId);
+            l.execute();
+        }
+
     }
 
 }
