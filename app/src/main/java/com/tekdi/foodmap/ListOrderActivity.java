@@ -7,9 +7,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Pair;
+import android.view.ContextMenu;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.tekdi.foodmap.backend.orderEntityApi.model.OrderEntity;
@@ -28,7 +31,13 @@ public class ListOrderActivity extends ListActivity {
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
 
+
         Log.v("sajid","ListOrderActivity onCreate");
+
+        Log.v("sajid","ListOrderActivity register for context menu");
+
+        registerForContextMenu(getListView());
+
 
         Intent intent = getIntent();
         String intentServerIdStr = intent.getStringExtra("serverId");
@@ -39,8 +48,6 @@ public class ListOrderActivity extends ListActivity {
                     (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
             mNotifyMgr.cancel(861);
         }
-
-        Log.v("sajid","intentServerIdStr="+intentServerIdStr);
 
         Long intentServerId =new Long(0);
 
@@ -71,6 +78,7 @@ public class ListOrderActivity extends ListActivity {
                 l.execute();
             }
         }
+
     }
 
     @Override
@@ -93,6 +101,30 @@ public class ListOrderActivity extends ListActivity {
 
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v,
+                                    ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.context_order, menu);
+
+        Log.v("sajid","create context menu for order");
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        switch (item.getItemId()) {
+            case R.id.order_edit:
+                return true;
+            case R.id.menu_delete:
+                orderList.remove(info.position);
+                return true;
+            default:
+                return super.onContextItemSelected(item);
+        }
     }
 
 

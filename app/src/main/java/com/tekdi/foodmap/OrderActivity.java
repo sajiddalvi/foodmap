@@ -1,13 +1,21 @@
 package com.tekdi.foodmap;
 
+import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Pair;
+import android.view.ContextMenu;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.NumberPicker;
+import android.widget.RelativeLayout;
 
 import com.tekdi.foodmap.backend.orderEntityApi.model.OrderEntity;
 
@@ -18,26 +26,28 @@ import java.util.ArrayList;
  */
 public class OrderActivity extends ListActivity {
     private ArrayList<ParcelableOrder>orders;
-    private ArrayList<OrderEntity>orderList = new ArrayList<OrderEntity>();
+    private static ArrayList<OrderEntity>orderList = new ArrayList<OrderEntity>();
+    private ListOrderRowAdapter adapter;
 
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
+
 
         try{
 
             Intent i = this.getIntent();
 
-            orders = i.getParcelableArrayListExtra("com.tekdi.foodmap.ParcelableOrder");
+            ParcelableOrder p = (ParcelableOrder) i.getParcelableExtra("com.tekdi.foodmap.ParcelableOrder");
 
             OrderEntity o = new OrderEntity();
-            o.setMenuId(orders.get(0).menuId);
-            o.setServerId(orders.get(0).serverId);
-            o.setFinderDevRegId(orders.get(0).finderDevRegId);
-            o.setServerName(orders.get(0).serverName);
+            o.setMenuId(p.menuId);
+            o.setServerId(p.serverId);
+            o.setFinderDevRegId(p.finderDevRegId);
+            o.setServerName(p.serverName);
             o.setOrderState(0);
-            o.setMenuName(orders.get(0).name);
-            o.setPrice(orders.get(0).price);
-            o.setQuantity(orders.get(0).quantity);
+            o.setMenuName(p.name);
+            o.setPrice(p.price);
+            o.setQuantity(p.quantity);
 
             orderList.add(o);
 
@@ -46,6 +56,9 @@ public class OrderActivity extends ListActivity {
         } catch(Exception e){
             e.printStackTrace();
         }
+
+        registerForContextMenu(getListView());
+
 
     }
 
@@ -65,19 +78,10 @@ public class OrderActivity extends ListActivity {
         switch(item.getItemId()) {
             case R.id.confirm_menu:
                 Log.v("sajid","Confirm Order");
-                OrderEntity o = new OrderEntity();
-                o.setMenuId(orders.get(0).menuId);
-                o.setServerId(orders.get(0).serverId);
-                o.setFinderDevRegId(orders.get(0).finderDevRegId);
-                o.setServerName(orders.get(0).serverName);
-                o.setOrderState(0);
-                o.setMenuName(orders.get(0).name);
-                o.setPrice(orders.get(0).price);
-                o.setQuantity(orders.get(0).quantity);
 
-                Log.v("sajid","OrderActivity:onConfirm serverName="+o.getServerName());
-
-                new OrderEndpointAsyncTask().execute(new Pair<Context, OrderEntity>(this, o));
+                for (OrderEntity order : orderList) {
+                    new OrderEndpointAsyncTask().execute(new Pair<Context, OrderEntity>(this, order));
+                }
 
                 break;
 
@@ -85,10 +89,83 @@ public class OrderActivity extends ListActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v,
+                                    ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.context_order, menu);
+
+        Log.v("sajid","create context menu for order");
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        final AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        switch (item.getItemId()) {
+            case R.id.order_edit:
+
+                RelativeLayout linearLayout=new RelativeLayout(this);
+                NumberPicker np = (NumberPicker) new NumberPicker(this);
+                np.setMaxValue(99);
+                np.setMinValue(0);
+                np.setValue(orderList.get(info.position).getQuantity());
+                np.setWrapSelectorWheel(false);
+                np.setClickable(false);
+                np.setEnabled(true);
+
+                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(50,50);
+                RelativeLayout.LayoutParams numPicerParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
+
+                numPicerParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+
+                linearLayout.setLayoutParams(params);
+                linearLayout.addView(np,numPicerParams);
+                linearLayout.isClickable();
+
+                np.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+                    @Override
+                    public void onValueChange(NumberPicker picker, int oldVal, int newVal){
+                        orderList.get(info.position).setQuantity(newVal);
+                    }
+                });
+
+
+                AlertDialog.Builder alertBw;
+                alertBw=new AlertDialog.Builder(this);
+                alertBw.setTitle("Select Order Quantity");
+                alertBw.setView(linearLayout);
+                alertBw.setPositiveButton("Done", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        if (orderList.get(info.position).getQuantity() == 0) {
+                            orderList.remove(info.position);
+                        }
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+
+                AlertDialog alertDw=alertBw.create();
+                alertDw.show();
+
+
+                return true;
+            case R.id.order_delete:
+                OrderEntity removed = orderList.remove(info.position);
+                Log.v("sajid","removed "+removed.getMenuName());
+                adapter.notifyDataSetChanged();
+
+                return true;
+            default:
+                return super.onContextItemSelected(item);
+        }
+    }
 
     public void showOrder() {
 
-        ListOrderRowAdapter adapter = new ListOrderRowAdapter(this, R.layout.list_order_row,
+        adapter = new ListOrderRowAdapter(this, R.layout.list_order_row,
                 orderList);
 
         setListAdapter(adapter);
