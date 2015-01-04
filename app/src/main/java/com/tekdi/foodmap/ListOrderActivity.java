@@ -38,6 +38,7 @@ public class ListOrderActivity extends ListActivity {
 
         registerForContextMenu(getListView());
 
+        orderList.clear();
 
         Intent intent = getIntent();
         String intentServerIdStr = intent.getStringExtra("serverId");
@@ -82,6 +83,12 @@ public class ListOrderActivity extends ListActivity {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+
+    }
+
+        @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_order_list, menu);
         return true;
@@ -139,6 +146,7 @@ public class ListOrderActivity extends ListActivity {
 
 
     public void refreshOrder() {
+        orderList.clear();
         if (iAmServer) {
             Log.v("sajid", "refreshing server listorder for "+myServerId);
             ListOrdersEndpointAsyncTask l = new ListOrdersEndpointAsyncTask(this);

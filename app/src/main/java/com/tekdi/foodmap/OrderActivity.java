@@ -83,6 +83,8 @@ public class OrderActivity extends ListActivity {
                     new OrderEndpointAsyncTask().execute(new Pair<Context, OrderEntity>(this, order));
                 }
 
+                orderList.clear();
+
                 break;
 
         }

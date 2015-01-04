@@ -44,7 +44,7 @@ public class GcmIntentService extends IntentService {
 
                 NotificationCompat.Builder mBuilder =
                         new NotificationCompat.Builder(this)
-                                .setSmallIcon(R.drawable.notification_icon)
+                                .setSmallIcon(R.drawable.ic_stat_foodmap_icon)
                                 .setContentTitle("Foodmap:"+extras.getString("myMessageType"))
                                 .setContentText("order number "+extras.getString("orderId"));
 

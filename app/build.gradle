@@ -1,9 +1,16 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        config {
+            keyAlias 'FoodMapAndroidKey'
+            keyPassword 'lennon1'
+            storeFile file('/Users/fsd017/AndroidStudioProjects/FoodMap/foodmap_android_keystore.jks')
+            storePassword 'lennon1'
+        }
+    }
     compileSdkVersion 21
     buildToolsVersion "20.0.0"
-
     defaultConfig {
         applicationId "com.tekdi.foodmap"
         minSdkVersion 15
@@ -15,6 +22,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
         }
     }
 }
