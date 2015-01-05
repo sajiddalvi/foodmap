@@ -19,6 +19,7 @@
     <string name="menu_description_label">Description</string>
     <string name="menu_quantity_label">Quantity</string>
     <string name="menu_price_label">Price</string>
+    <string name="menu_picture_label">Picture</string>
     <string name="menu_add_button">Add Menu</string>
     <string name="menu_list_button">List Menu</string>
     <string name="order_list_button">List Orders</string>

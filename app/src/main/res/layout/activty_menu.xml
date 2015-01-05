@@ -90,6 +90,26 @@
                 android:id="@+id/menu_price_text" />
         </LinearLayout>
 
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
+
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:id="@+id/menu_picture_view"
+                android:src="@drawable/ic_action_camera"
+                android:clickable="true"
+                android:focusable="true"
+                android:onClick="dispatchTakePictureIntent"
+                android:background="#ffffff"
+                android:layout_gravity="center_horizontal|bottom"
+                />
+
+        </LinearLayout>
+
 
         <LinearLayout
             android:orientation="horizontal"

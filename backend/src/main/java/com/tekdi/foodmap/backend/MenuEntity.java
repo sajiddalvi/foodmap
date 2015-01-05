@@ -3,6 +3,7 @@ package com.tekdi.foodmap.backend;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
+import com.google.appengine.api.datastore.Blob;
 
 @Entity
 public class MenuEntity {
@@ -14,6 +15,7 @@ public class MenuEntity {
     String description;
     Integer quantity;
     Float price;
+    Blob thumbnail;
 
     public Long getId() {
         return id;
@@ -37,6 +39,8 @@ public class MenuEntity {
         return price;
     }
 
+    public Blob getThumbnail() {return thumbnail; }
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -58,4 +62,6 @@ public class MenuEntity {
     public void setPrice(Float price) {
         this.price = price;
     }
+
+    public void setThumbnail(Blob thumbnail) {this.thumbnail = thumbnail; }
 }

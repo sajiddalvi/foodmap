@@ -15,6 +15,7 @@ public class ParcelableMenu implements Parcelable {
     String description;
     Integer quantity;
     Float price;
+    String thumbnail;
 
     ParcelableMenu() {}
 
@@ -25,6 +26,7 @@ public class ParcelableMenu implements Parcelable {
         this.description = in.readString();
         this.quantity = in.readInt();
         this.price = in.readFloat();
+        this.thumbnail = in.readString();
     }
 
     public void writeToParcel(Parcel dest, int flags) {
@@ -34,6 +36,7 @@ public class ParcelableMenu implements Parcelable {
         dest.writeString(description);
         dest.writeInt(quantity);
         dest.writeFloat(price);
+        dest.writeString(thumbnail);
     }
 
     public int describeContents() {

@@ -2,10 +2,14 @@ package com.tekdi.foodmap;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -37,9 +41,9 @@ public class ListMenuRowAdapter extends ArrayAdapter<MenuEntity> {
 
         LayoutInflater inflater = ((Activity) context).getLayoutInflater();
 
-        LinearLayout row = (LinearLayout) convertView;
+        //LinearLayout row = (LinearLayout) convertView;
 
-        row = (LinearLayout) inflater.inflate(layoutResourceId, parent, false);
+        LinearLayout row = (LinearLayout) inflater.inflate(layoutResourceId, parent, false);
 
         MyListHolder holder = null;
         holder = new MyListHolder();
@@ -50,6 +54,7 @@ public class ListMenuRowAdapter extends ArrayAdapter<MenuEntity> {
                 .findViewById(R.id.list_menu_row_quantity);
         holder.description = (TextView) row
                 .findViewById(R.id.list_menu_row_description);
+        holder.thumbnail = (ImageView) row.findViewById(R.id.menu_picture_view);
 
         row.setTag(holder);
 
@@ -61,6 +66,11 @@ public class ListMenuRowAdapter extends ArrayAdapter<MenuEntity> {
         holder.price.setText(currency_symbol + myList.getPrice().toString());
         holder.description.setText(myList.getDescription());
 
+        if (myList.getThumbnail() != null) {
+            Bitmap bm = StringToBitMap(myList.getThumbnail());
+            holder.thumbnail.setImageBitmap(bm);
+        }
+
         return row;
     }
 
@@ -69,6 +79,18 @@ public class ListMenuRowAdapter extends ArrayAdapter<MenuEntity> {
         TextView quantity;
         TextView price;
         TextView description;
+        ImageView thumbnail;
+    }
+
+    private Bitmap StringToBitMap(String encodedString){
+        try{
+            byte [] encodeByte= Base64.decode(encodedString, Base64.DEFAULT);
+            Bitmap bitmap= BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+            return bitmap;
+        }catch(Exception e){
+            e.getMessage();
+            return null;
+        }
     }
 
 }
