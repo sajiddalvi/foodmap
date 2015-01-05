@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 
 public class MainActivity extends Activity {
@@ -41,4 +42,27 @@ public class MainActivity extends Activity {
         intent.putExtra("serverId", serverId);
         startActivity(intent);
     }
+
+    public void onServerSetupButtonClick(View v) {
+        Intent intent = new Intent(this, EditServerActivity.class);
+        startActivity(intent);
+    }
+
+    public void onFinderSetupButtonClick(View v) {
+        Toast.makeText(this, "No Finder Setup", Toast.LENGTH_LONG).show();
+    }
+
+    public void onMenuListButtonClick(View v) {
+        String serverId = Prefs.getServeIdPref(this);
+        Intent intent = new Intent(this, ListMenuActivity.class);
+        intent.putExtra("serverId", Long.parseLong(serverId));
+        startActivity(intent);
+    }
+
+    public void onBannerClick(View v) {
+        Intent intent = new Intent(this, ListMenuActivity.class);
+        intent.putExtra("serverId", Long.parseLong("6240701431939072"));
+        startActivity(intent);
+    }
 }
+

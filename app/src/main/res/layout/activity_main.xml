@@ -1,56 +1,203 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity"
-    android:gravity="center_horizontal">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:gravity="center_vertical"
+    android:orientation="vertical" >
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/main_logo"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
         android:src="@drawable/main_logo"
-        android:longClickable="false" />
+        android:layout_gravity="center_horizontal" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/serve_button_text"
-        android:id="@+id/serve_button"
-        android:layout_centerVertical="true"
-        android:layout_alignLeft="@+id/main_logo"
-        android:layout_alignStart="@+id/main_logo"
-        android:layout_alignRight="@+id/main_logo"
-        android:layout_alignEnd="@+id/main_logo"
-        android:onClick="onServeButtonClick" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal"
+        >
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/find_button_text"
-        android:id="@+id/find_button"
-        android:layout_below="@+id/serve_button"
-        android:layout_alignLeft="@+id/serve_button"
-        android:layout_alignStart="@+id/serve_button"
-        android:layout_marginTop="42dp"
-        android:layout_alignRight="@+id/serve_button"
-        android:layout_alignEnd="@+id/serve_button"
-        android:onClick="onFindButtonClick" />
+        <LinearLayout
+        android:layout_width="150dp"
+        android:layout_height="match_parent"
+        android:background="#551A8B"
+        android:orientation="vertical"
+        android:layout_marginRight="5dp"
+        >
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/list_order_button_text"
-        android:id="@+id/list_order_button"
-        android:layout_below="@+id/find_button"
-        android:layout_alignLeft="@+id/find_button"
-        android:layout_alignStart="@+id/find_button"
-        android:layout_marginTop="42dp"
-        android:layout_alignRight="@+id/find_button"
-        android:layout_alignEnd="@+id/find_button"
-        android:onClick="onOrderListButtonClick" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text=" Cater Food"
+                android:id="@+id/textView"
+                android:textColor="#ffffffff"
+                android:gravity="center"
+                android:clickable="true"
+                android:focusable="true"
+                android:onClick="onServeButtonClick"
+                />
 
-</RelativeLayout>
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="5dp"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/cater_settings"
+                    android:src="@drawable/ic_action_settings"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:onClick="onServerSetupButtonClick"
+                    android:layout_gravity="bottom"
+                    android:layout_weight="1"
+                    />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/cater_show_orders"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:onClick="onOrderListButtonClick"
+                    android:layout_gravity="bottom"
+                    android:layout_weight="1"
+                    android:src="@drawable/ic_action_new_event" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/cater_list_menu"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:onClick="onMenuListButtonClick"
+                    android:layout_gravity="bottom"
+                    android:layout_weight="1"
+                    android:src="@drawable/ic_action_view_as_list" />
+            </LinearLayout>
+        </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="150dp"
+                android:layout_height="match_parent"
+                android:background="#1d7808"
+                android:orientation="vertical"
+                android:layout_marginRight="5dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Find Food"
+                android:id="@+id/textView2"
+                android:textColor="#ffffffff"
+                android:gravity="center"
+                android:clickable="true"
+                android:focusable="true"
+                android:onClick="onFindButtonClick"/>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="5dp"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/finder_settings"
+                    android:src="@drawable/ic_action_settings"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:onClick="onFinderSetupButtonClick"
+                    android:layout_gravity="bottom"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/finder_find_cater"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:onClick="onFindButtonClick"
+                    android:layout_gravity="bottom"
+                    android:layout_weight="1"
+                    android:src="@drawable/ic_action_location_found" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/finder_check_order"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:onClick="onOrderListButtonClick"
+                    android:layout_gravity="bottom"
+                    android:layout_weight="1"
+                    android:src="@drawable/ic_action_view_as_list" />
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="133dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="15dp"
+        android:background="#333333">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Featured Caterers"
+            android:id="@+id/featuredView"
+            android:textColor="#ffffffff"
+            android:gravity="center"
+            />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:id="@+id/banner1"
+                android:src="@drawable/lulus_banner"
+                android:clickable="true"
+                android:focusable="true"
+                android:onClick="onBannerClick"
+                android:background="#ffffff"
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="2dp"
+                 />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:id="@+id/banner2"
+            android:src="@drawable/patels_banner"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="onBannerClick"
+            android:background="#ffffff"
+            android:layout_gravity="bottom"
+            />
+
+
+
+    </LinearLayout>
+
+</LinearLayout>
