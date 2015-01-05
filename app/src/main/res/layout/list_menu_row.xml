@@ -1,67 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:padding="5dp">
+
+    <TextView
+        android:id="@+id/list_menu_row_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="name"
+        android:textStyle="bold"
+        android:textSize="15dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginTop="10dp"
-
-        >
-
-        <TextView
-            android:id="@+id/list_menu_row_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:text="name"
-            android:layout_weight="1"
-            android:textStyle="bold" />
-
-
-        <TextView
-            android:id="@+id/list_menu_row_price"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:text="$5.00"
-            />
-
-        <TextView
-            android:id="@+id/list_menu_row_quantity"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:text="2"
-            />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="10dp"
-        android:layout_gravity="center_vertical"
         >
 
         <ImageView
             android:layout_width="100dp"
             android:layout_height="100dp"
+            android:padding="5dp"
             android:id="@+id/menu_picture_view"
-            android:src="@drawable/ic_action_camera"
-         />
+            android:src="@drawable/ic_action_camera" />
 
-        <TextView
-        android:id="@+id/list_menu_row_description"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:minHeight="100dp">
 
-        android:text="this is the description that is at least more than one line long."
-        />
+            <TextView
+                android:id="@+id/list_menu_row_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="25dp"
+                android:text="this is the description that is at least more than one line long."
+                android:layout_weight="1" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_weight="0"
+                android:gravity="right">
+
+                <RatingBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:rating="3"
+                    style="?android:attr/ratingBarStyleSmall"
+                    android:id="@+id/ratingBar" />
+
+                <TextView
+                    android:id="@+id/list_menu_row_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="25dp"
+                    android:text="$5.00"
+                    />
+
+                <TextView
+                    android:id="@+id/list_menu_row_quantity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2 left"
+                    android:layout_marginLeft="25dp"
+                    android:layout_marginRight="25dp"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
 
     </LinearLayout>
 

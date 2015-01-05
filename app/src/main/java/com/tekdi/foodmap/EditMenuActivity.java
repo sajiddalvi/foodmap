@@ -5,13 +5,12 @@ package com.tekdi.foodmap;
  */
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Base64;
 import android.util.Log;
 import android.util.Pair;
 import android.view.View;
@@ -20,15 +19,15 @@ import android.widget.ImageView;
 
 import com.tekdi.foodmap.backend.menuEntityApi.model.MenuEntity;
 
-import java.io.ByteArrayOutputStream;
-
 public class EditMenuActivity extends Activity {
     private Long menuId;
     private Long serverId;
 
-    static final int REQUEST_IMAGE_CAPTURE = 1;
+    private static final int REQUEST_IMAGE_CAPTURE = 1;
+    private static final int REQUEST_IMAGE_CROP = 2;
+
     private ImageView mImageView;
-    private Bitmap mThumbnail;
+    private Thumbnail mThumbnail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +35,7 @@ public class EditMenuActivity extends Activity {
         setContentView(R.layout.activity_edit_menu);
 
         mImageView = (ImageView) findViewById(R.id.menu_picture_view);
-        mThumbnail = BitmapFactory.decodeResource(getResources(), R.drawable.ic_action_camera);
+        mThumbnail = new Thumbnail(this);
 
         Log.v("sajid","EditMenuActivity onCreate");
         try {
@@ -62,10 +61,9 @@ public class EditMenuActivity extends Activity {
             ImageView imageView = (ImageView) findViewById(R.id.menu_picture_view);
 
             if (p.thumbnail != null) {
-                Bitmap bm = StringToBitMap(p.thumbnail);
-                imageView.setImageBitmap(bm);
+                mThumbnail.setBitmap(p.thumbnail);
+                imageView.setImageBitmap(mThumbnail.getBitmap());
             }
-
 
         } catch(Exception e){
             Log.v("sajid","EditMenuActivity onCreate failed");
@@ -101,7 +99,7 @@ public class EditMenuActivity extends Activity {
             menu.setServerId(Long.parseLong(serverId));
         }
 
-        menu.setThumbnail(BitMapToString(mThumbnail));
+        menu.setThumbnail(mThumbnail.getString());
 
         new MenuEntityEditEndpointAsyncTask(this).execute(new Pair<Context, MenuEntity>(this, menu));
 
@@ -121,31 +119,35 @@ public class EditMenuActivity extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+        if  (resultCode == RESULT_OK) {
             Bundle extras = data.getExtras();
-            mThumbnail = (Bitmap) extras.get("data");
-            mImageView.setImageBitmap(mThumbnail);
+            Bitmap bm = (Bitmap) extras.get("data");
+            mThumbnail.setBitmap(bm);
+
+            if (requestCode == REQUEST_IMAGE_CAPTURE) {
+                performCrop();
+            } else if (requestCode == REQUEST_IMAGE_CROP) {
+                mImageView.setImageBitmap(mThumbnail.getBitmap());
+            }
+        }
+    }
+
+    private void performCrop(){
+        try {
+            Intent cropIntent = new Intent("com.android.camera.action.CROP");
+            cropIntent.setDataAndType(mThumbnail.getImageUri(), "image/*");
+            cropIntent.putExtra("crop", "true");
+            cropIntent.putExtra("aspectX", 1);
+            cropIntent.putExtra("aspectY", 1);
+            cropIntent.putExtra("outputX", 100);
+            cropIntent.putExtra("outputY", 100);
+            cropIntent.putExtra("return-data", true);
+            startActivityForResult(cropIntent, REQUEST_IMAGE_CROP);
+        }
+        catch(ActivityNotFoundException error){
         }
     }
 
 
-    private Bitmap StringToBitMap(String encodedString){
-        try{
-            byte [] encodeByte= Base64.decode(encodedString, Base64.DEFAULT);
-            Bitmap bitmap= BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
-            return bitmap;
-        }catch(Exception e){
-            e.getMessage();
-            return null;
-        }
-    }
-
-    private String BitMapToString(Bitmap bitmap){
-        ByteArrayOutputStream ByteStream=new  ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG,100, ByteStream);
-        byte [] b=ByteStream.toByteArray();
-        String temp= Base64.encodeToString(b, Base64.DEFAULT);
-        return temp;
-    }
 }
 
