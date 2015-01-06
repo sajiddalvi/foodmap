@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.util.Pair;
 import android.view.View;
@@ -45,7 +46,7 @@ public class EditServerActivity extends FragmentActivity
     private EditText mAddress;
     private Location mLocation;
     private LocationClient mLocationClient;
-
+    private String mPhoneNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,9 +60,15 @@ public class EditServerActivity extends FragmentActivity
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
 
+        TelephonyManager tMgr = (TelephonyManager)this.getSystemService(Context.TELEPHONY_SERVICE);
+        String mPhoneNumber = tMgr.getLine1Number();
+
         if (Prefs.getServeIdPref(this) == "") {
             setTitle("Add Server");
             addingNewServer = true;
+            EditText editText = (EditText) findViewById(R.id.server_phone_text);
+            editText.setText(mPhoneNumber);
+
         } else {
             EditText editText = (EditText) findViewById(R.id.server_name_text);
             editText.setText(Prefs.getSERVER_NAME_PREF(this));
@@ -78,6 +85,7 @@ public class EditServerActivity extends FragmentActivity
                 (ProgressBar) findViewById(R.id.address_progress);
         mAddress =(EditText) findViewById(R.id.server_address_text);
         mLocationClient = new LocationClient(this, this, this);
+
     }
 
     @Override
