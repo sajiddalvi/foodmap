@@ -33,55 +33,45 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text=" Cater Food"
+                android:text="Cater Food"
                 android:id="@+id/textView"
                 android:textColor="#ffffffff"
                 android:gravity="center"
                 android:clickable="true"
                 android:focusable="true"
-                android:onClick="onServeButtonClick"
+                android:onClick="onServerSetupButtonClick"
                 />
 
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="5dp"
-                android:gravity="center">
+                android:layout_margin="20dp"
+                android:gravity="bottom">
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/cater_settings"
-                    android:src="@drawable/ic_action_settings"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:onClick="onServerSetupButtonClick"
-                    android:layout_gravity="bottom"
-                    android:layout_weight="1"
-                    />
-
-                <ImageView
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/cater_show_orders"
                     android:clickable="true"
                     android:focusable="true"
                     android:onClick="onOrderListButtonClick"
-                    android:layout_gravity="bottom"
                     android:layout_weight="1"
-                    android:src="@drawable/ic_action_new_event" />
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="Orders"
+                    android:textColor="#ffffffff" />
 
-                <ImageView
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/cater_list_menu"
                     android:clickable="true"
                     android:focusable="true"
                     android:onClick="onMenuListButtonClick"
-                    android:layout_gravity="bottom"
-                    android:layout_weight="1"
-                    android:src="@drawable/ic_action_view_as_list" />
+                    android:layout_weight="0"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="Menu"
+                    android:textColor="#ffffffff" />
             </LinearLayout>
         </LinearLayout>
 
@@ -110,41 +100,32 @@
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="5dp"
-                android:gravity="center">
+                android:layout_margin="20dp"
+                android:gravity="bottom">
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/finder_settings"
-                    android:src="@drawable/ic_action_settings"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:onClick="onFinderSetupButtonClick"
-                    android:layout_gravity="bottom"
-                    android:layout_weight="1" />
-
-                <ImageView
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/finder_find_cater"
                     android:clickable="true"
                     android:focusable="true"
                     android:onClick="onFindButtonClick"
-                    android:layout_gravity="bottom"
                     android:layout_weight="1"
-                    android:src="@drawable/ic_action_location_found" />
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="Locate"
+                    android:textColor="#ffffffff" />
 
-                <ImageView
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/finder_check_order"
                     android:clickable="true"
                     android:focusable="true"
                     android:onClick="onOrderListButtonClick"
-                    android:layout_gravity="bottom"
-                    android:layout_weight="1"
-                    android:src="@drawable/ic_action_view_as_list" />
+                    android:layout_weight="0"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="Orders"
+                    android:textColor="#ffffffff" />
             </LinearLayout>
 
 

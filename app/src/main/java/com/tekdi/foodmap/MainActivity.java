@@ -56,12 +56,16 @@ public class MainActivity extends Activity {
         String serverId = Prefs.getServeIdPref(this);
         Intent intent = new Intent(this, ListMenuActivity.class);
         intent.putExtra("serverId", Long.parseLong(serverId));
+        intent.putExtra("serverName", "lulus");
+        intent.putExtra("source","server");
         startActivity(intent);
     }
 
     public void onBannerClick(View v) {
         Intent intent = new Intent(this, ListMenuActivity.class);
         intent.putExtra("serverId", Long.parseLong("6240701431939072"));
+        intent.putExtra("serverName", "lulus");
+        intent.putExtra("source","finder");
         startActivity(intent);
     }
 }

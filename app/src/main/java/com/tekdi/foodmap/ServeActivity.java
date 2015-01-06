@@ -57,6 +57,7 @@ public class ServeActivity extends Activity {
         String serverId = Prefs.getServeIdPref(this);
         Intent intent = new Intent(this, ListMenuActivity.class);
         intent.putExtra("serverId", Long.parseLong(serverId));
+        intent.putExtra("source","server");
         startActivity(intent);
     }
 
