@@ -11,6 +11,9 @@ import android.support.v4.app.FragmentActivity;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.util.Pair;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -60,14 +63,11 @@ public class EditServerActivity extends FragmentActivity
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
 
-        TelephonyManager tMgr = (TelephonyManager)this.getSystemService(Context.TELEPHONY_SERVICE);
-        String mPhoneNumber = tMgr.getLine1Number();
+
 
         if (Prefs.getServeIdPref(this) == "") {
             setTitle("Add Server");
             addingNewServer = true;
-            EditText editText = (EditText) findViewById(R.id.server_phone_text);
-            editText.setText(mPhoneNumber);
 
         } else {
             EditText editText = (EditText) findViewById(R.id.server_name_text);
@@ -81,11 +81,33 @@ public class EditServerActivity extends FragmentActivity
             spinner.setSelection(adapter.getPosition(cuisine));
         }
 
-        mActivityIndicator =
-                (ProgressBar) findViewById(R.id.address_progress);
-        mAddress =(EditText) findViewById(R.id.server_address_text);
-        mLocationClient = new LocationClient(this, this, this);
+    }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_serve, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch(item.getItemId()) {
+            case R.id.action_save:
+                setupServer();
+                break;
+            case R.id.action_cancel:
+                finish();
+                break;
+
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -101,7 +123,7 @@ public class EditServerActivity extends FragmentActivity
     protected void onStart() {
         super.onStart();
         // Connect the client.
-        mLocationClient.connect();
+        // mLocationClient.connect();
     }
 
     /*
@@ -110,7 +132,8 @@ public class EditServerActivity extends FragmentActivity
     @Override
     protected void onStop() {
         // Disconnecting the client invalidates it.
-        mLocationClient.disconnect();
+        if (mLocationClient != null)
+            mLocationClient.disconnect();
         super.onStop();
     }
 
@@ -204,7 +227,26 @@ public class EditServerActivity extends FragmentActivity
         // Another interface callback
     }
 
-    public void onServerSetupButtonClick(View v) {
+    public void onServerSetupGetPhone(View v) {
+        TelephonyManager tMgr = (TelephonyManager)this.getSystemService(Context.TELEPHONY_SERVICE);
+        String mPhoneNumber = tMgr.getLine1Number();
+
+        EditText editText = (EditText) findViewById(R.id.server_phone_text);
+        editText.setText(mPhoneNumber);
+    }
+
+    public void onServerSetupGetAddress(View v) {
+
+        mActivityIndicator =
+                (ProgressBar) findViewById(R.id.address_progress);
+        mAddress =(EditText) findViewById(R.id.server_address_text);
+        mLocationClient = new LocationClient(this, this, this);
+
+        mLocationClient.connect();
+
+    }
+
+    private void setupServer() {
 
         EditText editText = (EditText) findViewById(R.id.server_name_text);
         String name = editText.getText().toString();
