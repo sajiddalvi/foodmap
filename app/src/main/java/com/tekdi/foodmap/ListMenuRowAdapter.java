@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.tekdi.foodmap.backend.menuEntityApi.model.MenuEntity;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 
 /**
@@ -59,8 +60,10 @@ public class ListMenuRowAdapter extends ArrayAdapter<MenuEntity> {
 
         holder.name.setText(myList.getName());
         holder.quantity.setText(myList.getQuantity().toString()+" left");
-        String currency_symbol = "$";
-        holder.price.setText(currency_symbol + myList.getPrice().toString());
+
+        NumberFormat format = NumberFormat.getCurrencyInstance();
+        holder.price.setText(format.format(myList.getPrice()));
+
         holder.description.setText(myList.getDescription());
 
         if (myList.getThumbnail() != null) {

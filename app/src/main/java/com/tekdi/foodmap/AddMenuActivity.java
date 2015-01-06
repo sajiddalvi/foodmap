@@ -8,6 +8,9 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Pair;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -33,7 +36,36 @@ public class AddMenuActivity extends Activity {
         mThumbnail = new Thumbnail(this);
     }
 
-    public void onMenuAddButtonClick(View v) {
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_add, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch(item.getItemId()) {
+            case R.id.action_save:
+                onMenuAddButtonClick();
+                break;
+            case R.id.action_cancel:
+                finish();
+                break;
+
+        }
+        return super.onOptionsItemSelected(item);
+
+    }
+
+    private void onMenuAddButtonClick() {
         EditText editText = (EditText) findViewById(R.id.menu_name_text);
         String name = editText.getText().toString();
 
