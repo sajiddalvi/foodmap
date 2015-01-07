@@ -18,6 +18,7 @@ import android.widget.ListView;
 import com.tekdi.foodmap.backend.orderEntityApi.model.OrderEntity;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ListOrderActivity extends ListActivity {
@@ -31,10 +32,7 @@ public class ListOrderActivity extends ListActivity {
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
 
-
-        Log.v("sajid","ListOrderActivity onCreate");
-
-        Log.v("sajid","ListOrderActivity register for context menu");
+        setContentView(R.layout.list_order_view);
 
         registerForContextMenu(getListView());
 
@@ -79,7 +77,6 @@ public class ListOrderActivity extends ListActivity {
                 l.execute();
             }
         }
-
     }
 
     @Override
@@ -116,8 +113,6 @@ public class ListOrderActivity extends ListActivity {
         super.onCreateContextMenu(menu, v, menuInfo);
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.context_order, menu);
-
-        Log.v("sajid","create context menu for order");
     }
 
     @Override
@@ -172,6 +167,8 @@ public class ListOrderActivity extends ListActivity {
         for (OrderEntity q : result) {
             orderList.add(q);
         }
+
+        Collections.sort(orderList, new ComparatorOrderEntity());
 
         ListOrderRowAdapter adapter = new ListOrderRowAdapter(this, R.layout.list_order_row,
                 orderList);
