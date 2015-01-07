@@ -39,17 +39,33 @@ public class OrderActivity extends ListActivity {
 
             ParcelableOrder p = (ParcelableOrder) i.getParcelableExtra("com.tekdi.foodmap.ParcelableOrder");
 
-            OrderEntity o = new OrderEntity();
-            o.setMenuId(p.menuId);
-            o.setServerId(p.serverId);
-            o.setFinderDevRegId(p.finderDevRegId);
-            o.setServerName(p.serverName);
-            o.setOrderState(0);
-            o.setMenuName(p.name);
-            o.setPrice(p.price);
-            o.setQuantity(p.quantity);
+            // if menu item already exists, bump up quantity
+            int index = 0;
+            boolean foundEntry = false;
+            for (OrderEntity order : orderList) {
+                if (order.getMenuId().equals(p.menuId)) {
+                    order.setQuantity(order.getQuantity() + 1);
+                    orderList.set(index,order);
+                    foundEntry = true;
+                    break;
+                }
+                index ++;
+            }
 
-            orderList.add(o);
+            if (!foundEntry) {
+
+                OrderEntity o = new OrderEntity();
+                o.setMenuId(p.menuId);
+                o.setServerId(p.serverId);
+                o.setFinderDevRegId(p.finderDevRegId);
+                o.setServerName(p.serverName);
+                o.setOrderState(0);
+                o.setMenuName(p.name);
+                o.setPrice(p.price);
+                o.setQuantity(p.quantity);
+
+                orderList.add(o);
+            }
 
             showOrder();
 
