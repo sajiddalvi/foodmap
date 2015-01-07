@@ -46,7 +46,7 @@
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="20dp"
+                android:layout_margin="10dp"
                 android:gravity="bottom">
 
                 <TextView
@@ -100,7 +100,7 @@
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="20dp"
+                android:layout_margin="10dp"
                 android:gravity="bottom">
 
                 <TextView
@@ -136,7 +136,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:orientation="vertical"
-        android:layout_height="133dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="15dp"
@@ -146,11 +146,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Featured Caterers"
+            android:text="Featured"
             android:id="@+id/featuredView"
             android:textColor="#ffffffff"
             android:gravity="center"
-            />
+            android:layout_margin="5dp" />
 
             <ImageView
                 android:layout_width="match_parent"
@@ -164,19 +164,6 @@
                 android:layout_gravity="bottom"
                 android:layout_marginBottom="2dp"
                  />
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:id="@+id/banner2"
-            android:src="@drawable/patels_banner"
-            android:clickable="true"
-            android:focusable="true"
-            android:onClick="onBannerClick"
-            android:background="#ffffff"
-            android:layout_gravity="bottom"
-            />
-
 
 
     </LinearLayout>

@@ -63,8 +63,8 @@ public class OrderActivity extends ListActivity {
                 o.setMenuName(p.name);
                 o.setPrice(p.price);
                 o.setQuantity(p.quantity);
-
                 orderList.add(o);
+
             }
 
             showOrder();

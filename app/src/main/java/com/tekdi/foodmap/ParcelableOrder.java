@@ -16,6 +16,8 @@ public class ParcelableOrder implements Parcelable {
     String description;
     Integer quantity;
     Float price;
+    String thumbnail;
+
 
     ParcelableOrder() {}
 
@@ -29,6 +31,7 @@ public class ParcelableOrder implements Parcelable {
         this.description = in.readString();
         this.quantity = in.readInt();
         this.price = in.readFloat();
+        this.thumbnail = in.readString();
     }
 
     public void writeToParcel(Parcel dest, int flags) {
@@ -41,6 +44,7 @@ public class ParcelableOrder implements Parcelable {
         dest.writeString(description);
         dest.writeInt(quantity);
         dest.writeFloat(price);
+        dest.writeString(thumbnail);
     }
 
     public int describeContents() {

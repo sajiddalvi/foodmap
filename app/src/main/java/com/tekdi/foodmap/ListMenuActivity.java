@@ -51,6 +51,8 @@ public class ListMenuActivity extends ListActivity implements Serializable {
             amIServer = false;
 
         registerForContextMenu(getListView());
+
+        setContentView(R.layout.list_menu_view);
     }
 
     @Override
@@ -109,6 +111,7 @@ public class ListMenuActivity extends ListActivity implements Serializable {
             p.description = m.getDescription();
             p.quantity = 1;
             p.price = m.getPrice();
+            p.thumbnail = m.getThumbnail();
 
             Intent intent = new Intent(this, OrderActivity.class);
             intent.putExtra("com.tekdi.foodmap.ParcelableOrder", p);
