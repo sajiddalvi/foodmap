@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.tekdi.foodmap.backend.orderEntityApi.model.OrderEntity;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 
 /**
@@ -62,11 +63,25 @@ public class ListOrderRowAdapter extends ArrayAdapter<OrderEntity> {
                 .findViewById(R.id.list_order_row_quantity);
         holder.state = (TextView) row
                 .findViewById(R.id.list_order_row_state);
+        holder.totalLabel = (TextView) row.findViewById(R.id.list_order_row_total_label);
+
         holder.total = (TextView) row.findViewById(R.id.list_order_row_total);
 
         row.setTag(holder);
 
         OrderEntity order = data.get(position);
+
+        if (order.getFinderDevRegId().equals("total")){
+            hide_all(holder);
+            holder.totalLabel.setVisibility(View.VISIBLE);
+
+            holder.total.setVisibility(View.VISIBLE);
+            //holder.total.setText(prevTotal.toString());
+            NumberFormat format = NumberFormat.getCurrencyInstance();
+            holder.total.setText(format.format(prevTotal));
+
+            return row;
+        }
 
         String orderIdStr = "";
         String truncatedOrderIdStr = "";
@@ -86,6 +101,7 @@ public class ListOrderRowAdapter extends ArrayAdapter<OrderEntity> {
             whoStr = order.getServerName();
         }
 
+
         if (position == 0) {
             prevFinderDevRegId = order.getFinderDevRegId();
             holder.who.setVisibility(View.VISIBLE);
@@ -96,8 +112,6 @@ public class ListOrderRowAdapter extends ArrayAdapter<OrderEntity> {
                 prevFinderDevRegId = order.getFinderDevRegId();
                 holder.who.setVisibility(View.VISIBLE);
                 holder.border.setVisibility(View.VISIBLE);
-                holder.total.setVisibility(View.VISIBLE);
-                holder.total.setText(prevTotal.toString());
                 prevTotal = (float)0;
             } else {
                 prevTotal += order.getPrice();
@@ -109,8 +123,9 @@ public class ListOrderRowAdapter extends ArrayAdapter<OrderEntity> {
 
         holder.name.setText(order.getMenuName());
         holder.quantity.setText(order.getQuantity().toString());
-        String currency_symbol = "$";
-        holder.price.setText(currency_symbol + order.getPrice().toString());
+
+        NumberFormat format = NumberFormat.getCurrencyInstance();
+        holder.price.setText(format.format(order.getPrice()));
 
         if (order.getOrderState() == 0)
             holder.state.setText("new1");
@@ -120,6 +135,19 @@ public class ListOrderRowAdapter extends ArrayAdapter<OrderEntity> {
         return row;
     }
 
+    private void hide_all(MyListHolder row){
+        row.name.setVisibility(View.GONE);
+        row.who.setVisibility(View.GONE);
+        row.quantity.setVisibility(View.GONE);
+        row.name.setVisibility(View.GONE);
+        row.price.setVisibility(View.GONE);
+        row.state.setVisibility(View.GONE);
+        row.border.setVisibility(View.GONE);
+        row.totalLabel.setVisibility(View.GONE);
+        row.total.setVisibility(View.GONE);
+
+    }
+
     static class MyListHolder {
         TextView name;
         TextView who;
@@ -127,6 +155,7 @@ public class ListOrderRowAdapter extends ArrayAdapter<OrderEntity> {
         TextView price;
         TextView state;
         LinearLayout border;
+        TextView totalLabel;
         TextView total;
     }
 

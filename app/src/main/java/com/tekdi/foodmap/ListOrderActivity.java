@@ -40,7 +40,7 @@ public class ListOrderActivity extends ListActivity {
 
         Intent intent = getIntent();
         String intentServerIdStr = intent.getStringExtra("serverId");
-        Integer notificationId = intent.getIntExtra("notificationId",0);
+        Integer notificationId = intent.getIntExtra("notificationId", 0);
 
         if (notificationId == 861) {
             NotificationManager mNotifyMgr =
@@ -170,8 +170,37 @@ public class ListOrderActivity extends ListActivity {
 
         Collections.sort(orderList, new ComparatorOrderEntity());
 
+        ArrayList<OrderEntity> newOrderList = new ArrayList<OrderEntity>();
+
+        OrderEntity prev = orderList.get(0);
+        int index = 0;
+
+
+        for (OrderEntity o : orderList) {
+            newOrderList.add(o);
+            if (! o.getFinderDevRegId().equals(prev.getFinderDevRegId())) {
+                OrderEntity dummyEntity = new OrderEntity();
+                dummyEntity.setFinderDevRegId("total");
+                newOrderList.add(index,dummyEntity);
+                prev = o;
+            }
+            index ++;
+        }
+
+        OrderEntity dummyEntity = new OrderEntity();
+        dummyEntity.setFinderDevRegId("total");
+        newOrderList.add(index+1,dummyEntity);
+
+        for (OrderEntity o : newOrderList) {
+
+            String finderStr = o.getFinderDevRegId();
+            String truncatedFinderStr = finderStr.substring(finderStr.length() - 5);
+
+            Log.v("sajid","order="+truncatedFinderStr);
+        }
+
         ListOrderRowAdapter adapter = new ListOrderRowAdapter(this, R.layout.list_order_row,
-                orderList);
+                newOrderList);
 
         adapter.setIAmServer(iAmServer);
 
