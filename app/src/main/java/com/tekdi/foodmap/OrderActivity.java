@@ -102,6 +102,9 @@ public class OrderActivity extends ListActivity {
             case R.id.confirm_menu:
                 Log.v("sajid","Confirm Order");
 
+                // remove total
+                orderList.remove(orderList.size()-1);
+
                 for (OrderEntity order : orderList) {
                     new OrderEndpointAsyncTask().execute(new Pair<Context, OrderEntity>(this, order));
                 }

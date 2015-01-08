@@ -66,9 +66,7 @@ class ListFinderOrdersEndpointAsyncTask extends AsyncTask<Void, Void, List<Order
             Log.v("sajid", "result is null");
             return;
         }
-        for (OrderEntity q : result) {
-            Log.v("sajid","name="+q.getMenuId());
-            caller.showOrder(result);
-        }
+        caller.showOrder(result);
+
     }
 }

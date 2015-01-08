@@ -171,35 +171,39 @@ public class ListOrderActivity extends ListActivity {
         Collections.sort(orderList, new ComparatorOrderEntity());
 
         ArrayList<OrderEntity> newOrderList = new ArrayList<OrderEntity>();
+        ArrayList<OrderEntity> finderOrderList = new ArrayList<OrderEntity>();
 
         OrderEntity prev = orderList.get(0);
-        int index = 0;
 
+        finderOrderList.clear();
+        newOrderList.clear();
 
         for (OrderEntity o : orderList) {
             if (! o.getFinderDevRegId().equals(prev.getFinderDevRegId())) {
+
+                finderOrderList = removeDups(finderOrderList);
+
+                newOrderList.addAll(finderOrderList);
+
                 OrderEntity dummyEntity = new OrderEntity();
                 dummyEntity.setFinderDevRegId("total");
-                newOrderList.add(index,dummyEntity);
-                prev = o;
-                index++;
-            }
+                newOrderList.add(dummyEntity);
 
-            newOrderList.add(o);
-            index ++;
+                finderOrderList.clear();
+                finderOrderList.add(o);
+                prev = o;
+            } else {
+                finderOrderList.add(o);
+            }
         }
+
+        finderOrderList = removeDups(finderOrderList);
+
+        newOrderList.addAll(finderOrderList);
 
         OrderEntity dummyEntity = new OrderEntity();
         dummyEntity.setFinderDevRegId("total");
-        newOrderList.add(index,dummyEntity);
-
-        for (OrderEntity o : newOrderList) {
-
-            String finderStr = o.getFinderDevRegId();
-            String truncatedFinderStr = finderStr.substring(finderStr.length() - 5);
-
-            Log.v("sajid","order="+truncatedFinderStr);
-        }
+        newOrderList.add(dummyEntity);
 
         ListOrderRowAdapter adapter = new ListOrderRowAdapter(this, R.layout.list_order_row,
                 newOrderList);
@@ -209,4 +213,28 @@ public class ListOrderActivity extends ListActivity {
         setListAdapter(adapter);
 
     }
+
+    private String truncateStr(String str) {
+        return str.substring(str.length() - 5);
+    }
+
+    private ArrayList<OrderEntity> removeDups(ArrayList<OrderEntity> finderOrderList) {
+        int size = finderOrderList.size();
+        for (int i = 0; i < size; i++) {
+            OrderEntity oe = finderOrderList.get(i);
+            for (int j = i + 1; j < size; j++) {
+                OrderEntity oe2 = finderOrderList.get(j);
+                if (oe.getMenuId().equals(oe2.getMenuId())) {
+                    oe.setQuantity(oe.getQuantity() + oe2.getQuantity());
+                    finderOrderList.remove(j);
+                    size--;
+                    j--;
+
+                }
+            }
+        }
+
+        return finderOrderList;
+    }
+
 }
