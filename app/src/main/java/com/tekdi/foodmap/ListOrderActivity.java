@@ -177,19 +177,21 @@ public class ListOrderActivity extends ListActivity {
 
 
         for (OrderEntity o : orderList) {
-            newOrderList.add(o);
             if (! o.getFinderDevRegId().equals(prev.getFinderDevRegId())) {
                 OrderEntity dummyEntity = new OrderEntity();
                 dummyEntity.setFinderDevRegId("total");
                 newOrderList.add(index,dummyEntity);
                 prev = o;
+                index++;
             }
+
+            newOrderList.add(o);
             index ++;
         }
 
         OrderEntity dummyEntity = new OrderEntity();
         dummyEntity.setFinderDevRegId("total");
-        newOrderList.add(index+1,dummyEntity);
+        newOrderList.add(index,dummyEntity);
 
         for (OrderEntity o : newOrderList) {
 

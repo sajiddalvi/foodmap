@@ -15,6 +15,7 @@ import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.cmd.Query;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -87,6 +88,9 @@ public class OrderEntityEndpoint {
         // Objectify ID generator, e.g. long or String, then you should generate the unique ID yourself prior to saving.
         //
         // If your client provides the ID then you should probably use PUT instead.
+
+        orderEntity.setTimestamp(new Date());
+
         ofy().save().entity(orderEntity).now();
         logger.info("Created OrderEntity with ID: " + orderEntity.getId());
 
@@ -179,6 +183,8 @@ public class OrderEntityEndpoint {
             logger.info ("Could not send order ");
 
         }
+
+        orderEntity.setTimestamp(new Date());
 
         ofy().save().entity(orderEntity).now();
         logger.info("Updated OrderEntity: " + orderEntity);

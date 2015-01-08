@@ -3,6 +3,7 @@ package com.tekdi.foodmap.backend;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
+import java.util.Date;
 
 /**
  * Created by fsd017 on 12/19/14.
@@ -24,6 +25,8 @@ public class OrderEntity {
     String menuName;
     Integer quantity;
     Float price;
+    Date timestamp;
+
 
     public Long getId() {
         return id;
@@ -53,6 +56,8 @@ public class OrderEntity {
 
     public Float getPrice() { return price; }
 
+    public Date getTimestamp() { return timestamp; }
+
 
     public void setId(Long id) {
         this.id = id;
@@ -81,4 +86,6 @@ public class OrderEntity {
     public void setQuantity(Integer quantity) { this.quantity = quantity; }
 
     public void setPrice(Float price) { this.price = price; }
+
+    public void setTimestamp(Date timestamp) { this.timestamp = timestamp; }
 }

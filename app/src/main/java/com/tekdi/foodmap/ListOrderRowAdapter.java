@@ -2,6 +2,7 @@ package com.tekdi.foodmap;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +13,13 @@ import android.widget.TextView;
 import com.tekdi.foodmap.backend.orderEntityApi.model.OrderEntity;
 
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.TimeZone;
+
 
 /**
  * Created by fsd017 on 12/30/14.
@@ -66,6 +73,7 @@ public class ListOrderRowAdapter extends ArrayAdapter<OrderEntity> {
         holder.totalLabel = (TextView) row.findViewById(R.id.list_order_row_total_label);
 
         holder.total = (TextView) row.findViewById(R.id.list_order_row_total);
+        holder.timestamp = (TextView) row.findViewById(R.id.list_order_row_timestamp);
 
         row.setTag(holder);
 
@@ -76,7 +84,6 @@ public class ListOrderRowAdapter extends ArrayAdapter<OrderEntity> {
             holder.totalLabel.setVisibility(View.VISIBLE);
 
             holder.total.setVisibility(View.VISIBLE);
-            //holder.total.setText(prevTotal.toString());
             NumberFormat format = NumberFormat.getCurrencyInstance();
             holder.total.setText(format.format(prevTotal));
 
@@ -105,21 +112,26 @@ public class ListOrderRowAdapter extends ArrayAdapter<OrderEntity> {
         if (position == 0) {
             prevFinderDevRegId = order.getFinderDevRegId();
             holder.who.setVisibility(View.VISIBLE);
-            prevTotal = order.getPrice();
+            holder.who.setText(whoStr);
+            holder.timestamp.setText(getTimeStamp2(order));
+            holder.timestamp.setVisibility(View.VISIBLE);
+
+            prevTotal = order.getPrice() * order.getQuantity();
         }
         else {
             if (! prevFinderDevRegId.equals(order.getFinderDevRegId())) {
                 prevFinderDevRegId = order.getFinderDevRegId();
+                holder.who.setText(whoStr);
                 holder.who.setVisibility(View.VISIBLE);
+                holder.timestamp.setText(getTimeStamp2(order));
+                holder.timestamp.setVisibility(View.VISIBLE);
                 holder.border.setVisibility(View.VISIBLE);
-                prevTotal = (float)0;
+                prevTotal = order.getPrice() * order.getQuantity();
             } else {
-                prevTotal += order.getPrice();
+                prevTotal += (order.getPrice() * order.getQuantity());
             }
 
         }
-
-        holder.who.setText(whoStr);
 
         holder.name.setText(order.getMenuName());
         holder.quantity.setText(order.getQuantity().toString());
@@ -128,9 +140,9 @@ public class ListOrderRowAdapter extends ArrayAdapter<OrderEntity> {
         holder.price.setText(format.format(order.getPrice()));
 
         if (order.getOrderState() == 0)
-            holder.state.setText("new1");
+            holder.state.setText("new");
         else if (order.getOrderState() == 1)
-            holder.state.setText("cnf1");
+            holder.state.setText("cnf");
 
         return row;
     }
@@ -138,6 +150,7 @@ public class ListOrderRowAdapter extends ArrayAdapter<OrderEntity> {
     private void hide_all(MyListHolder row){
         row.name.setVisibility(View.GONE);
         row.who.setVisibility(View.GONE);
+        row.timestamp.setVisibility(View.GONE);
         row.quantity.setVisibility(View.GONE);
         row.name.setVisibility(View.GONE);
         row.price.setVisibility(View.GONE);
@@ -148,9 +161,62 @@ public class ListOrderRowAdapter extends ArrayAdapter<OrderEntity> {
 
     }
 
+    private String getTimeStamp(OrderEntity order) {
+        String input = order.getTimestamp().toString();
+
+        Log.v("sajid","time1="+input);
+        TimeZone utc = TimeZone.getTimeZone("UTC");
+        SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        f.setTimeZone(utc);
+        GregorianCalendar cal = new GregorianCalendar(utc);
+        try {
+            cal.setTime(f.parse(input));
+        } catch (Exception e)
+        {
+            Log.v("sajid",e.toString());
+        }
+
+        Log.v("sajid","time2="+cal.getTime().toString());
+
+        //SimpleDateFormat fmt = new SimpleDateFormat("dd-MMM hh:mm a");
+        //String dateFormatted = fmt.format(cal);
+
+        //Log.v("sajid","time3="+dateFormatted);
+
+
+        String dateFormatted = cal.getTime().toString();
+
+        return dateFormatted;
+    }
+
+
+    private String getTimeStamp2(OrderEntity order) {
+
+        Date d = new Date();
+        String datestring = order.getTimestamp().toString();
+
+        try {
+            SimpleDateFormat s = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'");// spec for RFC3339 (with fractional seconds)
+            s.setLenient(true);
+            s.setTimeZone(TimeZone.getTimeZone("UTC"));
+            d = s.parse(datestring);
+        } catch (java.text.ParseException pe) {
+            Log.e("sajid",pe.getMessage());
+        }
+
+        Calendar cal = Calendar.getInstance();
+        TimeZone tz = cal.getTimeZone();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM, hh:mm a");
+        sdf.setTimeZone(tz);
+        String localTime = sdf.format(d);
+
+        return localTime;
+    }
+
     static class MyListHolder {
         TextView name;
         TextView who;
+        TextView timestamp;
         TextView quantity;
         TextView price;
         TextView state;
