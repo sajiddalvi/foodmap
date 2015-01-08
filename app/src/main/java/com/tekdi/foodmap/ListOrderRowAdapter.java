@@ -73,6 +73,7 @@ public class ListOrderRowAdapter extends ArrayAdapter<OrderEntity> {
 
         holder.total = (TextView) row.findViewById(R.id.list_order_row_total);
         holder.timestamp = (TextView) row.findViewById(R.id.list_order_row_timestamp);
+        holder.confirm = (TextView) row.findViewById(R.id.list_order_row_confirm);
 
         row.setTag(holder);
 
@@ -81,20 +82,15 @@ public class ListOrderRowAdapter extends ArrayAdapter<OrderEntity> {
         if (order.getFinderDevRegId().equals("total")){
             hide_all(holder);
             holder.totalLabel.setVisibility(View.VISIBLE);
-
             holder.total.setVisibility(View.VISIBLE);
             NumberFormat format = NumberFormat.getCurrencyInstance();
             holder.total.setText(format.format(prevTotal));
 
+            if (iAmServer) {
+                holder.confirm.setVisibility(View.VISIBLE);
+            }
+
             return row;
-        }
-
-        String orderIdStr = "";
-        String truncatedOrderIdStr = "";
-
-        if (!(order.getId() == null)) {
-            orderIdStr = order.getId().toString();
-            truncatedOrderIdStr = orderIdStr.substring(orderIdStr.length() - 5);
         }
 
         String whoStr = new String("who");
@@ -195,6 +191,7 @@ public class ListOrderRowAdapter extends ArrayAdapter<OrderEntity> {
         LinearLayout border;
         TextView totalLabel;
         TextView total;
+        TextView confirm;
     }
 
 }

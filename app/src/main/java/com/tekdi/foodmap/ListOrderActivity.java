@@ -26,8 +26,11 @@ public class ListOrderActivity extends ListActivity {
     private Boolean iAmServer = Boolean.FALSE;
     private Long myServerId;
     private String finderDevRegId = "";
-
+    private ListOrderRowAdapter adapter;
     private ArrayList<OrderEntity> orderList = new ArrayList<OrderEntity>();
+    private ArrayList<OrderEntity> newOrderList = new ArrayList<OrderEntity>();
+    private int numItemsInOrder;
+    private int numItemsConfirmed;
 
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -37,6 +40,8 @@ public class ListOrderActivity extends ListActivity {
         registerForContextMenu(getListView());
 
         orderList.clear();
+        numItemsInOrder = 0;
+        numItemsConfirmed = 0;
 
         Intent intent = getIntent();
         String intentServerIdStr = intent.getStringExtra("serverId");
@@ -82,7 +87,6 @@ public class ListOrderActivity extends ListActivity {
     @Override
     public void onResume() {
         super.onResume();
-
     }
 
         @Override
@@ -132,28 +136,44 @@ public class ListOrderActivity extends ListActivity {
 
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
+        Log.v("sajid","onlistitemclicked");
+
         if (iAmServer) {
-            Log.v("sajid", "confirming order");
-            OrderEntity selectedOrder = orderList.get(position);
-            new ConfirmOrderEndpointAsyncTask(this).execute(new Pair<Context, OrderEntity>(this, selectedOrder));
+             if (newOrderList.get(position).getFinderDevRegId().equals("total")) {
+                numItemsConfirmed = 0;
+                Log.v("sajid","clicked total");
+                String finderDevRegId = newOrderList.get(position-1).getFinderDevRegId();
+                Log.v("sajid","confirming for "+truncateStr(finderDevRegId));
+                for (OrderEntity o : orderList) {
+                    if (o.getFinderDevRegId().equals(finderDevRegId)) {
+                        Log.v("sajid","confirming item "+o.getMenuName());
+                        new ConfirmOrderEndpointAsyncTask(this).execute(new Pair<Context, OrderEntity>(this, o));
+                    }
+                    numItemsInOrder ++;
+                }
+            }
         }
     }
 
-
     public void refreshOrder() {
-        orderList.clear();
-        if (iAmServer) {
-            Log.v("sajid", "refreshing server listorder for "+myServerId);
-            ListOrdersEndpointAsyncTask l = new ListOrdersEndpointAsyncTask(this);
-            l.setServerId(myServerId);
-            l.execute();
-        } else {
-            Log.v("sajid","refreshing finder listorder");
-            if (!(finderDevRegId.equals(""))) {
-                ListFinderOrdersEndpointAsyncTask l =
-                        new ListFinderOrdersEndpointAsyncTask(this);
-                l.setFinderDevRegId(finderDevRegId);
+
+        numItemsConfirmed ++;
+        Log.v("sajid","refresh order tot="+numItemsInOrder+",cnf="+numItemsConfirmed);
+        if (numItemsConfirmed == numItemsInOrder) {
+            orderList.clear();
+            if (iAmServer) {
+                Log.v("sajid", "refreshing server listorder for " + myServerId);
+                ListOrdersEndpointAsyncTask l = new ListOrdersEndpointAsyncTask(this);
+                l.setServerId(myServerId);
                 l.execute();
+            } else {
+                Log.v("sajid", "refreshing finder listorder");
+                if (!(finderDevRegId.equals(""))) {
+                    ListFinderOrdersEndpointAsyncTask l =
+                            new ListFinderOrdersEndpointAsyncTask(this);
+                    l.setFinderDevRegId(finderDevRegId);
+                    l.execute();
+                }
             }
         }
     }
@@ -170,7 +190,6 @@ public class ListOrderActivity extends ListActivity {
 
         Collections.sort(orderList, new ComparatorOrderEntity());
 
-        ArrayList<OrderEntity> newOrderList = new ArrayList<OrderEntity>();
         ArrayList<OrderEntity> finderOrderList = new ArrayList<OrderEntity>();
 
         OrderEntity prev = orderList.get(0);
@@ -205,7 +224,7 @@ public class ListOrderActivity extends ListActivity {
         dummyEntity.setFinderDevRegId("total");
         newOrderList.add(dummyEntity);
 
-        ListOrderRowAdapter adapter = new ListOrderRowAdapter(this, R.layout.list_order_row,
+        adapter = new ListOrderRowAdapter(this, R.layout.list_order_row,
                 newOrderList);
 
         adapter.setIAmServer(iAmServer);
@@ -229,7 +248,6 @@ public class ListOrderActivity extends ListActivity {
                     finderOrderList.remove(j);
                     size--;
                     j--;
-
                 }
             }
         }
