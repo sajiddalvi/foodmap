@@ -32,9 +32,7 @@ public class OrderActivity extends ListActivity {
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
 
-
         try{
-
             Intent i = this.getIntent();
 
             ParcelableOrder p = (ParcelableOrder) i.getParcelableExtra("com.tekdi.foodmap.ParcelableOrder");
@@ -53,7 +51,6 @@ public class OrderActivity extends ListActivity {
             }
 
             if (!foundEntry) {
-
                 OrderEntity o = new OrderEntity();
                 o.setMenuId(p.menuId);
                 o.setServerId(p.serverId);
@@ -63,18 +60,28 @@ public class OrderActivity extends ListActivity {
                 o.setMenuName(p.name);
                 o.setPrice(p.price);
                 o.setQuantity(p.quantity);
-                orderList.add(o);
 
+                // if its the first order entry, add "total"
+                if (orderList.size() == 0) {
+                    orderList.add(o);
+                    OrderEntity dummyEntity = new OrderEntity();
+                    dummyEntity.setFinderDevRegId("total");
+                    dummyEntity.setMenuId((long)999);
+                    orderList.add(dummyEntity);
+                } else {
+                    // always add new order to the top, so "total" stays last
+                    orderList.add(0,o);
+                }
             }
 
             showOrder();
 
         } catch(Exception e){
+            Log.v("sajid","OrderActivity:"+e.getMessage());
             e.printStackTrace();
         }
 
         registerForContextMenu(getListView());
-
 
     }
 

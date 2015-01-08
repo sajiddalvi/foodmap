@@ -17,7 +17,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
 
@@ -113,7 +112,7 @@ public class ListOrderRowAdapter extends ArrayAdapter<OrderEntity> {
             prevFinderDevRegId = order.getFinderDevRegId();
             holder.who.setVisibility(View.VISIBLE);
             holder.who.setText(whoStr);
-            holder.timestamp.setText(getTimeStamp2(order));
+            holder.timestamp.setText(getTimeStamp(order));
             holder.timestamp.setVisibility(View.VISIBLE);
 
             prevTotal = order.getPrice() * order.getQuantity();
@@ -123,7 +122,7 @@ public class ListOrderRowAdapter extends ArrayAdapter<OrderEntity> {
                 prevFinderDevRegId = order.getFinderDevRegId();
                 holder.who.setText(whoStr);
                 holder.who.setVisibility(View.VISIBLE);
-                holder.timestamp.setText(getTimeStamp2(order));
+                holder.timestamp.setText(getTimeStamp(order));
                 holder.timestamp.setVisibility(View.VISIBLE);
                 holder.border.setVisibility(View.VISIBLE);
                 prevTotal = order.getPrice() * order.getQuantity();
@@ -162,54 +161,27 @@ public class ListOrderRowAdapter extends ArrayAdapter<OrderEntity> {
     }
 
     private String getTimeStamp(OrderEntity order) {
-        String input = order.getTimestamp().toString();
 
-        Log.v("sajid","time1="+input);
-        TimeZone utc = TimeZone.getTimeZone("UTC");
-        SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-        f.setTimeZone(utc);
-        GregorianCalendar cal = new GregorianCalendar(utc);
-        try {
-            cal.setTime(f.parse(input));
-        } catch (Exception e)
-        {
-            Log.v("sajid",e.toString());
+        String localTime = "";
+        if ((order.getTimestamp() != null) && (! order.getTimestamp().equals(""))) {
+            Date d = new Date();
+            String datestring = order.getTimestamp().toString();
+
+            try {
+                SimpleDateFormat s = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'");// spec for RFC3339 (with fractional seconds)
+                s.setLenient(true);
+                s.setTimeZone(TimeZone.getTimeZone("UTC"));
+                d = s.parse(datestring);
+            } catch (java.text.ParseException pe) {
+                Log.e("sajid", pe.getMessage());
+            }
+
+            Calendar cal = Calendar.getInstance();
+            TimeZone tz = cal.getTimeZone();
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM, hh:mm a");
+            sdf.setTimeZone(tz);
+            localTime = sdf.format(d);
         }
-
-        Log.v("sajid","time2="+cal.getTime().toString());
-
-        //SimpleDateFormat fmt = new SimpleDateFormat("dd-MMM hh:mm a");
-        //String dateFormatted = fmt.format(cal);
-
-        //Log.v("sajid","time3="+dateFormatted);
-
-
-        String dateFormatted = cal.getTime().toString();
-
-        return dateFormatted;
-    }
-
-
-    private String getTimeStamp2(OrderEntity order) {
-
-        Date d = new Date();
-        String datestring = order.getTimestamp().toString();
-
-        try {
-            SimpleDateFormat s = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'");// spec for RFC3339 (with fractional seconds)
-            s.setLenient(true);
-            s.setTimeZone(TimeZone.getTimeZone("UTC"));
-            d = s.parse(datestring);
-        } catch (java.text.ParseException pe) {
-            Log.e("sajid",pe.getMessage());
-        }
-
-        Calendar cal = Calendar.getInstance();
-        TimeZone tz = cal.getTimeZone();
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM, hh:mm a");
-        sdf.setTimeZone(tz);
-        String localTime = sdf.format(d);
-
         return localTime;
     }
 

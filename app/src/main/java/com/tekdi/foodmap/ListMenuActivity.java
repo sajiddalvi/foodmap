@@ -113,6 +113,8 @@ public class ListMenuActivity extends ListActivity implements Serializable {
             p.price = m.getPrice();
             p.thumbnail = m.getThumbnail();
 
+            Log.v("sajid","calling Orderactivity");
+
             Intent intent = new Intent(this, OrderActivity.class);
             intent.putExtra("com.tekdi.foodmap.ParcelableOrder", p);
             startActivity(intent);
