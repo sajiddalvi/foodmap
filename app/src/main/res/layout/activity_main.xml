@@ -35,11 +35,11 @@
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="Cater Food"
                 android:id="@+id/textView"
-                android:textColor="#ffffffff"
                 android:gravity="center"
                 android:clickable="true"
                 android:focusable="true"
                 android:onClick="onServerSetupButtonClick"
+                android:textColor="@drawable/text_link_selector"
                 />
 
             <LinearLayout
@@ -59,7 +59,7 @@
                     android:layout_weight="1"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text="Orders"
-                    android:textColor="#ffffffff" />
+                    android:textColor="@drawable/text_link_selector" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -71,7 +71,7 @@
                     android:layout_weight="0"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text="Menu"
-                    android:textColor="#ffffffff" />
+                    android:textColor="@drawable/text_link_selector" />
             </LinearLayout>
         </LinearLayout>
 
@@ -90,7 +90,7 @@
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="Find Food"
                 android:id="@+id/textView2"
-                android:textColor="#ffffffff"
+                android:textColor="@drawable/text_link_selector"
                 android:gravity="center"
                 android:clickable="true"
                 android:focusable="true"
@@ -113,7 +113,7 @@
                     android:layout_weight="1"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text="Locate"
-                    android:textColor="#ffffffff" />
+                    android:textColor="@drawable/text_link_selector" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -125,7 +125,7 @@
                     android:layout_weight="0"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text="Orders"
-                    android:textColor="#ffffffff" />
+                    android:textColor="@drawable/text_link_selector" />
             </LinearLayout>
 
 

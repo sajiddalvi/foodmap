@@ -54,11 +54,15 @@ public class MainActivity extends Activity {
 
     public void onMenuListButtonClick(View v) {
         String serverId = Prefs.getServeIdPref(this);
-        Intent intent = new Intent(this, ListMenuActivity.class);
-        intent.putExtra("serverId", Long.parseLong(serverId));
-        intent.putExtra("serverName", "lulus");
-        intent.putExtra("source","server");
-        startActivity(intent);
+        if (! serverId.equals("")) {
+            Intent intent = new Intent(this, ListMenuActivity.class);
+            intent.putExtra("serverId", Long.parseLong(serverId));
+            intent.putExtra("serverName", "lulus");
+            intent.putExtra("source", "server");
+            startActivity(intent);
+        } else {
+            v.setClickable(false);
+        }
     }
 
     public void onBannerClick(View v) {
