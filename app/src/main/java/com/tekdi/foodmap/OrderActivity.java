@@ -35,42 +35,46 @@ public class OrderActivity extends ListActivity {
         try{
             Intent i = this.getIntent();
 
-            ParcelableOrder p = (ParcelableOrder) i.getParcelableExtra("com.tekdi.foodmap.ParcelableOrder");
+            String action = i.getStringExtra("action");
+            if (action.equals("neworder")) {
 
-            // if menu item already exists, bump up quantity
-            int index = 0;
-            boolean foundEntry = false;
-            for (OrderEntity order : orderList) {
-                if (order.getMenuId().equals(p.menuId)) {
-                    order.setQuantity(order.getQuantity() + 1);
-                    orderList.set(index,order);
-                    foundEntry = true;
-                    break;
+                ParcelableOrder p = (ParcelableOrder) i.getParcelableExtra("com.tekdi.foodmap.ParcelableOrder");
+
+                // if menu item already exists, bump up quantity
+                int index = 0;
+                boolean foundEntry = false;
+                for (OrderEntity order : orderList) {
+                    if (order.getMenuId().equals(p.menuId)) {
+                        order.setQuantity(order.getQuantity() + 1);
+                        orderList.set(index, order);
+                        foundEntry = true;
+                        break;
+                    }
+                    index++;
                 }
-                index ++;
-            }
 
-            if (!foundEntry) {
-                OrderEntity o = new OrderEntity();
-                o.setMenuId(p.menuId);
-                o.setServerId(p.serverId);
-                o.setFinderDevRegId(p.finderDevRegId);
-                o.setServerName(p.serverName);
-                o.setOrderState(0);
-                o.setMenuName(p.name);
-                o.setPrice(p.price);
-                o.setQuantity(p.quantity);
+                if (!foundEntry) {
+                    OrderEntity o = new OrderEntity();
+                    o.setMenuId(p.menuId);
+                    o.setServerId(p.serverId);
+                    o.setFinderDevRegId(p.finderDevRegId);
+                    o.setServerName(p.serverName);
+                    o.setOrderState(0);
+                    o.setMenuName(p.name);
+                    o.setPrice(p.price);
+                    o.setQuantity(p.quantity);
 
-                // if its the first order entry, add "total"
-                if (orderList.size() == 0) {
-                    orderList.add(o);
-                    OrderEntity dummyEntity = new OrderEntity();
-                    dummyEntity.setFinderDevRegId("total");
-                    dummyEntity.setMenuId((long)999);
-                    orderList.add(dummyEntity);
-                } else {
-                    // always add new order to the top, so "total" stays last
-                    orderList.add(0,o);
+                    // if its the first order entry, add "total"
+                    if (orderList.size() == 0) {
+                        orderList.add(o);
+                        OrderEntity dummyEntity = new OrderEntity();
+                        dummyEntity.setFinderDevRegId("total");
+                        dummyEntity.setMenuId((long) 999);
+                        orderList.add(dummyEntity);
+                    } else {
+                        // always add new order to the top, so "total" stays last
+                        orderList.add(0, o);
+                    }
                 }
             }
 
@@ -102,17 +106,50 @@ public class OrderActivity extends ListActivity {
             case R.id.confirm_menu:
                 Log.v("sajid","Confirm Order");
 
-                // remove total
-                orderList.remove(orderList.size()-1);
+                if (orderList.size() > 0) {
+                    // remove total
+                    orderList.remove(orderList.size() - 1);
 
-                for (OrderEntity order : orderList) {
-                    new OrderEndpointAsyncTask().execute(new Pair<Context, OrderEntity>(this, order));
+                    for (OrderEntity order : orderList) {
+                        new OrderEndpointAsyncTask().execute(new Pair<Context, OrderEntity>(this, order));
+                    }
+
+                    orderList.clear();
+
+                    Intent i = new Intent(OrderActivity.this, ListOrderActivity.class);
+                    i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(i);
+                    finish();
                 }
-
-                orderList.clear();
 
                 break;
 
+            case R.id.add_menu:
+
+                if (orderList.size() > 0) {
+                    OrderEntity o = orderList.get(0);
+
+
+                    Intent intent = new Intent(this, ListMenuActivity.class);
+                    intent.putExtra("serverId", o.getServerId());
+                    intent.putExtra("serverName", o.getServerName());
+                    intent.putExtra("source", "finder");
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                    finish();
+
+                } else {
+                    Intent intent = new Intent(this, FindActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                    finish();
+                }
+                break;
+
+
+            case R.id.clear_menu:
+                orderList.clear();
+                adapter.notifyDataSetChanged();
         }
         return super.onOptionsItemSelected(item);
     }

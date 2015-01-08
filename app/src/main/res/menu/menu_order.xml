@@ -1,5 +1,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     >
+
+    <item android:id="@+id/add_menu" android:title="@string/order_add"
+        android:showAsAction="always" />
     <item android:id="@+id/confirm_menu" android:title="@string/order_confirm"
         android:showAsAction="always" />
+    <item android:id="@+id/clear_menu" android:title="@string/order_clear"
+        android:showAsAction="ifRoom" />
 </menu>

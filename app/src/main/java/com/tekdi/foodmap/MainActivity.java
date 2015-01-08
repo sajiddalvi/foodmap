@@ -43,6 +43,15 @@ public class MainActivity extends Activity {
         startActivity(intent);
     }
 
+    public void onFinderOrderButtonClick(View v) {
+        Log.v("sajid", "onOrderListButtonClick");
+        String serverId = Prefs.getServeIdPref(this);
+        Intent intent = new Intent(this, OrderActivity.class);
+        intent.putExtra("action","showorder");
+        intent.putExtra("serverId", serverId);
+        startActivity(intent);
+    }
+
     public void onServerSetupButtonClick(View v) {
         Intent intent = new Intent(this, EditServerActivity.class);
         startActivity(intent);

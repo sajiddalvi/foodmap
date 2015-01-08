@@ -121,7 +121,7 @@
                     android:id="@+id/finder_check_order"
                     android:clickable="true"
                     android:focusable="true"
-                    android:onClick="onOrderListButtonClick"
+                    android:onClick="onFinderOrderButtonClick"
                     android:layout_weight="0"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text="Orders"

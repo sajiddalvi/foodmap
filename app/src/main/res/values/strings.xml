@@ -29,8 +29,10 @@
     <string name="preference_server_id_key">preference_file_server_id</string>
     <string name="order_menu">Order</string>
     <string name="order_confirm">Confirm</string>
+    <string name="order_clear">Clear</string>
+    <string name="order_add">Add</string>
     <string name="done">Done</string>
-    <string name="title_activity_order">OrderActivity</string>
+    <string name="title_activity_order">New Order</string>
     <string name="title_activity_list_order">ListOrderActivity</string>
     <string name="order_list_refresh">Refresh</string>
     <string name="currency_symbol">$</string>

@@ -117,6 +117,7 @@ public class ListMenuActivity extends ListActivity implements Serializable {
 
             Intent intent = new Intent(this, OrderActivity.class);
             intent.putExtra("com.tekdi.foodmap.ParcelableOrder", p);
+            intent.putExtra("action","neworder");
             startActivity(intent);
         }
     }
@@ -150,6 +151,7 @@ public class ListMenuActivity extends ListActivity implements Serializable {
 
                     Intent intent = new Intent(this, EditMenuActivity.class);
                     intent.putExtra("com.tekdi.foodmap.ParcelableMenu", p);
+
                     startActivity(intent);
 
                     return true;
