@@ -79,14 +79,16 @@ public class ListOrderRowAdapter extends ArrayAdapter<OrderEntity> {
 
         OrderEntity order = data.get(position);
 
-        if (order.getFinderDevRegId().equals("total")){
+        if (order.getFinderDevRegId().contains("total")){
+
             hide_all(holder);
             holder.totalLabel.setVisibility(View.VISIBLE);
             holder.total.setVisibility(View.VISIBLE);
             NumberFormat format = NumberFormat.getCurrencyInstance();
             holder.total.setText(format.format(prevTotal));
 
-            if (iAmServer) {
+            if ((iAmServer) &&
+                    (! order.getFinderDevRegId().contains("confirm"))   ) {
                 holder.confirm.setVisibility(View.VISIBLE);
             }
 

@@ -206,6 +206,10 @@ public class ListOrderActivity extends ListActivity {
 
                 OrderEntity dummyEntity = new OrderEntity();
                 dummyEntity.setFinderDevRegId("total");
+                Boolean showConfirm = checkIfConfirmed(finderOrderList);
+                if (showConfirm)
+                    dummyEntity.setFinderDevRegId("total confirm");
+
                 newOrderList.add(dummyEntity);
 
                 finderOrderList.clear();
@@ -218,10 +222,16 @@ public class ListOrderActivity extends ListActivity {
 
         finderOrderList = removeDups(finderOrderList);
 
+
         newOrderList.addAll(finderOrderList);
 
         OrderEntity dummyEntity = new OrderEntity();
         dummyEntity.setFinderDevRegId("total");
+
+        Boolean showConfirm = checkIfConfirmed(finderOrderList);
+        if (showConfirm)
+            dummyEntity.setFinderDevRegId("total confirm");
+
         newOrderList.add(dummyEntity);
 
         adapter = new ListOrderRowAdapter(this, R.layout.list_order_row,
@@ -244,15 +254,26 @@ public class ListOrderActivity extends ListActivity {
             for (int j = i + 1; j < size; j++) {
                 OrderEntity oe2 = finderOrderList.get(j);
                 if (oe.getMenuId().equals(oe2.getMenuId())) {
-                    oe.setQuantity(oe.getQuantity() + oe2.getQuantity());
-                    finderOrderList.remove(j);
-                    size--;
-                    j--;
+                    if (oe.getOrderState().equals(oe2.getOrderState())) {
+                        oe.setQuantity(oe.getQuantity() + oe2.getQuantity());
+                        finderOrderList.remove(j);
+                        size--;
+                        j--;
+                    }
                 }
             }
         }
 
         return finderOrderList;
+    }
+
+    private Boolean checkIfConfirmed(ArrayList<OrderEntity> finderOrderList) {
+        for (OrderEntity o: finderOrderList) {
+            if (o.getOrderState() == 0) {
+                return false;
+            }
+        }
+        return true;
     }
 
 }
