@@ -59,10 +59,13 @@ public class OrderActivity extends ListActivity {
                     o.setServerId(p.serverId);
                     o.setFinderDevRegId(p.finderDevRegId);
                     o.setServerName(p.serverName);
+                    o.setServerPhone(p.serverPhone);
+                    o.setServerAddress(p.serverAddress);
                     o.setOrderState(0);
                     o.setMenuName(p.name);
                     o.setPrice(p.price);
                     o.setQuantity(p.quantity);
+
 
                     // if its the first order entry, add "total"
                     if (orderList.size() == 0) {
@@ -134,6 +137,8 @@ public class OrderActivity extends ListActivity {
                     intent.putExtra("serverId", o.getServerId());
                     intent.putExtra("serverName", o.getServerName());
                     intent.putExtra("source", "finder");
+                    intent.putExtra("phone", o.getServerPhone());
+                    intent.putExtra("address", o.getServerAddress());
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                     finish();

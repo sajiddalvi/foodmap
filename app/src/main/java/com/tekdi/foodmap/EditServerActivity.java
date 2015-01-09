@@ -348,7 +348,7 @@ public class EditServerActivity extends FragmentActivity
                 Log.e("sajid",
                         "IO Exception in getFromLocation()");
                 e1.printStackTrace();
-                return ("IO Exception trying to get address");
+                return ("Unable to get address. Try again or enter manually.");
             } catch (IllegalArgumentException e2) {
                 // Error message to post in the log
                 String errorString = "Illegal arguments " +
@@ -358,7 +358,7 @@ public class EditServerActivity extends FragmentActivity
                         " passed to address service";
                 Log.e("sajid", errorString);
                 e2.printStackTrace();
-                return errorString;
+                return "Unable to get address. Try again or enter manually.";
             }
             // If the reverse geocode returned an address
             if (addresses != null && addresses.size() > 0) {

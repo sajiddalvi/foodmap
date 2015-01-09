@@ -21,6 +21,8 @@ public class OrderEntity {
     @Index
     String finderDevRegId;
     String serverName;
+    String serverAddress;
+    String serverPhone;
     Integer orderState;
     String menuName;
     Integer quantity;
@@ -58,6 +60,10 @@ public class OrderEntity {
 
     public Date getTimestamp() { return timestamp; }
 
+    public String getServerAddress() { return serverAddress; }
+
+    public String getServerPhone() { return serverPhone; }
+
 
     public void setId(Long id) {
         this.id = id;
@@ -88,4 +94,8 @@ public class OrderEntity {
     public void setPrice(Float price) { this.price = price; }
 
     public void setTimestamp(Date timestamp) { this.timestamp = timestamp; }
+
+    public void setServerAddress(String address) { this.serverAddress = address; }
+
+    public void setServerPhone(String phone) { this.serverPhone = phone; }
 }

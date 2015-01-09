@@ -79,6 +79,9 @@ public class MainActivity extends Activity {
         intent.putExtra("serverId", Long.parseLong("6240701431939072"));
         intent.putExtra("serverName", "lulus");
         intent.putExtra("source","finder");
+        intent.putExtra("phone","6305852134");
+        intent.putExtra("address","1147 n eola road aurora il");
+
         startActivity(intent);
     }
 }

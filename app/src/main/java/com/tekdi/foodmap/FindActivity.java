@@ -40,6 +40,7 @@ public class FindActivity extends FragmentActivity implements
     private List<ServeFoodEntity> servers;
     private LocationClient mLocationClient;
     private Location mCurrentLocation;
+    private ServeMap selectedServeMap;
 
     class ServeMap
     {
@@ -258,31 +259,31 @@ public class FindActivity extends FragmentActivity implements
     @Override
     public boolean onMarkerClick(final Marker marker) {
         for (ServeMap sm : smList) {
-            if (sm.m.equals(marker)) {
+            if (sm.m.getId().equals(marker.getId())) {
                 Log.v("sajid", "Found marker " + sm.s.getName());
+                selectedServeMap = sm;
                 sm.m.showInfoWindow();
             }
         }
         return false;
     }
 
+
     @Override
     public void onInfoWindowClick(Marker marker) {
-        for (ServeMap sm : smList) {
-            if (sm.m.equals(marker)) {
-                Log.v("sajid", "Found info marker " + sm.s.getName());
-                Long serverId = sm.s.getId();
+
+                Log.v("sajid", "Found info marker " + selectedServeMap.s.getName());
+
 
                 Intent intent = new Intent(this, ListMenuActivity.class);
-                intent.putExtra("serverId", serverId);
-                intent.putExtra("serverName", sm.s.getName());
+                intent.putExtra("serverId", selectedServeMap.s.getId());
+                intent.putExtra("serverName", selectedServeMap.s.getName());
                 intent.putExtra("source","finder");
-                intent.putExtra("phone",sm.s.getPhone());
-                intent.putExtra("address",sm.s.getAddress());
+                intent.putExtra("phone",selectedServeMap.s.getPhone());
+                intent.putExtra("address",selectedServeMap.s.getAddress());
 
                 startActivity(intent);
-            }
-        }
+
     }
 
     // Use default InfoWindow frame
@@ -307,25 +308,12 @@ public class FindActivity extends FragmentActivity implements
         TextView infoName = (TextView) v.findViewById(R.id.info_window_name);
         TextView infoCuisine = (TextView) v.findViewById(R.id.info_window_cuisine);
 
-        ServeFoodEntity s = null;
-        for (ServeMap sm : smList) {
-            s = sm.s;
-            Marker m = sm.m;
-
-            if (arg0.getId() == m.getId()) {
-                break;
-            }
-
-        }
-        if (s != null) {
-            infoName.setText(s.getName());
-            infoCuisine.setText(s.getCuisine());
-        }
+        infoName.setText(selectedServeMap.s.getName());
+        infoCuisine.setText(selectedServeMap.s.getCuisine());
 
         // Returning the view containing InfoWindow contents
         return v;
 
     }
-
 }
 
