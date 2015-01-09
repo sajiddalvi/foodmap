@@ -5,6 +5,9 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -13,6 +16,7 @@ import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -29,6 +33,7 @@ public class FindActivity extends FragmentActivity implements
         GooglePlayServicesClient.OnConnectionFailedListener,
         GoogleMap.OnMarkerClickListener,
         GoogleMap.OnInfoWindowClickListener,
+        InfoWindowAdapter,
         LocationListener {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
@@ -40,6 +45,7 @@ public class FindActivity extends FragmentActivity implements
     {
         ServeFoodEntity s;
         Marker m;
+        String phone;
 
         ServeMap(ServeFoodEntity s, Marker m)
         {
@@ -112,6 +118,8 @@ public class FindActivity extends FragmentActivity implements
 
             mMap.setOnMarkerClickListener(this);
             mMap.setOnInfoWindowClickListener(this);
+            mMap.setInfoWindowAdapter(this);
+
         }
     }
 
@@ -161,6 +169,7 @@ public class FindActivity extends FragmentActivity implements
                     .title(q.getName())
                     .snippet(q.getCuisine())
                     .icon(flag));
+
 
             smList.add(new ServeMap(q,m));
         }
@@ -251,6 +260,7 @@ public class FindActivity extends FragmentActivity implements
         for (ServeMap sm : smList) {
             if (sm.m.equals(marker)) {
                 Log.v("sajid", "Found marker " + sm.s.getName());
+                sm.m.showInfoWindow();
             }
         }
         return false;
@@ -267,10 +277,55 @@ public class FindActivity extends FragmentActivity implements
                 intent.putExtra("serverId", serverId);
                 intent.putExtra("serverName", sm.s.getName());
                 intent.putExtra("source","finder");
+                intent.putExtra("phone",sm.s.getPhone());
+                intent.putExtra("address",sm.s.getAddress());
 
                 startActivity(intent);
             }
         }
     }
+
+    // Use default InfoWindow frame
+    @Override
+    public View getInfoWindow(Marker arg0) {
+        return null;
+    }
+
+    // Defines the contents of the InfoWindow
+    @Override
+    public View getInfoContents(Marker arg0) {
+
+        Log.v("sajid","called getInfoContents");
+
+        // Getting view from the layout file info_window_layout
+        View v = getLayoutInflater().inflate(R.layout.info_window_layout, null);
+
+        // Getting the position from the marker
+        String snippet = arg0.getSnippet();
+
+        // Getting reference to the TextView to set latitude
+        TextView infoName = (TextView) v.findViewById(R.id.info_window_name);
+        TextView infoCuisine = (TextView) v.findViewById(R.id.info_window_cuisine);
+
+        ServeFoodEntity s = null;
+        for (ServeMap sm : smList) {
+            s = sm.s;
+            Marker m = sm.m;
+
+            if (arg0.getId() == m.getId()) {
+                break;
+            }
+
+        }
+        if (s != null) {
+            infoName.setText(s.getName());
+            infoCuisine.setText(s.getCuisine());
+        }
+
+        // Returning the view containing InfoWindow contents
+        return v;
+
+    }
+
 }
 

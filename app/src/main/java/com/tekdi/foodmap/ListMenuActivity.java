@@ -3,6 +3,7 @@ package com.tekdi.foodmap;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Pair;
@@ -30,6 +31,8 @@ public class ListMenuActivity extends ListActivity implements Serializable {
     private String serverName;
     private String source;
     private Boolean amIServer;
+    private String phone;
+    private String address;
 
     private ArrayList<MenuEntity> menuList = new ArrayList<MenuEntity>();
     private ArrayList<ParcelableOrder> orderList = new ArrayList<ParcelableOrder>();
@@ -45,14 +48,21 @@ public class ListMenuActivity extends ListActivity implements Serializable {
         serverName = intent.getStringExtra("serverName");
         source = intent.getStringExtra("source");
 
+
         if (source.equals("server"))
             amIServer = true;
-        else
+        else {
             amIServer = false;
+            setTitle(serverName);
+            phone = intent.getStringExtra("phone");
+            address = intent.getStringExtra("address");
+        }
 
         registerForContextMenu(getListView());
 
         setContentView(R.layout.list_menu_view);
+
+
     }
 
     @Override
@@ -71,6 +81,9 @@ public class ListMenuActivity extends ListActivity implements Serializable {
         if (amIServer) {
             MenuInflater inflater = getMenuInflater();
             inflater.inflate(R.menu.menu_list, menu);
+        } else {
+            MenuInflater inflater = getMenuInflater();
+            inflater.inflate(R.menu.menu_list_finder, menu);
         }
         return super.onCreateOptionsMenu(menu);
     }
@@ -88,7 +101,24 @@ public class ListMenuActivity extends ListActivity implements Serializable {
                     Intent intent = new Intent(this, AddMenuActivity.class);
                     startActivity(intent);
                     break;
+
             }
+        } else {
+            switch (item.getItemId()) {
+                case R.id.action_call:
+                    Log.v("sajid", "action_call");
+                    Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:"+phone));
+                    startActivity(intent);
+                    break;
+                case R.id.action_navigate:
+                    Log.v("sajid", "action_navigate");
+                    Intent intent2 = new Intent(android.content.Intent.ACTION_VIEW,
+                            Uri.parse("google.navigation:q="+address));
+                    startActivity(intent2);
+
+                    break;
+            }
+
         }
         return super.onOptionsItemSelected(item);
 

@@ -136,17 +136,12 @@ public class ListOrderActivity extends ListActivity {
 
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
-        Log.v("sajid","onlistitemclicked");
-
         if (iAmServer) {
              if (newOrderList.get(position).getFinderDevRegId().equals("total")) {
                 numItemsConfirmed = 0;
-                Log.v("sajid","clicked total");
                 String finderDevRegId = newOrderList.get(position-1).getFinderDevRegId();
-                Log.v("sajid","confirming for "+truncateStr(finderDevRegId));
                 for (OrderEntity o : orderList) {
                     if (o.getFinderDevRegId().equals(finderDevRegId)) {
-                        Log.v("sajid","confirming item "+o.getMenuName());
                         new ConfirmOrderEndpointAsyncTask(this).execute(new Pair<Context, OrderEntity>(this, o));
                     }
                     numItemsInOrder ++;
@@ -162,12 +157,10 @@ public class ListOrderActivity extends ListActivity {
         if (numItemsConfirmed == numItemsInOrder) {
             orderList.clear();
             if (iAmServer) {
-                Log.v("sajid", "refreshing server listorder for " + myServerId);
                 ListOrdersEndpointAsyncTask l = new ListOrdersEndpointAsyncTask(this);
                 l.setServerId(myServerId);
                 l.execute();
             } else {
-                Log.v("sajid", "refreshing finder listorder");
                 if (!(finderDevRegId.equals(""))) {
                     ListFinderOrdersEndpointAsyncTask l =
                             new ListFinderOrdersEndpointAsyncTask(this);
