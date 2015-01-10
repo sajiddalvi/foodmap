@@ -72,9 +72,6 @@ public class AddMenuActivity extends Activity {
         editText = (EditText) findViewById(R.id.menu_description_text);
         String description = editText.getText().toString();
 
-        editText = (EditText) findViewById(R.id.menu_quantity_text);
-        String quantity = editText.getText().toString();
-
         editText = (EditText) findViewById(R.id.menu_price_text);
         String price = editText.getText().toString();
 
@@ -83,7 +80,6 @@ public class AddMenuActivity extends Activity {
         MenuEntity menu = new MenuEntity();
         menu.setName(name);
         menu.setDescription(description);
-        menu.setQuantity(Integer.parseInt(quantity));
         menu.setPrice(Float.parseFloat(price));
         if (serverId != null) {
             menu.setServerId(Long.parseLong(serverId));

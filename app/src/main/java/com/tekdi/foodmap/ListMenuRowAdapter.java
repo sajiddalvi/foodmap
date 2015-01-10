@@ -48,8 +48,6 @@ public class ListMenuRowAdapter extends ArrayAdapter<MenuEntity> {
         holder.name = (TextView) row.findViewById(R.id.list_menu_row_name);
         holder.price = (TextView) row
                 .findViewById(R.id.list_menu_row_price);
-        holder.quantity = (TextView) row
-                .findViewById(R.id.list_menu_row_quantity);
         holder.description = (TextView) row
                 .findViewById(R.id.list_menu_row_description);
         holder.thumbnail = (ImageView) row.findViewById(R.id.menu_picture_view);
@@ -59,7 +57,6 @@ public class ListMenuRowAdapter extends ArrayAdapter<MenuEntity> {
         MenuEntity myList = data.get(position);
 
         holder.name.setText(myList.getName());
-        holder.quantity.setText(myList.getQuantity().toString()+" left");
 
         NumberFormat format = NumberFormat.getCurrencyInstance();
         holder.price.setText(format.format(myList.getPrice()));
@@ -76,7 +73,6 @@ public class ListMenuRowAdapter extends ArrayAdapter<MenuEntity> {
 
     static class MyListHolder {
         TextView name;
-        TextView quantity;
         TextView price;
         TextView description;
         ImageView thumbnail;

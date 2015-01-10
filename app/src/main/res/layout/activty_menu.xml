@@ -41,22 +41,6 @@
         android:layout_height="wrap_content"
         style="?android:attr/listSeparatorTextViewStyle"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="@string/menu_quantity_label"
-        android:id="@+id/menu_quantity_label"
-        android:textColor="@android:color/holo_blue_light" />
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/menu_quantity_text"
-        android:inputType="number"
-        android:hint="Enter Number of Orders Available"/>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="?android:attr/listSeparatorTextViewStyle"
-        android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/menu_price_label"
         android:id="@+id/menu_price_label"
         android:textColor="@android:color/holo_blue_light" />

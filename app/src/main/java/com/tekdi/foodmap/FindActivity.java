@@ -131,6 +131,8 @@ public class FindActivity extends FragmentActivity implements
      * This should only be called once and when we are sure that {@link #mMap} is not null.
      */
     private void setUpMap(Location location) {
+        mMap.clear();
+
         mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
 
         if (location != null) {
