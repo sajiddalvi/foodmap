@@ -51,130 +51,138 @@ uses-permission#com.google.android.c2dm.permission.RECEIVE
 ADDED from AndroidManifest.xml:19:5
 	android:name
 		ADDED from AndroidManifest.xml:19:22
-uses-feature#android.hardware.camera
+uses-permission#android.permission.READ_PHONE_STATE
 ADDED from AndroidManifest.xml:20:5
+	android:name
+		ADDED from AndroidManifest.xml:20:22
+uses-permission#android.permission.CALL_PHONE
+ADDED from AndroidManifest.xml:21:5
+	android:name
+		ADDED from AndroidManifest.xml:21:22
+uses-feature#android.hardware.camera
+ADDED from AndroidManifest.xml:22:5
 	android:required
-		ADDED from AndroidManifest.xml:21:9
+		ADDED from AndroidManifest.xml:23:9
 	android:name
-		ADDED from AndroidManifest.xml:20:19
+		ADDED from AndroidManifest.xml:22:19
 permission#com.example.gcm.permission.C2D_MESSAGE
-ADDED from AndroidManifest.xml:23:5
+ADDED from AndroidManifest.xml:25:5
 	android:protectionLevel
-		ADDED from AndroidManifest.xml:25:9
+		ADDED from AndroidManifest.xml:27:9
 	android:name
-		ADDED from AndroidManifest.xml:24:9
+		ADDED from AndroidManifest.xml:26:9
 uses-permission#com.example.gcm.permission.C2D_MESSAGE
-ADDED from AndroidManifest.xml:27:5
-	android:name
-		ADDED from AndroidManifest.xml:27:22
-application
 ADDED from AndroidManifest.xml:29:5
+	android:name
+		ADDED from AndroidManifest.xml:29:22
+application
+ADDED from AndroidManifest.xml:31:5
 MERGED from com.google.android.gms:play-services:6.1.71:16:5
 MERGED from com.android.support:support-v4:20.0.0:17:5
 	android:label
-		ADDED from AndroidManifest.xml:32:9
+		ADDED from AndroidManifest.xml:34:9
 	android:allowBackup
-		ADDED from AndroidManifest.xml:30:9
+		ADDED from AndroidManifest.xml:32:9
 	android:icon
-		ADDED from AndroidManifest.xml:31:9
-	android:theme
 		ADDED from AndroidManifest.xml:33:9
+	android:theme
+		ADDED from AndroidManifest.xml:35:9
 meta-data#com.google.android.gms.version
-ADDED from AndroidManifest.xml:34:9
+ADDED from AndroidManifest.xml:36:9
 	android:name
-		ADDED from AndroidManifest.xml:35:13
+		ADDED from AndroidManifest.xml:37:13
 	android:value
-		ADDED from AndroidManifest.xml:36:13
-meta-data#com.google.android.maps.v2.API_KEY
-ADDED from AndroidManifest.xml:37:9
-	android:name
 		ADDED from AndroidManifest.xml:38:13
+meta-data#com.google.android.maps.v2.API_KEY
+ADDED from AndroidManifest.xml:39:9
+	android:name
+		ADDED from AndroidManifest.xml:40:13
 	android:value
-		ADDED from AndroidManifest.xml:39:13
-activity#com.tekdi.foodmap.MainActivity
-ADDED from AndroidManifest.xml:40:9
-	android:label
-		ADDED from AndroidManifest.xml:42:13
-	android:name
 		ADDED from AndroidManifest.xml:41:13
+activity#com.tekdi.foodmap.MainActivity
+ADDED from AndroidManifest.xml:42:9
+	android:label
+		ADDED from AndroidManifest.xml:44:13
+	android:name
+		ADDED from AndroidManifest.xml:43:13
 intent-filter#android.intent.action.MAIN+android.intent.category.LAUNCHER
-ADDED from AndroidManifest.xml:43:13
+ADDED from AndroidManifest.xml:45:13
 action#android.intent.action.MAIN
-ADDED from AndroidManifest.xml:44:17
+ADDED from AndroidManifest.xml:46:17
 	android:name
-		ADDED from AndroidManifest.xml:44:25
+		ADDED from AndroidManifest.xml:46:25
 category#android.intent.category.LAUNCHER
-ADDED from AndroidManifest.xml:45:17
+ADDED from AndroidManifest.xml:47:17
 	android:name
-		ADDED from AndroidManifest.xml:45:27
+		ADDED from AndroidManifest.xml:47:27
 activity#com.tekdi.foodmap.ServeActivity
-ADDED from AndroidManifest.xml:48:9
+ADDED from AndroidManifest.xml:50:9
 	android:label
-		ADDED from AndroidManifest.xml:50:13
+		ADDED from AndroidManifest.xml:52:13
 	android:name
-		ADDED from AndroidManifest.xml:49:13
+		ADDED from AndroidManifest.xml:51:13
 activity#com.tekdi.foodmap.OrderActivity
-ADDED from AndroidManifest.xml:52:9
+ADDED from AndroidManifest.xml:54:9
 	android:label
-		ADDED from AndroidManifest.xml:54:13
+		ADDED from AndroidManifest.xml:56:13
 	android:name
-		ADDED from AndroidManifest.xml:53:13
+		ADDED from AndroidManifest.xml:55:13
 activity#com.tekdi.foodmap.FindActivity
-ADDED from AndroidManifest.xml:56:9
+ADDED from AndroidManifest.xml:58:9
 	android:label
-		ADDED from AndroidManifest.xml:58:13
+		ADDED from AndroidManifest.xml:60:13
 	android:name
-		ADDED from AndroidManifest.xml:57:13
+		ADDED from AndroidManifest.xml:59:13
 activity#com.tekdi.foodmap.AddMenuActivity
-ADDED from AndroidManifest.xml:60:9
+ADDED from AndroidManifest.xml:62:9
 	android:label
-		ADDED from AndroidManifest.xml:62:13
+		ADDED from AndroidManifest.xml:64:13
 	android:name
-		ADDED from AndroidManifest.xml:61:13
+		ADDED from AndroidManifest.xml:63:13
 activity#com.tekdi.foodmap.ListMenuActivity
-ADDED from AndroidManifest.xml:64:9
+ADDED from AndroidManifest.xml:66:9
 	android:label
-		ADDED from AndroidManifest.xml:66:13
+		ADDED from AndroidManifest.xml:68:13
 	android:name
-		ADDED from AndroidManifest.xml:65:13
+		ADDED from AndroidManifest.xml:67:13
 activity#com.tekdi.foodmap.EditMenuActivity
-ADDED from AndroidManifest.xml:68:9
+ADDED from AndroidManifest.xml:70:9
 	android:label
-		ADDED from AndroidManifest.xml:70:13
+		ADDED from AndroidManifest.xml:72:13
 	android:name
-		ADDED from AndroidManifest.xml:69:13
+		ADDED from AndroidManifest.xml:71:13
 activity#com.tekdi.foodmap.EditServerActivity
-ADDED from AndroidManifest.xml:72:9
+ADDED from AndroidManifest.xml:74:9
 	android:label
-		ADDED from AndroidManifest.xml:74:13
+		ADDED from AndroidManifest.xml:76:13
 	android:name
-		ADDED from AndroidManifest.xml:73:13
+		ADDED from AndroidManifest.xml:75:13
 activity#com.tekdi.foodmap.ListOrderActivity
-ADDED from AndroidManifest.xml:76:9
+ADDED from AndroidManifest.xml:78:9
 	android:label
-		ADDED from AndroidManifest.xml:78:13
+		ADDED from AndroidManifest.xml:80:13
 	android:name
-		ADDED from AndroidManifest.xml:77:13
+		ADDED from AndroidManifest.xml:79:13
 receiver#com.tekdi.foodmap.GcmBroadcastReceiver
-ADDED from AndroidManifest.xml:80:9
+ADDED from AndroidManifest.xml:82:9
 	android:permission
-		ADDED from AndroidManifest.xml:82:13
+		ADDED from AndroidManifest.xml:84:13
 	android:name
-		ADDED from AndroidManifest.xml:81:13
+		ADDED from AndroidManifest.xml:83:13
 intent-filter#com.google.android.c2dm.intent.RECEIVE+com.tekdi.foodmap
-ADDED from AndroidManifest.xml:83:13
+ADDED from AndroidManifest.xml:85:13
 action#com.google.android.c2dm.intent.RECEIVE
-ADDED from AndroidManifest.xml:84:17
-	android:name
-		ADDED from AndroidManifest.xml:84:25
-category#com.tekdi.foodmap
 ADDED from AndroidManifest.xml:86:17
 	android:name
-		ADDED from AndroidManifest.xml:86:27
-service#com.tekdi.foodmap.GcmIntentService
-ADDED from AndroidManifest.xml:90:9
+		ADDED from AndroidManifest.xml:86:25
+category#com.tekdi.foodmap
+ADDED from AndroidManifest.xml:88:17
 	android:name
-		ADDED from AndroidManifest.xml:90:18
+		ADDED from AndroidManifest.xml:88:27
+service#com.tekdi.foodmap.GcmIntentService
+ADDED from AndroidManifest.xml:92:9
+	android:name
+		ADDED from AndroidManifest.xml:92:18
 uses-sdk
 INJECTED from AndroidManifest.xml:0:0 reason: use-sdk injection requested
 MERGED from com.google.android.gms:play-services:6.1.71:15:5

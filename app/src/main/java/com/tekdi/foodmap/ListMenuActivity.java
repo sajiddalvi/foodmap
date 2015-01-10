@@ -40,17 +40,18 @@ public class ListMenuActivity extends ListActivity implements Serializable {
 
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-
-        menuList.clear();
+        setContentView(R.layout.list_menu_view);
 
         Intent intent = getIntent();
         serverId = intent.getLongExtra("serverId",0);
         serverName = intent.getStringExtra("serverName");
         source = intent.getStringExtra("source");
 
-
-        if (source.equals("server"))
+        if (source.equals("server")) {
             amIServer = true;
+            registerForContextMenu(getListView());
+
+        }
         else {
             amIServer = false;
             setTitle(serverName);
@@ -58,10 +59,7 @@ public class ListMenuActivity extends ListActivity implements Serializable {
             address = intent.getStringExtra("address");
         }
 
-        registerForContextMenu(getListView());
-
-        setContentView(R.layout.list_menu_view);
-
+        menuList.clear();
 
     }
 
@@ -156,7 +154,10 @@ public class ListMenuActivity extends ListActivity implements Serializable {
     public void onCreateContextMenu(ContextMenu menu, View v,
                                     ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
+
+        Log.v("sajid", "onCreateContextMenu");
         if (amIServer) {
+            Log.v("sajid","inflating menu");
             MenuInflater inflater = getMenuInflater();
             inflater.inflate(R.menu.context_menu, menu);
         }
@@ -175,7 +176,6 @@ public class ListMenuActivity extends ListActivity implements Serializable {
                     p.serverId = m.getServerId();
                     p.name = m.getName();
                     p.description = m.getDescription();
-                    p.quantity = m.getQuantity();
                     p.price = m.getPrice();
                     p.thumbnail = m.getThumbnail();
 

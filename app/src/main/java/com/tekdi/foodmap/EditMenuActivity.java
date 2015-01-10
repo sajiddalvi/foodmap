@@ -55,7 +55,6 @@ public class EditMenuActivity extends Activity {
             editText = (EditText) findViewById(R.id.menu_description_text);
             editText.setText(p.description);
 
-            editText.setText(p.quantity.toString());
             editText = (EditText) findViewById(R.id.menu_price_text);
             editText.setText(p.price.toString());
 
@@ -113,8 +112,6 @@ public class EditMenuActivity extends Activity {
         editText = (EditText) findViewById(R.id.menu_description_text);
         String description = editText.getText().toString();
 
-        String quantity = editText.getText().toString();
-
         editText = (EditText) findViewById(R.id.menu_price_text);
         String price = editText.getText().toString();
 
@@ -125,7 +122,6 @@ public class EditMenuActivity extends Activity {
         menu.setServerId(this.serverId);
         menu.setName(name);
         menu.setDescription(description);
-        menu.setQuantity(Integer.parseInt(quantity));
         menu.setPrice(Float.parseFloat(price));
         if (serverId != null) {
             menu.setServerId(Long.parseLong(serverId));

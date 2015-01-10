@@ -13,7 +13,6 @@ public class ParcelableMenu implements Parcelable {
     Long serverId;
     String name;
     String description;
-    Integer quantity;
     Float price;
     String thumbnail;
 
@@ -24,7 +23,6 @@ public class ParcelableMenu implements Parcelable {
         this.serverId = in.readLong();
         this.name = in.readString();
         this.description = in.readString();
-        this.quantity = in.readInt();
         this.price = in.readFloat();
         this.thumbnail = in.readString();
     }
@@ -34,7 +32,6 @@ public class ParcelableMenu implements Parcelable {
         dest.writeLong(serverId);
         dest.writeString(name);
         dest.writeString(description);
-        dest.writeInt(quantity);
         dest.writeFloat(price);
         dest.writeString(thumbnail);
     }
