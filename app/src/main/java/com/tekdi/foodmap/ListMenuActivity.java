@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.util.Pair;
 import android.view.ContextMenu;
@@ -132,6 +133,10 @@ public class ListMenuActivity extends ListActivity implements Serializable {
             ParcelableOrder p = new ParcelableOrder();
             p.menuId = m.getId();
             p.finderDevRegId = Prefs.getDeviceRegIdPref(this);
+
+            TelephonyManager tMgr = (TelephonyManager)this.getSystemService(Context.TELEPHONY_SERVICE);
+            p.finderPhone = tMgr.getLine1Number();
+
             p.serverId = m.getServerId();
             p.serverName = serverName;
             p.orderState = 0;

@@ -20,6 +20,7 @@ public class OrderEntity {
     Long serverId;
     @Index
     String finderDevRegId;
+    String finderPhone;
     String serverName;
     String serverAddress;
     String serverPhone;
@@ -64,6 +65,7 @@ public class OrderEntity {
 
     public String getServerPhone() { return serverPhone; }
 
+    public String getFinderPhone() { return finderPhone; }
 
     public void setId(Long id) {
         this.id = id;
@@ -98,4 +100,6 @@ public class OrderEntity {
     public void setServerAddress(String address) { this.serverAddress = address; }
 
     public void setServerPhone(String phone) { this.serverPhone = phone; }
+
+    public void setFinderPhone(String phone) { this.finderPhone = phone; }
 }

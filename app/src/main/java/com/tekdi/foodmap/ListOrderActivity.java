@@ -4,6 +4,7 @@ import android.app.ListActivity;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Pair;
@@ -26,6 +27,8 @@ public class ListOrderActivity extends ListActivity {
     private Boolean iAmServer = Boolean.FALSE;
     private Long myServerId;
     private String finderDevRegId = "";
+    private String finderPhone = "";
+    private String serverPhone = "";
     private ListOrderRowAdapter adapter;
     private ArrayList<OrderEntity> orderList = new ArrayList<OrderEntity>();
     private ArrayList<OrderEntity> newOrderList = new ArrayList<OrderEntity>();
@@ -104,7 +107,7 @@ public class ListOrderActivity extends ListActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
             case R.id.order_list_refresh:
-                refreshOrder();
+                reSyncOrder();
                 break;
 
         }
@@ -150,6 +153,17 @@ public class ListOrderActivity extends ListActivity {
         }
     }
 
+    public void callPressed(View v) {
+        String phone;
+        if (iAmServer)
+            phone = finderPhone;
+        else
+            phone = serverPhone;
+
+        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + phone));
+        startActivity(intent);
+    }
+
     public void refreshOrder() {
 
         numItemsConfirmed ++;
@@ -171,6 +185,22 @@ public class ListOrderActivity extends ListActivity {
         }
     }
 
+    public void reSyncOrder() {
+        orderList.clear();
+        if (iAmServer) {
+            ListOrdersEndpointAsyncTask l = new ListOrdersEndpointAsyncTask(this);
+            l.setServerId(myServerId);
+            l.execute();
+        } else {
+            if (!(finderDevRegId.equals(""))) {
+                ListFinderOrdersEndpointAsyncTask l =
+                        new ListFinderOrdersEndpointAsyncTask(this);
+                l.setFinderDevRegId(finderDevRegId);
+                l.execute();
+            }
+        }
+
+    }
     public void showOrder(List<OrderEntity> result) {
 
         Log.v("sajid","showing order list");
@@ -186,6 +216,9 @@ public class ListOrderActivity extends ListActivity {
         ArrayList<OrderEntity> finderOrderList = new ArrayList<OrderEntity>();
 
         OrderEntity prev = orderList.get(0);
+
+        finderPhone = prev.getFinderPhone();
+        serverPhone = prev.getServerPhone();
 
         finderOrderList.clear();
         newOrderList.clear();

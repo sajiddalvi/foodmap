@@ -95,16 +95,13 @@ public class ListOrderRowAdapter extends ArrayAdapter<OrderEntity> {
             return row;
         }
 
-        String whoStr = new String("who");
+        String whoStr;
 
         if (iAmServer) {
-            String finderStr = order.getFinderDevRegId();
-            String truncatedFinderStr = finderStr.substring(finderStr.length() - 5);
-            whoStr = truncatedFinderStr;
+            whoStr = order.getFinderPhone()+" CALL";
         } else {
-            whoStr = order.getServerName();
+            whoStr = order.getServerName()+" CALL";
         }
-
 
         if (position == 0) {
             prevFinderDevRegId = order.getFinderDevRegId();

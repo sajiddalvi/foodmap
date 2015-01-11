@@ -58,6 +58,7 @@ public class OrderActivity extends ListActivity {
                     o.setMenuId(p.menuId);
                     o.setServerId(p.serverId);
                     o.setFinderDevRegId(p.finderDevRegId);
+                    o.setFinderPhone(p.finderPhone);
                     o.setServerName(p.serverName);
                     o.setServerPhone(p.serverPhone);
                     o.setServerAddress(p.serverAddress);
@@ -132,7 +133,6 @@ public class OrderActivity extends ListActivity {
                 if (orderList.size() > 0) {
                     OrderEntity o = orderList.get(0);
 
-
                     Intent intent = new Intent(this, ListMenuActivity.class);
                     intent.putExtra("serverId", o.getServerId());
                     intent.putExtra("serverName", o.getServerName());
@@ -165,8 +165,6 @@ public class OrderActivity extends ListActivity {
         super.onCreateContextMenu(menu, v, menuInfo);
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.context_order, menu);
-
-        Log.v("sajid","create context menu for order");
     }
 
     @Override
