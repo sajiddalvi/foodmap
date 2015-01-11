@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="order_status_button">
+        <item>SEND</item>
+        <item>Order Sent</item>
+        <item>Order Received</item>
+        <item>Order Ready</item>
+        <item>Rate Order</item>
+        <item>Order Complete</item>
+        <item>Order Cancelled</item>
+    </string-array>
+
+    <string-array name="order_button_finder">
+        <item>@string/order_button_send</item>
+        <item></item>
+        <item></item>
+        <item></item>
+        <item>@string/order_button_rate</item>
+        <item>@string/order_button_close</item>
+        <item></item>
+    </string-array>
+
+    <string-array name="order_button_server">
+        <item></item>
+        <item>@string/order_button_receive</item>
+        <item>@string/order_button_ready</item>
+        <item></item>
+        <item>@string/order_button_rate</item>
+        <item>@string/order_button_close</item>
+        <item></item>
+    </string-array>
+
+    <string-array name="order_status_finder">
+        <item>@string/order_status_finder_new</item>
+        <item>@string/order_status_finder_send</item>
+        <item>@string/order_status_finder_receive</item>
+        <item>@string/order_status_finder_ready</item>
+        <item>@string/order_status_finder_rate</item>
+        <item>@string/order_status_finder_close</item>
+        <item>@string/order_status_finder_cancel</item>
+    </string-array>
+
+    <string-array name="order_status_server">
+        <item>@string/order_status_server_new</item>
+        <item>@string/order_status_server_send</item>
+        <item>@string/order_status_server_receive</item>
+        <item>@string/order_status_server_ready</item>
+        <item>@string/order_status_server_rate</item>
+        <item>@string/order_status_server_close</item>
+        <item>@string/order_status_finder_cancel</item>
+    </string-array>
+
+</resources>

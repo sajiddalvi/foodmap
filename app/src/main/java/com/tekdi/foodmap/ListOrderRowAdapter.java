@@ -73,7 +73,7 @@ public class ListOrderRowAdapter extends ArrayAdapter<OrderEntity> {
 
         holder.total = (TextView) row.findViewById(R.id.list_order_row_total);
         holder.timestamp = (TextView) row.findViewById(R.id.list_order_row_timestamp);
-        holder.confirm = (TextView) row.findViewById(R.id.list_order_row_confirm);
+        holder.status = (TextView) row.findViewById(R.id.list_order_row_status);
 
         row.setTag(holder);
 
@@ -89,7 +89,7 @@ public class ListOrderRowAdapter extends ArrayAdapter<OrderEntity> {
 
             if ((iAmServer) &&
                     (! order.getFinderDevRegId().contains("confirm"))   ) {
-                holder.confirm.setVisibility(View.VISIBLE);
+                holder.status.setVisibility(View.VISIBLE);
             }
 
             return row;
@@ -190,7 +190,7 @@ public class ListOrderRowAdapter extends ArrayAdapter<OrderEntity> {
         LinearLayout border;
         TextView totalLabel;
         TextView total;
-        TextView confirm;
+        TextView status;
     }
 
 }
