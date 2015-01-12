@@ -67,8 +67,6 @@ public class ListOrderRowAdapter extends ArrayAdapter<OrderEntity> {
                 .findViewById(R.id.list_order_row_price);
         holder.quantity = (TextView) row
                 .findViewById(R.id.list_order_row_quantity);
-        holder.state = (TextView) row
-                .findViewById(R.id.list_order_row_state);
         holder.totalLabel = (TextView) row.findViewById(R.id.list_order_row_total_label);
 
         holder.total = (TextView) row.findViewById(R.id.list_order_row_total);
@@ -79,18 +77,18 @@ public class ListOrderRowAdapter extends ArrayAdapter<OrderEntity> {
 
         OrderEntity order = data.get(position);
 
-        if (order.getFinderDevRegId().contains("total")){
-
+        if (order.getMenuId() == ListOrderFinderActivity.DUMMY_TOTAL_MENU_ID ) {
             hide_all(holder);
             holder.totalLabel.setVisibility(View.VISIBLE);
             holder.total.setVisibility(View.VISIBLE);
+            holder.status.setVisibility(View.VISIBLE);
             NumberFormat format = NumberFormat.getCurrencyInstance();
             holder.total.setText(format.format(prevTotal));
 
-            if ((iAmServer) &&
-                    (! order.getFinderDevRegId().contains("confirm"))   ) {
-                holder.status.setVisibility(View.VISIBLE);
-            }
+
+            String orderStatus[] = context.getResources().getStringArray(R.array.order_status_finder);
+            int orderState = order.getOrderState();
+            holder.status.setText(orderStatus[orderState]);
 
             return row;
         }
@@ -98,9 +96,9 @@ public class ListOrderRowAdapter extends ArrayAdapter<OrderEntity> {
         String whoStr;
 
         if (iAmServer) {
-            whoStr = order.getFinderPhone()+" CALL";
+            whoStr = order.getFinderPhone();
         } else {
-            whoStr = order.getServerName()+" CALL";
+            whoStr = order.getServerName();
         }
 
         if (position == 0) {
@@ -133,11 +131,6 @@ public class ListOrderRowAdapter extends ArrayAdapter<OrderEntity> {
         NumberFormat format = NumberFormat.getCurrencyInstance();
         holder.price.setText(format.format(order.getPrice()));
 
-        if (order.getOrderState() == 0)
-            holder.state.setText("new");
-        else if (order.getOrderState() == 1)
-            holder.state.setText("cnf");
-
         return row;
     }
 
@@ -148,7 +141,6 @@ public class ListOrderRowAdapter extends ArrayAdapter<OrderEntity> {
         row.quantity.setVisibility(View.GONE);
         row.name.setVisibility(View.GONE);
         row.price.setVisibility(View.GONE);
-        row.state.setVisibility(View.GONE);
         row.border.setVisibility(View.GONE);
         row.totalLabel.setVisibility(View.GONE);
         row.total.setVisibility(View.GONE);
@@ -186,7 +178,6 @@ public class ListOrderRowAdapter extends ArrayAdapter<OrderEntity> {
         TextView timestamp;
         TextView quantity;
         TextView price;
-        TextView state;
         LinearLayout border;
         TextView totalLabel;
         TextView total;

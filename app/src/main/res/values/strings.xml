@@ -37,6 +37,8 @@
     <string name="order_rate">Rate</string>
     <string name="order_pay">Pay</string>
     <string name="order_closed">Closed</string>
+    <string name="order_cancel">Cancel</string>
+    <string name="order_update">Update</string>
     <string name="order_status_finder_new">Press SEND when order is complete</string>
     <string name="order_status_server_new"></string>
     <string name="order_status_finder_send">Waiting for Caterer to acknowledge order</string>

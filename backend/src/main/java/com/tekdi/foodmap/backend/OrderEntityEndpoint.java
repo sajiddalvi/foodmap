@@ -151,14 +151,14 @@ public class OrderEntityEndpoint {
         // TODO: You should validate your ID parameter against your resource's ID here.
         checkExists(id);
 
-
         Sender sender = new Sender(API_KEY);
 
         Message msg = new Message.Builder()
-                .addData("myMessageType", "confirm_order_to_finder")
+                .addData("myMessageType", "order_update")
                 .addData("orderId", orderEntity.getId().toString())
                 .addData("serverId", orderEntity.getServerId().toString())
                 .addData("finder", orderEntity.getFinderDevRegId().toString())
+                .addData("orderState", orderEntity.getOrderState().toString())
                 .build();
 
         try {

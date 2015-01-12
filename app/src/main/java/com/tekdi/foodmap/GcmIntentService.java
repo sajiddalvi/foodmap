@@ -40,40 +40,43 @@ public class GcmIntentService extends IntentService {
                 String myMessageType = extras.getString("myMessageType");
 
                 showToast(extras.getString("orderId"));
-                Log.v("sajid",extras.getString("myMessageType")+" "+extras.getString("orderId"));
+                Log.v("sajid", extras.getString("myMessageType") + " " + extras.getString("orderId"));
 
-                NotificationCompat.Builder mBuilder =
-                        new NotificationCompat.Builder(this)
-                                .setSmallIcon(R.drawable.ic_stat_foodmap_icon)
-                                .setContentTitle("Foodmap:"+extras.getString("myMessageType"))
-                                .setContentText("order number "+extras.getString("orderId"));
+                if (myMessageType.equals("order_update")) {
 
-                Intent resultIntent = new Intent(this, ListOrderActivity.class);
-                resultIntent.putExtra("orderId",extras.getString("orderId"));
-                resultIntent.putExtra("serverId",extras.getString("serverId"));
-                resultIntent.putExtra("finder", extras.getString("finder"));
-                resultIntent.putExtra("notificationId", 861);
+                    NotificationCompat.Builder mBuilder =
+                            new NotificationCompat.Builder(this)
+                                    .setSmallIcon(R.drawable.ic_stat_foodmap_icon)
+                                    .setContentTitle("Foodmap:" + extras.getString("myMessageType"))
+                                    .setContentText("order number " + extras.getString("orderId"));
 
-                PendingIntent resultPendingIntent =
-                        PendingIntent.getActivity(
-                                this,
-                                0,
-                                resultIntent,
-                                PendingIntent.FLAG_UPDATE_CURRENT
-                        );
+                    Intent resultIntent = new Intent(this, ListOrderFinderActivity.class);
+                    resultIntent.putExtra("orderId", extras.getString("orderId"));
+                    resultIntent.putExtra("serverId", extras.getString("serverId"));
+                    resultIntent.putExtra("finder", extras.getString("finder"));
+                    resultIntent.putExtra("orderState", extras.getString("orderState"));
+                    resultIntent.putExtra("action","notification");
+                    resultIntent.putExtra("notificationId", NotificationId.ORDER_UPDATE_NOTIFICATION_ID);
 
-                Log.v("sajid","sending notification for ListOrderActivity "+extras.getString("message"));
+                    PendingIntent resultPendingIntent =
+                            PendingIntent.getActivity(
+                                    this,
+                                    0,
+                                    resultIntent,
+                                    PendingIntent.FLAG_UPDATE_CURRENT
+                            );
 
-                mBuilder.setContentIntent(resultPendingIntent);
 
-                // Sets an ID for the notification
-                int mNotificationId = 861;
-                // Gets an instance of the NotificationManager service
-                NotificationManager mNotifyMgr =
-                        (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-                // Builds the notification and issues it.
-                mNotifyMgr.notify(mNotificationId, mBuilder.build());
+                    mBuilder.setContentIntent(resultPendingIntent);
 
+                    // Sets an ID for the notification
+                    int mNotificationId = NotificationId.ORDER_UPDATE_NOTIFICATION_ID;
+                    // Gets an instance of the NotificationManager service
+                    NotificationManager mNotifyMgr =
+                            (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                    // Builds the notification and issues it.
+                    mNotifyMgr.notify(mNotificationId, mBuilder.build());
+                }
             }
         }
         GcmBroadcastReceiver.completeWakefulIntent(intent);

@@ -2,8 +2,8 @@ package com.tekdi.foodmap;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.util.Pair;
-import android.widget.Toast;
 
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
@@ -17,6 +17,13 @@ import java.io.IOException;
 class OrderEndpointAsyncTask extends AsyncTask<Pair<Context, OrderEntity>, Void, String> {
     private static OrderEntityApi myApiService = null;
     private Context context;
+    ListOrderFinderActivity caller;
+
+    OrderEndpointAsyncTask(ListOrderFinderActivity caller) {
+
+        this.caller = caller;
+        Log.v("sajid", "in ListFinderOrdersEndpointAsyncTask setting up caller");
+    }
 
     @Override
     protected String doInBackground(Pair<Context, OrderEntity>... params) {
@@ -35,10 +42,11 @@ class OrderEndpointAsyncTask extends AsyncTask<Pair<Context, OrderEntity>, Void,
 
         context = params[0].first;
         OrderEntity order = params[0].second;
+        order.setOrderState(OrderState.ORDER_STATE_SEND);
 
         try {
             OrderEntity orderEntity = myApiService.insert(order).execute();
-            return "added order";
+            return "new order success";
         } catch (IOException e) {
             return e.getMessage();
         }
@@ -46,6 +54,6 @@ class OrderEndpointAsyncTask extends AsyncTask<Pair<Context, OrderEntity>, Void,
 
     @Override
     protected void onPostExecute(String result) {
-        Toast.makeText(context, result, Toast.LENGTH_LONG).show();
+        caller.onPostExecute(result);
     }
 }

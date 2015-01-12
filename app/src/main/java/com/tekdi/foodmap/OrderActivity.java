@@ -2,12 +2,10 @@ package com.tekdi.foodmap;
 
 import android.app.AlertDialog;
 import android.app.ListActivity;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.Pair;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -107,7 +105,7 @@ public class OrderActivity extends ListActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
-            case R.id.confirm_menu:
+            case R.id.order_send:
                 Log.v("sajid","Confirm Order");
 
                 if (orderList.size() > 0) {
@@ -115,7 +113,7 @@ public class OrderActivity extends ListActivity {
                     orderList.remove(orderList.size() - 1);
 
                     for (OrderEntity order : orderList) {
-                        new OrderEndpointAsyncTask().execute(new Pair<Context, OrderEntity>(this, order));
+                        //new OrderEndpointAsyncTask().execute(new Pair<Context, OrderEntity>(this, order));
                     }
 
                     orderList.clear();
@@ -128,7 +126,7 @@ public class OrderActivity extends ListActivity {
 
                 break;
 
-            case R.id.add_menu:
+            case R.id.order_add:
 
                 if (orderList.size() > 0) {
                     OrderEntity o = orderList.get(0);
@@ -152,7 +150,7 @@ public class OrderActivity extends ListActivity {
                 break;
 
 
-            case R.id.clear_menu:
+            case R.id.order_clear:
                 orderList.clear();
                 adapter.notifyDataSetChanged();
         }

@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.util.Pair;
 import android.view.ContextMenu;
@@ -28,12 +27,13 @@ import java.util.List;
  */
 public class ListMenuActivity extends ListActivity implements Serializable {
 
+    private String source;
+
+    private Boolean amIServer;
     private Long serverId;
     private String serverName;
-    private String source;
-    private Boolean amIServer;
-    private String phone;
-    private String address;
+    private String serverPhone;
+    private String serverAddress;
 
     private ArrayList<MenuEntity> menuList = new ArrayList<MenuEntity>();
     private ArrayList<ParcelableOrder> orderList = new ArrayList<ParcelableOrder>();
@@ -44,24 +44,22 @@ public class ListMenuActivity extends ListActivity implements Serializable {
         setContentView(R.layout.list_menu_view);
 
         Intent intent = getIntent();
-        serverId = intent.getLongExtra("serverId",0);
-        serverName = intent.getStringExtra("serverName");
         source = intent.getStringExtra("source");
 
         if (source.equals("server")) {
             amIServer = true;
             registerForContextMenu(getListView());
-
         }
         else {
             amIServer = false;
+            serverId = intent.getLongExtra("serverId",0);
+            serverName = intent.getStringExtra("serverName");
+            serverPhone = intent.getStringExtra("phone");
+            serverAddress = intent.getStringExtra("address");
+
             setTitle(serverName);
-            phone = intent.getStringExtra("phone");
-            address = intent.getStringExtra("address");
         }
-
         menuList.clear();
-
     }
 
     @Override
@@ -106,13 +104,13 @@ public class ListMenuActivity extends ListActivity implements Serializable {
             switch (item.getItemId()) {
                 case R.id.action_call:
                     Log.v("sajid", "action_call");
-                    Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:"+phone));
+                    Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:"+serverPhone));
                     startActivity(intent);
                     break;
                 case R.id.action_navigate:
                     Log.v("sajid", "action_navigate");
                     Intent intent2 = new Intent(android.content.Intent.ACTION_VIEW,
-                            Uri.parse("google.navigation:q="+address));
+                            Uri.parse("google.navigation:q="+serverAddress));
                     startActivity(intent2);
 
                     break;
@@ -129,28 +127,23 @@ public class ListMenuActivity extends ListActivity implements Serializable {
         if (amIServer == false) {
 
             MenuEntity m = menuList.get(position);
-
-            ParcelableOrder p = new ParcelableOrder();
-            p.menuId = m.getId();
-            p.finderDevRegId = Prefs.getDeviceRegIdPref(this);
-
-            TelephonyManager tMgr = (TelephonyManager)this.getSystemService(Context.TELEPHONY_SERVICE);
-            p.finderPhone = tMgr.getLine1Number();
+            ParcelableFinderOrder p = new ParcelableFinderOrder();
 
             p.serverId = m.getServerId();
             p.serverName = serverName;
-            p.orderState = 0;
-            p.name = m.getName();
-            p.description = m.getDescription();
+            p.serverAddress = serverAddress;
+            p.serverPhone = serverPhone;
+            p.menuId = m.getId();
+            p.menuName = m.getName();
             p.quantity = 1;
             p.price = m.getPrice();
-            p.thumbnail = m.getThumbnail();
+            p.orderState = 0;
 
-            Log.v("sajid","calling Orderactivity");
+            Log.v("sajid","calling ListOrderFinderActivity");
 
-            Intent intent = new Intent(this, OrderActivity.class);
-            intent.putExtra("com.tekdi.foodmap.ParcelableOrder", p);
-            intent.putExtra("action","neworder");
+            Intent intent = new Intent(this, ListOrderFinderActivity.class);
+            intent.putExtra("com.tekdi.foodmap.ParcelableFinderOrder", p);
+            intent.putExtra("action","new_order");
             startActivity(intent);
         }
     }

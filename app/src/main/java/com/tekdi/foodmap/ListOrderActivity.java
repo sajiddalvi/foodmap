@@ -34,6 +34,8 @@ public class ListOrderActivity extends ListActivity {
     private ArrayList<OrderEntity> newOrderList = new ArrayList<OrderEntity>();
     private int numItemsInOrder;
     private int numItemsConfirmed;
+    public static final long DUMMY_TOTAL_MENU_ID = 999;
+
 
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -56,7 +58,7 @@ public class ListOrderActivity extends ListActivity {
             mNotifyMgr.cancel(861);
         }
 
-        Long intentServerId =new Long(0);
+        Long intentServerId = new Long(0);
 
         if ((intentServerIdStr != null)&&(!(intentServerIdStr.equals(""))))
             intentServerId = Long.parseLong(intentServerIdStr);
@@ -232,6 +234,10 @@ public class ListOrderActivity extends ListActivity {
 
                 OrderEntity dummyEntity = new OrderEntity();
                 dummyEntity.setFinderDevRegId("total");
+                dummyEntity.setMenuId((long) DUMMY_TOTAL_MENU_ID);
+                dummyEntity.setOrderState(prev.getOrderState());
+
+
                 Boolean showConfirm = checkIfConfirmed(finderOrderList);
                 if (showConfirm)
                     dummyEntity.setFinderDevRegId("total confirm");
@@ -253,6 +259,9 @@ public class ListOrderActivity extends ListActivity {
 
         OrderEntity dummyEntity = new OrderEntity();
         dummyEntity.setFinderDevRegId("total");
+        dummyEntity.setMenuId((long) DUMMY_TOTAL_MENU_ID);
+        dummyEntity.setOrderState(prev.getOrderState());
+
 
         Boolean showConfirm = checkIfConfirmed(finderOrderList);
         if (showConfirm)
@@ -295,7 +304,7 @@ public class ListOrderActivity extends ListActivity {
 
     private Boolean checkIfConfirmed(ArrayList<OrderEntity> finderOrderList) {
         for (OrderEntity o: finderOrderList) {
-            if (o.getOrderState() == 0) {
+            if (o.getOrderState() == 1) {
                 return false;
             }
         }

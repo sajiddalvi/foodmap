@@ -43,11 +43,11 @@ class ConfirmOrderEndpointAsyncTask extends AsyncTask<Pair<Context, OrderEntity>
 
         context = params[0].first;
         OrderEntity order = params[0].second;
-        order.setOrderState(1);
+        order.setOrderState(OrderState.ORDER_STATE_RECEIVE);
 
         try {
             OrderEntity orderEntity =myApiService.update(order.getId(),order).execute();
-            return "confirm order";
+            return "order received";
         } catch (IOException e) {
             return e.getMessage();
         }
@@ -55,8 +55,8 @@ class ConfirmOrderEndpointAsyncTask extends AsyncTask<Pair<Context, OrderEntity>
 
     @Override
     protected void onPostExecute(String result) {
-        Toast.makeText(context, result+" confirmed", Toast.LENGTH_LONG).show();
-        Log.v("sajid","order confirmed");
+        Toast.makeText(context, result, Toast.LENGTH_LONG).show();
+        Log.v("sajid","order received");
 
         caller.refreshOrder();
     }

@@ -30,7 +30,6 @@ public class OrderEntity {
     Float price;
     Date timestamp;
 
-
     public Long getId() {
         return id;
     }
