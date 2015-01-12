@@ -44,11 +44,7 @@ public class MainActivity extends Activity {
     }
 
     public void onFinderOrderButtonClick(View v) {
-        Log.v("sajid", "onOrderListButtonClick");
-        String serverId = Prefs.getServeIdPref(this);
-        Intent intent = new Intent(this, OrderActivity.class);
-        intent.putExtra("action","showorder");
-        intent.putExtra("serverId", serverId);
+        Intent intent = new Intent(this, ListOrderFinderActivity.class);
         startActivity(intent);
     }
 

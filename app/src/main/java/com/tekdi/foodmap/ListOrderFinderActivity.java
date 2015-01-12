@@ -30,6 +30,7 @@ public class ListOrderFinderActivity extends ListActivity {
     private ListOrderRowAdapter adapter;
     public static final long DUMMY_TOTAL_MENU_ID = 999;
     private Menu orderActionBarMenu;
+    private String action;
 
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -39,15 +40,19 @@ public class ListOrderFinderActivity extends ListActivity {
         registerForContextMenu(getListView());
 
         Intent intent = getIntent();
-        String action = intent.getStringExtra("action");
+        action = intent.getStringExtra("action");
 
-        if (action.equals("new_order")) {
+        if ((action!= null) && action.equals("new_order")) {
             setTitle("New Order");
             ParcelableFinderOrder p = (ParcelableFinderOrder)
                     intent.getParcelableExtra("com.tekdi.foodmap.ParcelableFinderOrder");
             processNewOrder(p);
-        } else if (action.equals("notification")) {
+        } else if ( (action!= null) && action.equals("notification")) {
             processOrderReceived();
+        } else if ((orderList == null) || (orderList.size() == 0)) {
+            intent = new Intent(this, FindActivity.class);
+            startActivity(intent);
+            finish();
         }
 
         adapter = new ListOrderRowAdapter(this, R.layout.list_order_row,
@@ -65,14 +70,11 @@ public class ListOrderFinderActivity extends ListActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-
         if (orderList.size() > 0) {
             int orderState = orderList.get(0).getOrderState();
             setupActionBarButtons(orderState);
         }
-
         return super.onPrepareOptionsMenu(menu);
-
     }
 
     @Override
@@ -96,7 +98,20 @@ public class ListOrderFinderActivity extends ListActivity {
                 break;
 
             case R.id.order_add:
-                finish();
+                if ((action!= null) && action.equals("new_order"))
+                    finish();
+                else {
+                    OrderEntity o = orderList.get(0);
+                    Intent intent = new Intent(this, ListMenuActivity.class);
+                    intent.putExtra("serverId", o.getServerId());
+                    intent.putExtra("serverName", o.getServerName());
+                    intent.putExtra("source","finder");
+                    intent.putExtra("phone",o.getServerPhone());
+                    intent.putExtra("address",o.getServerAddress());
+
+                    startActivity(intent);
+                    finish();
+                }
                 break;
 
             case R.id.order_clear:
@@ -152,7 +167,6 @@ public class ListOrderFinderActivity extends ListActivity {
                         orderList.get(info.position).setQuantity(newVal);
                     }
                 });
-
 
                 AlertDialog.Builder alertBw;
                 alertBw=new AlertDialog.Builder(this);
