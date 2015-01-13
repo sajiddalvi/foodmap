@@ -311,18 +311,14 @@ public class ListOrderFinderActivity extends ListActivity {
     }
 
     public void onPostExecuteListOrder(List<OrderEntity> result) {
-        Toast.makeText(this, "got list", Toast.LENGTH_LONG).show();
         showOrder(result);
     }
 
     private void processOrderSent() {
-        for (OrderEntity order : orderList) {
-            order.setOrderState(OrderState.ORDER_STATE_SEND);
-        }
         setupActionBarButtons(OrderState.ORDER_STATE_SEND);
-        setTitle("Pending Order");
+        setTitle("Orders");
+        getOrderListFromServer();
         adapter.notifyDataSetChanged();
-
     }
 
     private void processOrderReceived() {
@@ -364,16 +360,13 @@ public class ListOrderFinderActivity extends ListActivity {
 
     public void showOrder(List<OrderEntity> result) {
 
+        Log.v("sajid","showOrderList");
         if (result == null) {
-            if ((pendingOrderList == null)||(pendingOrderList.size() == 0)) {
+            Log.v("sajid","null");
+
                 Intent intent = new Intent(this, FindActivity.class);
                 startActivity(intent);
                 finish();
-            } else {
-                setTitle("Pending Order");
-                orderList = pendingOrderList;
-            }
-            return;
         }
 
         ArrayList<OrderEntity> remoteOrderList = new ArrayList<OrderEntity>();
@@ -405,12 +398,11 @@ public class ListOrderFinderActivity extends ListActivity {
         // add the last finderList to newList
         remoteOrderList.addAll(serverOrderList);
         // add dummy total
+        remoteOrderList.add(getDummyTotalRow(prev));
 
-        remoteOrderList.add(getDummyTotalRow(serverOrderList.get(0)));
+        orderList=remoteOrderList;
 
-        orderList.clear();
-        orderList.addAll(pendingOrderList);
-        orderList.addAll(remoteOrderList);
+        setListAdapter(adapter);
 
         setTitle("Orders");
 
@@ -424,20 +416,20 @@ public class ListOrderFinderActivity extends ListActivity {
     }
 
     private OrderEntity getDummyTotalRow(OrderEntity base) {
-
-        Log.v("sajid","add dummy serverId="+base.getServerId().toString());
-
         OrderEntity dummyEntity = new OrderEntity();
         dummyEntity.setFinderDevRegId("total");
         dummyEntity.setMenuId((long) DUMMY_TOTAL_MENU_ID);
         dummyEntity.setOrderState(base.getOrderState());
         dummyEntity.setFinderDevRegId(base.getFinderDevRegId());
         dummyEntity.setServerId(base.getServerId());
+        dummyEntity.setMenuName("dummy");
 
         return dummyEntity;
     }
 
     private void getOrderListFromServer() {
+        pendingOrderList.clear();
+        orderList.clear();
         ListFinderOrdersEndpointAsyncTask l = new ListFinderOrdersEndpointAsyncTask(this);
         l.setFinderDevRegId(Prefs.getDeviceRegIdPref(this));
         l.execute();
