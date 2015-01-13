@@ -46,6 +46,11 @@ public class ListOrderFinderActivity extends ListActivity {
 
         registerForContextMenu(getListView());
 
+        adapter = new ListOrderRowAdapter(this, R.layout.list_order_row,
+                orderList);
+
+        setListAdapter(adapter);
+
         Intent intent = getIntent();
         action = intent.getStringExtra("action");
 
@@ -66,10 +71,7 @@ public class ListOrderFinderActivity extends ListActivity {
             getOrderListFromServer();
         }
 
-        adapter = new ListOrderRowAdapter(this, R.layout.list_order_row,
-                orderList);
 
-        setListAdapter(adapter);
     }
 
     @Override
@@ -376,7 +378,7 @@ public class ListOrderFinderActivity extends ListActivity {
         remoteOrderList.clear();
 
         // Sort orders by finders
-        Collections.sort(result, new ComparatorOrderEntity());
+        Collections.sort(result, new ComparatorFinderOrderEntity());
 
         OrderEntity prev = result.get(0);
         for (OrderEntity o : result) {
@@ -402,6 +404,9 @@ public class ListOrderFinderActivity extends ListActivity {
 
         orderList=remoteOrderList;
 
+
+        adapter = new ListOrderRowAdapter(this, R.layout.list_order_row,
+                orderList);
         setListAdapter(adapter);
 
         setTitle("Orders");
