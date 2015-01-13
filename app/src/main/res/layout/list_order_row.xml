@@ -4,14 +4,7 @@
     android:layout_height="fill_parent"
     >
 
-    <LinearLayout
-        android:id="@+id/list_order_border"
-        android:layout_width="match_parent"
-        android:layout_height="10dp"
-        android:orientation="horizontal"
-        android:background="?android:attr/listDivider"
-        android:visibility="gone">
-    </LinearLayout>
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -126,5 +119,14 @@
         android:textColor="#3b5998"
         android:gravity="center_horizontal"
         android:visibility="gone"/>
+
+    <LinearLayout
+        android:id="@+id/list_order_border"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:orientation="horizontal"
+        android:background="?android:attr/listDivider"
+        android:visibility="gone">
+    </LinearLayout>
 
 </LinearLayout>

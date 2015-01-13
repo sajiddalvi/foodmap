@@ -94,18 +94,23 @@ public class ListOrderRowAdapter extends ArrayAdapter<OrderEntity> {
             int orderState = order.getOrderState();
             holder.status.setText(orderStatus[orderState]);
 
+            holder.border.setVisibility(View.VISIBLE);
+
             return row;
         }
 
-        String whoStr;
+        if (order.getMenuId() == ListOrderFinderActivity.DUMMY_NAME_MENU_ID ) {
 
-        if (iAmServer) {
-            whoStr = order.getFinderPhone();
-        } else {
-            whoStr = order.getServerName();
-        }
+            String whoStr;
 
-        if (position == 0) {
+            if (iAmServer) {
+                whoStr = order.getFinderPhone();
+            } else {
+                whoStr = order.getServerName();
+            }
+
+            hide_all(holder);
+
             prevFinderDevRegId = order.getFinderDevRegId();
             holder.who.setVisibility(View.VISIBLE);
             holder.who.setText(whoStr);
@@ -113,21 +118,11 @@ public class ListOrderRowAdapter extends ArrayAdapter<OrderEntity> {
             holder.timestamp.setVisibility(View.VISIBLE);
 
             prevTotal = order.getPrice() * order.getQuantity();
-        }
-        else {
-            if (! prevFinderDevRegId.equals(order.getFinderDevRegId())) {
-                prevFinderDevRegId = order.getFinderDevRegId();
-                holder.who.setText(whoStr);
-                holder.who.setVisibility(View.VISIBLE);
-                holder.timestamp.setText(getTimeStamp(order));
-                holder.timestamp.setVisibility(View.VISIBLE);
-                holder.border.setVisibility(View.VISIBLE);
-                prevTotal = order.getPrice() * order.getQuantity();
-            } else {
-                prevTotal += (order.getPrice() * order.getQuantity());
-            }
 
+            return row;
         }
+
+        prevTotal += (order.getPrice() * order.getQuantity());
 
         holder.name.setText(order.getMenuName());
         holder.quantity.setText(order.getQuantity().toString());

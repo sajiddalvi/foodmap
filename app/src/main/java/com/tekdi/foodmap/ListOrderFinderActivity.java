@@ -36,6 +36,8 @@ public class ListOrderFinderActivity extends ListActivity {
 
     private ListOrderRowAdapter adapter;
     public static final long DUMMY_TOTAL_MENU_ID = 999;
+    public static final long DUMMY_NAME_MENU_ID = 998;
+
     private Menu orderActionBarMenu;
     private String action;
 
@@ -97,7 +99,8 @@ public class ListOrderFinderActivity extends ListActivity {
         switch(item.getItemId()) {
             case R.id.order_send:
                for (OrderEntity order : orderList) {
-                    if (order.getMenuId() != DUMMY_TOTAL_MENU_ID)  // dont't send total
+                    if ((order.getMenuId() != DUMMY_TOTAL_MENU_ID) &&
+                        (order.getMenuId() != DUMMY_NAME_MENU_ID)) // dont't send total and name
                         new OrderEndpointAsyncTask(this).execute(new Pair<Context, OrderEntity>(this, order));
                 }
 
@@ -207,7 +210,8 @@ public class ListOrderFinderActivity extends ListActivity {
             case R.id.order_delete:
                 OrderEntity o = orderList.get(info.position);
 
-                if (!(o.getMenuId().equals(DUMMY_TOTAL_MENU_ID))) {
+                if (!(o.getMenuId().equals(DUMMY_TOTAL_MENU_ID)) &&
+                    !(o.getMenuId().equals(DUMMY_NAME_MENU_ID))) {
                     orderList.remove(info.position);
 
                     if (orderList.size() == 1) // only total left, clear the list
@@ -233,8 +237,6 @@ public class ListOrderFinderActivity extends ListActivity {
 
             TelephonyManager tMgr = (TelephonyManager)this.getSystemService(Context.TELEPHONY_SERVICE);
 
-            Log.v("sajid","process new order phone="+p.serverPhone);
-
             OrderEntity o = new OrderEntity();
             o.setServerId(p.serverId);
             o.setServerName(p.serverName);
@@ -248,10 +250,9 @@ public class ListOrderFinderActivity extends ListActivity {
             o.setQuantity(p.quantity);
             o.setOrderState(OrderState.ORDER_STATE_NEW);
 
-            Log.v("sajid","adding server phone = " + o.getServerPhone());
-
             // if its the first order entry, add "total"
             if (pendingOrderList.size() == 0) {
+                pendingOrderList.add(getDummyNameRow(o));
                 pendingOrderList.add(o);
                 pendingOrderList.add(getDummyTotalRow(o));
             } else {
@@ -266,8 +267,8 @@ public class ListOrderFinderActivity extends ListActivity {
                     }
                 }
                 if (isSameSever)
-                    // always add new order to the top, so "total" stays last
-                    pendingOrderList.add(0, o);
+                    // always add new order below name
+                    pendingOrderList.add(1, o);
                 else
                     finishNewOrderWarning();
             }
@@ -362,10 +363,7 @@ public class ListOrderFinderActivity extends ListActivity {
 
     public void showOrder(List<OrderEntity> result) {
 
-        Log.v("sajid","showOrderList");
         if (result == null) {
-            Log.v("sajid","null");
-
                 Intent intent = new Intent(this, FindActivity.class);
                 startActivity(intent);
                 finish();
@@ -382,6 +380,7 @@ public class ListOrderFinderActivity extends ListActivity {
 
         OrderEntity prev = result.get(0);
         for (OrderEntity o : result) {
+            Log.v("sajid","o = "+o.getMenuName());
             if (!o.getServerId().equals(prev.getServerId())) {
                 // if new finder found, copy finderList into newList
                 remoteOrderList.addAll(serverOrderList);
@@ -389,12 +388,14 @@ public class ListOrderFinderActivity extends ListActivity {
                 remoteOrderList.add(getDummyTotalRow(prev));
                 // clean up for new finder and add current order to new finderList
                 serverOrderList.clear();
-                serverOrderList.add(o);
                 prev = o;
-            } else {
-                // as long as finder has not changed, keep adding to finderList
-                serverOrderList.add(o);
             }
+            if (serverOrderList.size() == 0) {
+                serverOrderList.add(getDummyNameRow(prev));
+                Log.v("sajid","adding name size="+serverOrderList.size());
+
+            }
+            serverOrderList.add(o);
         }
 
         // add the last finderList to newList
@@ -404,6 +405,9 @@ public class ListOrderFinderActivity extends ListActivity {
 
         orderList=remoteOrderList;
 
+        for (OrderEntity ol : orderList) {
+            Log.v("sajid",ol.getMenuName());
+        }
 
         adapter = new ListOrderRowAdapter(this, R.layout.list_order_row,
                 orderList);
@@ -427,7 +431,21 @@ public class ListOrderFinderActivity extends ListActivity {
         dummyEntity.setOrderState(base.getOrderState());
         dummyEntity.setFinderDevRegId(base.getFinderDevRegId());
         dummyEntity.setServerId(base.getServerId());
-        dummyEntity.setMenuName("dummy");
+        dummyEntity.setMenuName("dummy total");
+
+        return dummyEntity;
+    }
+
+    private OrderEntity getDummyNameRow(OrderEntity base) {
+        OrderEntity dummyEntity = new OrderEntity();
+        dummyEntity.setFinderDevRegId("name");
+        dummyEntity.setMenuId((long) DUMMY_NAME_MENU_ID);
+        dummyEntity.setQuantity(0);
+        dummyEntity.setPrice((float)0);
+        dummyEntity.setServerPhone(base.getServerPhone());
+        dummyEntity.setServerName(base.getServerName());
+        dummyEntity.setTimestamp(base.getTimestamp());
+        dummyEntity.setMenuName("dummy name");
 
         return dummyEntity;
     }
