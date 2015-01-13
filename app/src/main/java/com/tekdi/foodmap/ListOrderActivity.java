@@ -2,12 +2,10 @@ package com.tekdi.foodmap;
 
 import android.app.ListActivity;
 import android.app.NotificationManager;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.Pair;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -73,10 +71,10 @@ public class ListOrderActivity extends ListActivity {
         }
 
         if (iAmServer) {
-            Log.v("sajid", "executing server listorder for "+intentServerId.toString());
-            ListOrdersEndpointAsyncTask l = new ListOrdersEndpointAsyncTask(this);
-            l.setServerId(myServerId);
-            l.execute();
+            //Log.v("sajid", "executing server listorder for "+intentServerId.toString());
+            //ListOrdersEndpointAsyncTask l = new ListOrdersEndpointAsyncTask(this);
+            //l.setServerId(myServerId);
+            //l.execute();
         } else {
             Log.v("sajid","executing finder listorder");
             finderDevRegId = Prefs.getDeviceRegIdPref(this);
@@ -147,7 +145,7 @@ public class ListOrderActivity extends ListActivity {
                 String finderDevRegId = newOrderList.get(position-1).getFinderDevRegId();
                 for (OrderEntity o : orderList) {
                     if (o.getFinderDevRegId().equals(finderDevRegId)) {
-                        new ConfirmOrderEndpointAsyncTask(this).execute(new Pair<Context, OrderEntity>(this, o));
+                        //new ConfirmOrderEndpointAsyncTask(this).execute(new Pair<Context, OrderEntity>(this, o));
                     }
                     numItemsInOrder ++;
                 }
@@ -173,9 +171,9 @@ public class ListOrderActivity extends ListActivity {
         if (numItemsConfirmed == numItemsInOrder) {
             orderList.clear();
             if (iAmServer) {
-                ListOrdersEndpointAsyncTask l = new ListOrdersEndpointAsyncTask(this);
-                l.setServerId(myServerId);
-                l.execute();
+               // ListOrdersEndpointAsyncTask l = new ListOrdersEndpointAsyncTask(this);
+               // l.setServerId(myServerId);
+               // l.execute();
             } else {
                 if (!(finderDevRegId.equals(""))) {
                     ListFinderOrdersEndpointAsyncTask l =
@@ -190,9 +188,9 @@ public class ListOrderActivity extends ListActivity {
     public void reSyncOrder() {
         orderList.clear();
         if (iAmServer) {
-            ListOrdersEndpointAsyncTask l = new ListOrdersEndpointAsyncTask(this);
-            l.setServerId(myServerId);
-            l.execute();
+            //ListOrdersEndpointAsyncTask l = new ListOrdersEndpointAsyncTask(this);
+            //l.setServerId(myServerId);
+            //l.execute();
         } else {
             if (!(finderDevRegId.equals(""))) {
                 ListFinderOrdersEndpointAsyncTask l =

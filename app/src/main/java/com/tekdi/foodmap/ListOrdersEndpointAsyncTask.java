@@ -18,10 +18,10 @@ import java.util.List;
 class ListOrdersEndpointAsyncTask extends AsyncTask<Void, Void, List<OrderEntity>> {
     private static OrderEntityApi myApiService = null;
     private Context context;
-    private ListOrderActivity caller;
+    private ListOrderServerActivity caller;
     private Long serverId;
 
-    ListOrdersEndpointAsyncTask(ListOrderActivity caller) {
+    ListOrdersEndpointAsyncTask(ListOrderServerActivity caller) {
 
         this.caller = caller;
         Log.v("sajid","in ListOrdersEndpointAsyncTask setting up caller");

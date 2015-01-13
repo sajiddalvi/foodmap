@@ -42,7 +42,7 @@
     <string name="order_status_finder_new">Press SEND when order is complete</string>
     <string name="order_status_server_new"></string>
     <string name="order_status_finder_send">Waiting for Caterer to acknowledge order</string>
-    <string name="order_status_server_send">Press RECEIVE to acknowledge order</string>
+    <string name="order_status_server_send">Press Here and then select Accept/Cancel Order </string>
     <string name="order_status_finder_receive">Caterer is processing order</string>
     <string name="order_status_server_receive">Press READY when order is ready</string>
     <string name="order_status_finder_ready">Order is ready for pickup</string>

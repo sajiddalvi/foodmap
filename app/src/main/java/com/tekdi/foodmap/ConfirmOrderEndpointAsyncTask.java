@@ -18,9 +18,9 @@ import java.io.IOException;
 class ConfirmOrderEndpointAsyncTask extends AsyncTask<Pair<Context, OrderEntity>, Void, String> {
     private static OrderEntityApi myApiService = null;
     private Context context;
-    private ListOrderActivity caller;
+    private ListOrderServerActivity caller;
 
-    ConfirmOrderEndpointAsyncTask(ListOrderActivity caller) {
+    ConfirmOrderEndpointAsyncTask(ListOrderServerActivity caller) {
 
         this.caller = caller;
         Log.v("sajid", "in ConfirmOrderEndpointAsyncTask setting up caller");
@@ -58,6 +58,6 @@ class ConfirmOrderEndpointAsyncTask extends AsyncTask<Pair<Context, OrderEntity>
         Toast.makeText(context, result, Toast.LENGTH_LONG).show();
         Log.v("sajid","order received");
 
-        caller.refreshOrder();
+        caller.onPostExecute();
     }
 }

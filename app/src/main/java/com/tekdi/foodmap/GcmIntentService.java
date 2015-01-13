@@ -42,7 +42,7 @@ public class GcmIntentService extends IntentService {
                 showToast(extras.getString("orderId"));
                 Log.v("sajid", extras.getString("myMessageType") + " " + extras.getString("orderId"));
 
-                if (myMessageType.equals("order_update")) {
+                if (myMessageType.equals("new_order_to_server")) {
 
                     NotificationCompat.Builder mBuilder =
                             new NotificationCompat.Builder(this)
@@ -50,11 +50,7 @@ public class GcmIntentService extends IntentService {
                                     .setContentTitle("Foodmap:" + extras.getString("myMessageType"))
                                     .setContentText("order number " + extras.getString("orderId"));
 
-                    Intent resultIntent = new Intent(this, ListOrderFinderActivity.class);
-                    resultIntent.putExtra("orderId", extras.getString("orderId"));
-                    resultIntent.putExtra("serverId", extras.getString("serverId"));
-                    resultIntent.putExtra("finder", extras.getString("finder"));
-                    resultIntent.putExtra("orderState", extras.getString("orderState"));
+                    Intent resultIntent = new Intent(this, ListOrderServerActivity.class);
                     resultIntent.putExtra("action","notification");
                     resultIntent.putExtra("notificationId", NotificationId.ORDER_UPDATE_NOTIFICATION_ID);
 
@@ -65,7 +61,6 @@ public class GcmIntentService extends IntentService {
                                     resultIntent,
                                     PendingIntent.FLAG_UPDATE_CURRENT
                             );
-
 
                     mBuilder.setContentIntent(resultPendingIntent);
 

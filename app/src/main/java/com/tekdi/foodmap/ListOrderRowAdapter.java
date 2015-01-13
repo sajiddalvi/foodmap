@@ -85,8 +85,12 @@ public class ListOrderRowAdapter extends ArrayAdapter<OrderEntity> {
             NumberFormat format = NumberFormat.getCurrencyInstance();
             holder.total.setText(format.format(prevTotal));
 
+            String orderStatus[];
+            if (iAmServer)
+                orderStatus = context.getResources().getStringArray(R.array.order_status_server);
+            else
+                orderStatus = context.getResources().getStringArray(R.array.order_status_finder);
 
-            String orderStatus[] = context.getResources().getStringArray(R.array.order_status_finder);
             int orderState = order.getOrderState();
             holder.status.setText(orderStatus[orderState]);
 

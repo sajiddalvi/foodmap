@@ -3,7 +3,6 @@ package com.tekdi.foodmap;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -36,10 +35,7 @@ public class MainActivity extends Activity {
     }
 
     public void onOrderListButtonClick(View v) {
-        Log.v("sajid", "onOrderListButtonClick");
-        String serverId = Prefs.getServeIdPref(this);
-        Intent intent = new Intent(this, ListOrderActivity.class);
-        intent.putExtra("serverId", serverId);
+        Intent intent = new Intent(this, ListOrderServerActivity.class);
         startActivity(intent);
     }
 
