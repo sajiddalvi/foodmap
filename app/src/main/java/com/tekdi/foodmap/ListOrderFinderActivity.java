@@ -5,8 +5,10 @@ import android.app.ListActivity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.util.Pair;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -21,12 +23,17 @@ import android.widget.Toast;
 import com.tekdi.foodmap.backend.orderEntityApi.model.OrderEntity;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by fsd017 on 1/11/15.
  */
 public class ListOrderFinderActivity extends ListActivity {
+
     private static ArrayList<OrderEntity> orderList = new ArrayList<OrderEntity>();
+    private static ArrayList<OrderEntity> pendingOrderList = new ArrayList<OrderEntity>();
+
     private ListOrderRowAdapter adapter;
     public static final long DUMMY_TOTAL_MENU_ID = 999;
     private Menu orderActionBarMenu;
@@ -47,12 +54,16 @@ public class ListOrderFinderActivity extends ListActivity {
             ParcelableFinderOrder p = (ParcelableFinderOrder)
                     intent.getParcelableExtra("com.tekdi.foodmap.ParcelableFinderOrder");
             processNewOrder(p);
+
+        } else if ((pendingOrderList != null)&&(pendingOrderList.size() > 0)) {
+            finishNewOrderWarning();
         } else if ( (action!= null) && action.equals("notification")) {
+            setTitle("Order Update");
             processOrderReceived();
-        } else if ((orderList == null) || (orderList.size() == 0)) {
-            intent = new Intent(this, FindActivity.class);
-            startActivity(intent);
-            finish();
+        } else {
+            setTitle("Order Status");
+            Log.v("sajid", "executing listfinderorder");
+            getOrderListFromServer();
         }
 
         adapter = new ListOrderRowAdapter(this, R.layout.list_order_row,
@@ -101,6 +112,9 @@ public class ListOrderFinderActivity extends ListActivity {
                 if ((action!= null) && action.equals("new_order"))
                     finish();
                 else {
+                    // we've come to the ListOrder, not from ListMenu
+                    // but somewhere else (since new_order is not set),
+                    // so setup for showing ListMenuActivity
                     OrderEntity o = orderList.get(0);
                     Intent intent = new Intent(this, ListMenuActivity.class);
                     intent.putExtra("serverId", o.getServerId());
@@ -189,18 +203,26 @@ public class ListOrderFinderActivity extends ListActivity {
                 return true;
 
             case R.id.order_delete:
-                orderList.remove(info.position);
-                if (orderList.size() == 1) // only total left, clear the list
-                    orderList.clear();
-                adapter.notifyDataSetChanged();
+                OrderEntity o = orderList.get(info.position);
 
+                if (!(o.getMenuId().equals(DUMMY_TOTAL_MENU_ID))) {
+                    orderList.remove(info.position);
+
+                    if (orderList.size() == 1) // only total left, clear the list
+                        orderList.clear();
+                    adapter.notifyDataSetChanged();
+                }
                 return true;
+
+            case R.id.order_call:
+                String phone = orderList.get(info.position).getServerPhone();
+                Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + phone));
+                startActivity(intent);
 
             default:
                 return super.onContextItemSelected(item);
         }
     }
-
 
     private void processNewOrder(ParcelableFinderOrder p) {
 
@@ -208,6 +230,8 @@ public class ListOrderFinderActivity extends ListActivity {
         if (index < 0) { // index will be -1 if not found
 
             TelephonyManager tMgr = (TelephonyManager)this.getSystemService(Context.TELEPHONY_SERVICE);
+
+            Log.v("sajid","process new order phone="+p.serverPhone);
 
             OrderEntity o = new OrderEntity();
             o.setServerId(p.serverId);
@@ -222,24 +246,36 @@ public class ListOrderFinderActivity extends ListActivity {
             o.setQuantity(p.quantity);
             o.setOrderState(OrderState.ORDER_STATE_NEW);
 
-            // if its the first order entry, add "total"
-            if (orderList.size() == 0) {
-                orderList.add(o);
-                OrderEntity dummyEntity = new OrderEntity();
-                dummyEntity.setMenuId((long) DUMMY_TOTAL_MENU_ID);
-                dummyEntity.setOrderState(o.getOrderState());
+            Log.v("sajid","adding server phone = " + o.getServerPhone());
 
-                orderList.add(dummyEntity);
+            // if its the first order entry, add "total"
+            if (pendingOrderList.size() == 0) {
+                pendingOrderList.add(o);
+                pendingOrderList.add(getDummyTotalRow(o));
             } else {
-                // always add new order to the top, so "total" stays last
-                orderList.add(0, o);
+
+                //check if this is an order for a new server
+                boolean isSameSever = true;
+                for (OrderEntity op : pendingOrderList) {
+                    Log.v("sajid","so="+o.getServerId().toString()+",sop="+op.getServerId().toString());
+                    if (!(o.getServerId().equals(op.getServerId()))) {
+                        isSameSever = false;
+                        break;
+                    }
+                }
+                if (isSameSever)
+                    // always add new order to the top, so "total" stays last
+                    pendingOrderList.add(0, o);
+                else
+                    finishNewOrderWarning();
             }
 
         } else {
-            OrderEntity o = orderList.get(index);
+            OrderEntity o = pendingOrderList.get(index);
             o.setQuantity(o.getQuantity() + 1);
-            orderList.set(index, o);
+            pendingOrderList.set(index, o);
         }
+        orderList = pendingOrderList;
 
     }
 
@@ -274,6 +310,11 @@ public class ListOrderFinderActivity extends ListActivity {
         Toast.makeText(this, statusMessage, Toast.LENGTH_LONG).show();
     }
 
+    public void onPostExecuteListOrder(List<OrderEntity> result) {
+        Toast.makeText(this, "got list", Toast.LENGTH_LONG).show();
+        showOrder(result);
+    }
+
     private void processOrderSent() {
         for (OrderEntity order : orderList) {
             order.setOrderState(OrderState.ORDER_STATE_SEND);
@@ -285,11 +326,10 @@ public class ListOrderFinderActivity extends ListActivity {
     }
 
     private void processOrderReceived() {
-        for (OrderEntity order : orderList) {
-            order.setOrderState(OrderState.ORDER_STATE_RECEIVE);
-        }
+
+        getOrderListFromServer();
         setupActionBarButtons(OrderState.ORDER_STATE_RECEIVE);
-        setTitle("Pending Order");
+        setTitle("Orders");
         adapter.notifyDataSetChanged();
 
     }
@@ -322,4 +362,84 @@ public class ListOrderFinderActivity extends ListActivity {
         }
     }
 
+    public void showOrder(List<OrderEntity> result) {
+
+        if (result == null) {
+            if ((pendingOrderList == null)||(pendingOrderList.size() == 0)) {
+                Intent intent = new Intent(this, FindActivity.class);
+                startActivity(intent);
+                finish();
+            } else {
+                setTitle("Pending Order");
+                orderList = pendingOrderList;
+            }
+            return;
+        }
+
+        ArrayList<OrderEntity> remoteOrderList = new ArrayList<OrderEntity>();
+        ArrayList<OrderEntity> serverOrderList = new ArrayList<OrderEntity>();
+
+        serverOrderList.clear();
+        remoteOrderList.clear();
+
+        // Sort orders by finders
+        Collections.sort(result, new ComparatorOrderEntity());
+
+        OrderEntity prev = result.get(0);
+        for (OrderEntity o : result) {
+            if (!o.getServerId().equals(prev.getServerId())) {
+                // if new finder found, copy finderList into newList
+                remoteOrderList.addAll(serverOrderList);
+                // add dummy total at the end
+                remoteOrderList.add(getDummyTotalRow(prev));
+                // clean up for new finder and add current order to new finderList
+                serverOrderList.clear();
+                serverOrderList.add(o);
+                prev = o;
+            } else {
+                // as long as finder has not changed, keep adding to finderList
+                serverOrderList.add(o);
+            }
+        }
+
+        // add the last finderList to newList
+        remoteOrderList.addAll(serverOrderList);
+        // add dummy total
+
+        remoteOrderList.add(getDummyTotalRow(serverOrderList.get(0)));
+
+        orderList.clear();
+        orderList.addAll(pendingOrderList);
+        orderList.addAll(remoteOrderList);
+
+        setTitle("Orders");
+
+    }
+
+    private void finishNewOrderWarning() {
+        Toast.makeText(this, "Finish exiting new order first.", Toast.LENGTH_LONG).show();
+        orderList = pendingOrderList;
+
+        setTitle("New Order");
+    }
+
+    private OrderEntity getDummyTotalRow(OrderEntity base) {
+
+        Log.v("sajid","add dummy serverId="+base.getServerId().toString());
+
+        OrderEntity dummyEntity = new OrderEntity();
+        dummyEntity.setFinderDevRegId("total");
+        dummyEntity.setMenuId((long) DUMMY_TOTAL_MENU_ID);
+        dummyEntity.setOrderState(base.getOrderState());
+        dummyEntity.setFinderDevRegId(base.getFinderDevRegId());
+        dummyEntity.setServerId(base.getServerId());
+
+        return dummyEntity;
+    }
+
+    private void getOrderListFromServer() {
+        ListFinderOrdersEndpointAsyncTask l = new ListFinderOrdersEndpointAsyncTask(this);
+        l.setFinderDevRegId(Prefs.getDeviceRegIdPref(this));
+        l.execute();
+    }
 }

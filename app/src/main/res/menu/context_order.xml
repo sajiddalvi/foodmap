@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
+        android:id="@+id/order_call"
+        android:title="Call Caterer"/>
+
+    <item
         android:id="@+id/order_edit"
         android:title="Change Quantity"/>
     <item

@@ -78,12 +78,12 @@ public class ListOrderActivity extends ListActivity {
         } else {
             Log.v("sajid","executing finder listorder");
             finderDevRegId = Prefs.getDeviceRegIdPref(this);
-            if (!(finderDevRegId.equals(""))) {
+           /* if (!(finderDevRegId.equals(""))) {
                 ListFinderOrdersEndpointAsyncTask l =
                         new ListFinderOrdersEndpointAsyncTask(this);
                 l.setFinderDevRegId(finderDevRegId);
                 l.execute();
-            }
+            }*/
         }
     }
 
@@ -176,10 +176,10 @@ public class ListOrderActivity extends ListActivity {
                // l.execute();
             } else {
                 if (!(finderDevRegId.equals(""))) {
-                    ListFinderOrdersEndpointAsyncTask l =
+/*                    ListFinderOrdersEndpointAsyncTask l =
                             new ListFinderOrdersEndpointAsyncTask(this);
                     l.setFinderDevRegId(finderDevRegId);
-                    l.execute();
+                    l.execute();*/
                 }
             }
         }
@@ -193,10 +193,10 @@ public class ListOrderActivity extends ListActivity {
             //l.execute();
         } else {
             if (!(finderDevRegId.equals(""))) {
-                ListFinderOrdersEndpointAsyncTask l =
+/*                ListFinderOrdersEndpointAsyncTask l =
                         new ListFinderOrdersEndpointAsyncTask(this);
                 l.setFinderDevRegId(finderDevRegId);
-                l.execute();
+                l.execute();*/
             }
         }
 

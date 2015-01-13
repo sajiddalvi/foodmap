@@ -35,8 +35,8 @@ public class ParcelableFinderOrder implements  Parcelable{
     public void writeToParcel(Parcel out, int flags) {
         out.writeLong(serverId);
         out.writeString(serverName);
-        out.writeString(serverPhone);
         out.writeString(serverAddress);
+        out.writeString(serverPhone);
         out.writeLong(menuId);
         out.writeString(menuName);
         out.writeInt(quantity);

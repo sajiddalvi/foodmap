@@ -29,8 +29,6 @@
         android:textStyle="bold"
         android:layout_weight="1"
         android:textColor="@android:color/holo_blue_light"
-        android:clickable="true"
-        android:onClick="callPressed"
         android:visibility="gone"
          />
 

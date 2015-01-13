@@ -18,10 +18,10 @@ import android.content.Context;
 class ListFinderOrdersEndpointAsyncTask extends AsyncTask<Void, Void, List<OrderEntity>> {
     private static OrderEntityApi myApiService = null;
     private Context context;
-    private ListOrderActivity caller;
+    private ListOrderFinderActivity caller;
     private String finderDevRegId;
 
-    ListFinderOrdersEndpointAsyncTask(ListOrderActivity caller) {
+    ListFinderOrdersEndpointAsyncTask(ListOrderFinderActivity caller) {
 
         this.caller = caller;
         Log.v("sajid", "in ListFinderOrdersEndpointAsyncTask setting up caller");
@@ -52,7 +52,6 @@ class ListFinderOrdersEndpointAsyncTask extends AsyncTask<Void, Void, List<Order
         try {
             Log.v("sajid", "executing list order");
             return myApiService.listForFinder(finderDevRegId).execute().getItems();
-            //return myApiService.list().execute().getItems();
         } catch (IOException e) {
             Log.v("sajid", "executing list order returned empty list");
             return Collections.EMPTY_LIST;
@@ -64,9 +63,7 @@ class ListFinderOrdersEndpointAsyncTask extends AsyncTask<Void, Void, List<Order
         Log.v("sajid","finished executing list order");
         if (result == null) {
             Log.v("sajid", "result is null");
-            return;
         }
-        caller.showOrder(result);
-
+        caller.onPostExecuteListOrder(result);
     }
 }

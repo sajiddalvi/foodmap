@@ -120,6 +120,11 @@ public class ListOrderServerActivity extends ListActivity {
             case R.id.order_cancel:
                 return true;
 
+            case R.id.order_call:
+                String phone = orderList.get(info.position).getFinderPhone();
+                Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + phone));
+                startActivity(intent);
+
             default:
                 return super.onContextItemSelected(item);
         }
@@ -153,11 +158,6 @@ public class ListOrderServerActivity extends ListActivity {
         }
     }
 
-    public void callPressed(View v) {
-        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + finderPhone));
-        startActivity(intent);
-    }
-
     public void showOrder(List<OrderEntity> result) {
 
         orderList.clear();
@@ -187,6 +187,7 @@ public class ListOrderServerActivity extends ListActivity {
                 dummyEntity.setMenuId((long) DUMMY_TOTAL_MENU_ID);
                 dummyEntity.setOrderState(prev.getOrderState());
                 dummyEntity.setFinderDevRegId(prev.getFinderDevRegId());
+                dummyEntity.setFinderPhone(prev.getFinderPhone());
                 newOrderList.add(dummyEntity);
                 // clean up for new finder and add current order to new finderList
                 finderOrderList.clear();
@@ -206,6 +207,7 @@ public class ListOrderServerActivity extends ListActivity {
         dummyEntity.setMenuId((long) DUMMY_TOTAL_MENU_ID);
         dummyEntity.setOrderState(prev.getOrderState());
         dummyEntity.setFinderDevRegId(prev.getFinderDevRegId());
+        dummyEntity.setFinderPhone(prev.getFinderPhone());
 
         newOrderList.add(dummyEntity);
 

@@ -57,10 +57,13 @@ class ListServersEndpointAsyncTask extends AsyncTask<Void, Void, List<ServeFoodE
     @Override
     protected void onPostExecute(List<ServeFoodEntity> result) {
         Log.v("sajid","finished executing listservers");
-        for (ServeFoodEntity q : result) {
-            Log.v("sajid","name="+q.getName());
-            caller.setupServers(result);
+        if (result != null) {
+            for (ServeFoodEntity q : result) {
 
+                Log.v("sajid", "name=" + q.getName());
+                caller.setupServers(result);
+
+            }
         }
     }
 }

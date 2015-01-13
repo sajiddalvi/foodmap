@@ -49,6 +49,7 @@ public class ListMenuActivity extends ListActivity implements Serializable {
         if (source.equals("server")) {
             amIServer = true;
             registerForContextMenu(getListView());
+            serverId = Long.parseLong(Prefs.getServeIdPref(this));
         }
         else {
             amIServer = false;
@@ -65,7 +66,7 @@ public class ListMenuActivity extends ListActivity implements Serializable {
     @Override
     public void onResume() {
         super.onResume();
-        if (serverId != 0) {
+        if (serverId != null) {
             Log.v("sajid","executing listmenu");
             ListMenuEndpointAsyncTask l = new ListMenuEndpointAsyncTask(this);
             l.setServerId(serverId);
@@ -133,6 +134,7 @@ public class ListMenuActivity extends ListActivity implements Serializable {
             p.serverName = serverName;
             p.serverAddress = serverAddress;
             p.serverPhone = serverPhone;
+            Log.v("sajid","p.serverPhone="+p.serverPhone);
             p.menuId = m.getId();
             p.menuName = m.getName();
             p.quantity = 1;
