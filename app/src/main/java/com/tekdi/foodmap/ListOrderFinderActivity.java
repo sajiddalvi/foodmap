@@ -256,7 +256,6 @@ public class ListOrderFinderActivity extends ListActivity {
                 //check if this is an order for a new server
                 boolean isSameSever = true;
                 for (OrderEntity op : pendingOrderList) {
-                    Log.v("sajid","so="+o.getServerId().toString()+",sop="+op.getServerId().toString());
                     if (!(o.getServerId().equals(op.getServerId()))) {
                         isSameSever = false;
                         break;

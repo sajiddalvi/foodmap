@@ -27,8 +27,6 @@ public class ListOrderServerActivity extends ListActivity {
     private ListOrderRowAdapter adapter;
     private Menu orderActionBarMenu;
     private String action;
-    private ArrayList<OrderEntity> newOrderList = new ArrayList<OrderEntity>();
-    private String finderPhone = "";
     private int numItemsInOrder;
     private int numItemsConfirmed;
 
@@ -98,13 +96,16 @@ public class ListOrderServerActivity extends ListActivity {
             case R.id.order_receive:
                 numItemsInOrder = 0;
                 numItemsConfirmed = 0;
-                OrderEntity op = newOrderList.get(info.position);
+                OrderEntity op = orderList.get(info.position);
                 String finderDevRegId = op.getFinderDevRegId();
                 for (OrderEntity o : orderList) {
                     if (o.getFinderDevRegId().equals(finderDevRegId)) {
-                        new ConfirmOrderEndpointAsyncTask(this).execute(new Pair<Context, OrderEntity>(this, o));
+                        if ((o.getMenuId() != ListOrderFinderActivity.DUMMY_TOTAL_MENU_ID) &&
+                                (o.getMenuId() != ListOrderFinderActivity.DUMMY_NAME_MENU_ID)) {
+                            new ConfirmOrderEndpointAsyncTask(this).execute(new Pair<Context, OrderEntity>(this, o));
+                            numItemsInOrder ++;
+                        }
                     }
-                    numItemsInOrder ++;
                 }
 
                 return true;
@@ -201,7 +202,7 @@ public class ListOrderServerActivity extends ListActivity {
         dummyEntity.setFinderDevRegId("name");
         dummyEntity.setMenuId((long) ListOrderFinderActivity.DUMMY_NAME_MENU_ID);
         dummyEntity.setQuantity(0);
-        dummyEntity.setPrice((float)0);
+        dummyEntity.setPrice((float) 0);
         dummyEntity.setFinderPhone(base.getFinderPhone());
         dummyEntity.setTimestamp(base.getTimestamp());
         dummyEntity.setMenuName("dummy name");
