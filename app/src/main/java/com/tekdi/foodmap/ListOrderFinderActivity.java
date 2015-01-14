@@ -43,14 +43,10 @@ public class ListOrderFinderActivity extends ListActivity {
 
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-
         setContentView(R.layout.list_order_view);
-
         registerForContextMenu(getListView());
-
         adapter = new ListOrderRowAdapter(this, R.layout.list_order_row,
                 orderList);
-
         setListAdapter(adapter);
 
         Intent intent = getIntent();
@@ -367,6 +363,7 @@ public class ListOrderFinderActivity extends ListActivity {
                 Intent intent = new Intent(this, FindActivity.class);
                 startActivity(intent);
                 finish();
+                return;
         }
 
         ArrayList<OrderEntity> remoteOrderList = new ArrayList<OrderEntity>();
@@ -375,12 +372,11 @@ public class ListOrderFinderActivity extends ListActivity {
         serverOrderList.clear();
         remoteOrderList.clear();
 
-        // Sort orders by finders
+        // Sort orders by servers
         Collections.sort(result, new ComparatorFinderOrderEntity());
 
         OrderEntity prev = result.get(0);
         for (OrderEntity o : result) {
-            Log.v("sajid","o = "+o.getMenuName());
             if (!o.getServerId().equals(prev.getServerId())) {
                 // if new finder found, copy finderList into newList
                 remoteOrderList.addAll(serverOrderList);
@@ -392,8 +388,6 @@ public class ListOrderFinderActivity extends ListActivity {
             }
             if (serverOrderList.size() == 0) {
                 serverOrderList.add(getDummyNameRow(prev));
-                Log.v("sajid","adding name size="+serverOrderList.size());
-
             }
             serverOrderList.add(o);
         }
@@ -404,10 +398,6 @@ public class ListOrderFinderActivity extends ListActivity {
         remoteOrderList.add(getDummyTotalRow(prev));
 
         orderList=remoteOrderList;
-
-        for (OrderEntity ol : orderList) {
-            Log.v("sajid",ol.getMenuName());
-        }
 
         adapter = new ListOrderRowAdapter(this, R.layout.list_order_row,
                 orderList);
@@ -442,6 +432,7 @@ public class ListOrderFinderActivity extends ListActivity {
         dummyEntity.setMenuId((long) DUMMY_NAME_MENU_ID);
         dummyEntity.setQuantity(0);
         dummyEntity.setPrice((float)0);
+        dummyEntity.setOrderState(base.getOrderState());
         dummyEntity.setServerPhone(base.getServerPhone());
         dummyEntity.setServerName(base.getServerName());
         dummyEntity.setTimestamp(base.getTimestamp());
