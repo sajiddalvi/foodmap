@@ -69,7 +69,6 @@ public class ListOrderFinderActivity extends ListActivity {
             getOrderListFromServer();
         }
 
-
     }
 
     @Override
@@ -131,12 +130,14 @@ public class ListOrderFinderActivity extends ListActivity {
 
             case R.id.order_clear:
                 orderList.clear();
-                adapter.notifyDataSetChanged();
+                pendingOrderList.clear();
 
                 menuItem = orderActionBarMenu.findItem(R.id.order_send);
                 menuItem.setVisible(false);
                 menuItem = orderActionBarMenu.findItem(R.id.order_clear);
                 menuItem.setVisible(false);
+
+                finish();
 
                 break;
 
@@ -256,16 +257,21 @@ public class ListOrderFinderActivity extends ListActivity {
                 //check if this is an order for a new server
                 boolean isSameSever = true;
                 for (OrderEntity op : pendingOrderList) {
+                    if (op.getServerId() == null)
+                        continue;
                     if (!(o.getServerId().equals(op.getServerId()))) {
                         isSameSever = false;
                         break;
                     }
                 }
-                if (isSameSever)
+                if (isSameSever) {
                     // always add new order below name
                     pendingOrderList.add(1, o);
-                else
+                }
+                else {
                     finishNewOrderWarning();
+                }
+
             }
 
         } else {
@@ -273,7 +279,16 @@ public class ListOrderFinderActivity extends ListActivity {
             o.setQuantity(o.getQuantity() + 1);
             pendingOrderList.set(index, o);
         }
-        orderList = pendingOrderList;
+
+        orderList.clear();
+        for (OrderEntity po : pendingOrderList) {
+            orderList.add(po);
+        }
+
+        adapter = new ListOrderRowAdapter(this, R.layout.list_order_row,
+                orderList);
+
+        adapter.notifyDataSetChanged();
 
     }
 
@@ -430,7 +445,7 @@ public class ListOrderFinderActivity extends ListActivity {
         dummyEntity.setFinderDevRegId("name");
         dummyEntity.setMenuId((long) DUMMY_NAME_MENU_ID);
         dummyEntity.setQuantity(0);
-        dummyEntity.setPrice((float)0);
+        dummyEntity.setPrice((float) 0);
         dummyEntity.setOrderState(base.getOrderState());
         dummyEntity.setServerPhone(base.getServerPhone());
         dummyEntity.setServerName(base.getServerName());
