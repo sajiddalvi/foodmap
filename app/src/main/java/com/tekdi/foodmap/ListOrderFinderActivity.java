@@ -32,7 +32,6 @@ import java.util.List;
 public class ListOrderFinderActivity extends ListActivity {
 
     private static ArrayList<OrderEntity> orderList = new ArrayList<OrderEntity>();
-    private static ArrayList<OrderEntity> pendingOrderList = new ArrayList<OrderEntity>();
 
     private ListOrderRowAdapter adapter;
     public static final long DUMMY_TOTAL_MENU_ID = 999;
@@ -41,33 +40,68 @@ public class ListOrderFinderActivity extends ListActivity {
     private Menu orderActionBarMenu;
     private String action;
 
+    private static boolean pendingOrder = false;
+
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         setContentView(R.layout.list_order_view);
         registerForContextMenu(getListView());
-        adapter = new ListOrderRowAdapter(this, R.layout.list_order_row,
-                orderList);
-        setListAdapter(adapter);
 
         Intent intent = getIntent();
         action = intent.getStringExtra("action");
 
         if ((action!= null) && action.equals("new_order")) {
             setTitle("New Order");
+
             ParcelableFinderOrder p = (ParcelableFinderOrder)
                     intent.getParcelableExtra("com.tekdi.foodmap.ParcelableFinderOrder");
-            processNewOrder(p);
 
-        } else if ((pendingOrderList != null)&&(pendingOrderList.size() > 0)) {
-            finishNewOrderWarning();
+            // if we have a new order,
+            // and there is already a pending order
+            // check if new order is from the same server as pending order
+            // if not give user a warning to first finish pending order
+
+            // pending order will be cleared when the order is sent to the server
+            // or if the order is cleared
+
+            if (pendingOrder) {
+
+                boolean isSameSever = true;
+                for (OrderEntity op : orderList) {
+                    if (op.getServerId() == null)
+                        continue;
+                    if (!(p.serverId.equals(op.getServerId()))) {
+                        isSameSever = false;
+                        break;
+                    }
+                }
+                if (isSameSever) {
+                    processNewOrder(p);
+                } else {
+                    finishNewOrderWarning();
+                }
+            } else {
+                orderList.clear();
+                pendingOrder = true;
+                processNewOrder(p);
+            }
+
         } else if ( (action!= null) && action.equals("notification")) {
-            setTitle("Order Update");
-            processOrderReceived();
+            if (!pendingOrder) {
+                setTitle("Order Update");
+                processOrderReceived();
+            }
         } else {
-            setTitle("Order Status");
-            Log.v("sajid", "executing listfinderorder");
-            getOrderListFromServer();
+            if (!pendingOrder) {
+                setTitle("Order Status");
+                Log.v("sajid", "executing listfinderorder");
+                getOrderListFromServer();
+            }
         }
+
+        adapter = new ListOrderRowAdapter(this, R.layout.list_order_row,
+                orderList);
+        setListAdapter(adapter);
 
     }
 
@@ -99,12 +133,16 @@ public class ListOrderFinderActivity extends ListActivity {
                         new OrderEndpointAsyncTask(this).execute(new Pair<Context, OrderEntity>(this, order));
                 }
 
+                pendingOrder = false;
+
                 menuItem = orderActionBarMenu.findItem(R.id.order_add);
                 menuItem.setVisible(false);
                 menuItem = orderActionBarMenu.findItem(R.id.order_send);
                 menuItem.setVisible(false);
                 menuItem = orderActionBarMenu.findItem(R.id.order_clear);
                 menuItem.setVisible(false);
+
+                adapter.notifyDataSetChanged();
 
                 break;
 
@@ -130,14 +168,15 @@ public class ListOrderFinderActivity extends ListActivity {
 
             case R.id.order_clear:
                 orderList.clear();
-                pendingOrderList.clear();
+                pendingOrder = false;
 
                 menuItem = orderActionBarMenu.findItem(R.id.order_send);
                 menuItem.setVisible(false);
                 menuItem = orderActionBarMenu.findItem(R.id.order_clear);
                 menuItem.setVisible(false);
 
-                finish();
+                adapter.notifyDataSetChanged();
+
 
                 break;
 
@@ -248,41 +287,18 @@ public class ListOrderFinderActivity extends ListActivity {
             o.setOrderState(OrderState.ORDER_STATE_NEW);
 
             // if its the first order entry, add "total"
-            if (pendingOrderList.size() == 0) {
-                pendingOrderList.add(getDummyNameRow(o));
-                pendingOrderList.add(o);
-                pendingOrderList.add(getDummyTotalRow(o));
+            if (orderList.size() == 0) {
+                orderList.add(getDummyNameRow(o));
+                orderList.add(o);
+                orderList.add(getDummyTotalRow(o));
             } else {
-
-                //check if this is an order for a new server
-                boolean isSameSever = true;
-                for (OrderEntity op : pendingOrderList) {
-                    if (op.getServerId() == null)
-                        continue;
-                    if (!(o.getServerId().equals(op.getServerId()))) {
-                        isSameSever = false;
-                        break;
-                    }
-                }
-                if (isSameSever) {
-                    // always add new order below name
-                    pendingOrderList.add(1, o);
-                }
-                else {
-                    finishNewOrderWarning();
-                }
-
+                orderList.add(1, o);
             }
 
         } else {
-            OrderEntity o = pendingOrderList.get(index);
+            OrderEntity o = orderList.get(index);
             o.setQuantity(o.getQuantity() + 1);
-            pendingOrderList.set(index, o);
-        }
-
-        orderList.clear();
-        for (OrderEntity po : pendingOrderList) {
-            orderList.add(po);
+            orderList.set(index, o);
         }
 
         adapter = new ListOrderRowAdapter(this, R.layout.list_order_row,
@@ -314,7 +330,6 @@ public class ListOrderFinderActivity extends ListActivity {
 
         if (result.equals("new order success")) {
             statusMessage = "order sent";
-
             processOrderSent();
         }
         else
@@ -423,8 +438,6 @@ public class ListOrderFinderActivity extends ListActivity {
 
     private void finishNewOrderWarning() {
         Toast.makeText(this, "Finish exiting new order first.", Toast.LENGTH_LONG).show();
-        orderList = pendingOrderList;
-
         setTitle("New Order");
     }
 
@@ -456,7 +469,6 @@ public class ListOrderFinderActivity extends ListActivity {
     }
 
     private void getOrderListFromServer() {
-        pendingOrderList.clear();
         orderList.clear();
         ListFinderOrdersEndpointAsyncTask l = new ListFinderOrdersEndpointAsyncTask(this);
         l.setFinderDevRegId(Prefs.getDeviceRegIdPref(this));
