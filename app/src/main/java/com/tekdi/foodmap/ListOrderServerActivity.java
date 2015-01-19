@@ -211,10 +211,15 @@ public class ListOrderServerActivity extends ListActivity {
     }
 
     private void getOrderListFromServer() {
-        orderList.clear();
-        ListOrdersEndpointAsyncTask l = new ListOrdersEndpointAsyncTask(this);
-        l.setServerId(Long.parseLong(Prefs.getServeIdPref(this)));
-        l.execute();
+        if (Prefs.getServeIdPref(this).equals("")) {
+            Toast.makeText(this, "Setup Catering Service first.", Toast.LENGTH_LONG).show();
+            finish();
+        } else {
+            orderList.clear();
+            ListOrdersEndpointAsyncTask l = new ListOrdersEndpointAsyncTask(this);
+            l.setServerId(Long.parseLong(Prefs.getServeIdPref(this)));
+            l.execute();
+        }
     }
 
 }

@@ -35,8 +35,12 @@ public class MainActivity extends Activity {
     }
 
     public void onOrderListButtonClick(View v) {
-        Intent intent = new Intent(this, ListOrderServerActivity.class);
-        startActivity(intent);
+        if (Prefs.getServeIdPref(this).equals("")) {
+            Toast.makeText(this, "Setup Catering Service first.", Toast.LENGTH_LONG).show();
+        } else {
+            Intent intent = new Intent(this, ListOrderServerActivity.class);
+            startActivity(intent);
+        }
     }
 
     public void onFinderOrderButtonClick(View v) {
@@ -54,15 +58,18 @@ public class MainActivity extends Activity {
     }
 
     public void onMenuListButtonClick(View v) {
+
         String serverId = Prefs.getServeIdPref(this);
-        if (! serverId.equals("")) {
+
+        if (serverId.equals("")) {
+            Toast.makeText(this, "Setup Catering Service first.", Toast.LENGTH_LONG).show();
+        } else {
+
             Intent intent = new Intent(this, ListMenuActivity.class);
             intent.putExtra("serverId", Long.parseLong(serverId));
             intent.putExtra("serverName", "lulus");
             intent.putExtra("source", "server");
             startActivity(intent);
-        } else {
-            v.setClickable(false);
         }
     }
 

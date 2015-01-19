@@ -389,7 +389,9 @@ public class ListOrderFinderActivity extends ListActivity {
     public void showOrder(List<OrderEntity> result) {
 
         if (result == null) {
-                Intent intent = new Intent(this, FindActivity.class);
+            Toast.makeText(this, "No orders found. Lets look for food.", Toast.LENGTH_LONG).show();
+
+            Intent intent = new Intent(this, FindActivity.class);
                 startActivity(intent);
                 finish();
                 return;
