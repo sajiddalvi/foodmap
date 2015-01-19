@@ -142,6 +142,7 @@ public class ListOrderServerActivity extends ListActivity {
         if (result == null) {
             Toast.makeText(this, "No orders received.", Toast.LENGTH_LONG).show();
             finish();
+            return;
         }
 
         ArrayList<OrderEntity> remoteOrderList = new ArrayList<OrderEntity>();

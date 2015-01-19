@@ -64,9 +64,7 @@ class ListOrdersEndpointAsyncTask extends AsyncTask<Void, Void, List<OrderEntity
         Log.v("sajid","finished executing list order");
         if (result == null) {
             Log.v("sajid", "result is null");
-            return;
         }
-
         caller.showOrder(result);
     }
 }

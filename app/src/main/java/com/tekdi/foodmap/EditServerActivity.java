@@ -147,9 +147,12 @@ public class EditServerActivity extends FragmentActivity
         // Display the connection status
 
         mLocation = mLocationClient.getLastLocation();
-        getAddress(getWindow().getDecorView().findViewById(android.R.id.content));
-
-        Toast.makeText(this, "Connected " + mLocation.getLatitude() + "," + mLocation.getLongitude(), Toast.LENGTH_SHORT).show();
+        if (mLocation == null) {
+            Toast.makeText(this, "Unable to get location.", Toast.LENGTH_SHORT).show();
+        } else {
+            getAddress(getWindow().getDecorView().findViewById(android.R.id.content));
+            Toast.makeText(this, "Connected " + mLocation.getLatitude() + "," + mLocation.getLongitude(), Toast.LENGTH_SHORT).show();
+        }
     }
 
     /*
@@ -300,6 +303,8 @@ public class EditServerActivity extends FragmentActivity
             Prefs.setSERVER_CUISINE_PREF(this, result.getCuisine());
         } else {
             Log.v("sajid","EditServerActivity : failed to setup server");
+            Toast.makeText(this, "Failed to setup server", Toast.LENGTH_SHORT).show();
+
         }
         finish();
     }

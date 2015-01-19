@@ -54,7 +54,7 @@ class ServeFoodEntityEndpointAsyncTask extends AsyncTask<Pair<Context, ServeFood
 
     @Override
     protected void onPostExecute(ServeFoodEntity result) {
-        Toast.makeText(context, "done", Toast.LENGTH_LONG).show();
+        Toast.makeText(context, "Server setup. Next add you menu.", Toast.LENGTH_LONG).show();
         caller.doneEditingServer(result);
     }
 }
