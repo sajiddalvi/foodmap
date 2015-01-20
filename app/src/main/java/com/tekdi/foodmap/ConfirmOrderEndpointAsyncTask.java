@@ -19,11 +19,16 @@ class ConfirmOrderEndpointAsyncTask extends AsyncTask<Pair<Context, OrderEntity>
     private static OrderEntityApi myApiService = null;
     private Context context;
     private ListOrderServerActivity caller;
+    private int orderState;
 
     ConfirmOrderEndpointAsyncTask(ListOrderServerActivity caller) {
 
         this.caller = caller;
         Log.v("sajid", "in ConfirmOrderEndpointAsyncTask setting up caller");
+    }
+
+    public void setOrderState(int orderState) {
+        this.orderState = orderState;
     }
 
     @Override
@@ -43,11 +48,11 @@ class ConfirmOrderEndpointAsyncTask extends AsyncTask<Pair<Context, OrderEntity>
 
         context = params[0].first;
         OrderEntity order = params[0].second;
-        order.setOrderState(OrderState.ORDER_STATE_RECEIVE);
+        order.setOrderState(this.orderState);
 
         try {
             OrderEntity orderEntity =myApiService.update(order.getId(),order).execute();
-            return "order received";
+            return "order processed state="+this.orderState;
         } catch (IOException e) {
             return e.getMessage();
         }

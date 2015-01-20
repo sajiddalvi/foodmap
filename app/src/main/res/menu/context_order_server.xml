@@ -4,9 +4,12 @@
         android:id="@+id/order_call"
         android:title="Call Finder"/>
     <item
-        android:id="@+id/order_receive"
+        android:id="@+id/order_accept"
         android:title="Accept Order"/>
     <item
         android:id="@+id/order_cancel"
         android:title="Cancel Order"/>
+    <item
+        android:id="@+id/order_ready"
+        android:title="Order Ready"/>
 </menu>

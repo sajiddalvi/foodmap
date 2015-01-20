@@ -25,7 +25,6 @@ import java.util.List;
 public class ListOrderServerActivity extends ListActivity {
     private static ArrayList<OrderEntity> orderList = new ArrayList<OrderEntity>();
     private ListOrderRowAdapter adapter;
-    private Menu orderActionBarMenu;
     private String action;
     private int numItemsInOrder;
     private int numItemsConfirmed;
@@ -93,7 +92,7 @@ public class ListOrderServerActivity extends ListActivity {
     public boolean onContextItemSelected(MenuItem item) {
         final AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         switch (item.getItemId()) {
-            case R.id.order_receive:
+            case R.id.order_accept:
                 numItemsInOrder = 0;
                 numItemsConfirmed = 0;
                 OrderEntity op = orderList.get(info.position);
@@ -102,8 +101,28 @@ public class ListOrderServerActivity extends ListActivity {
                     if (o.getFinderDevRegId().equals(finderDevRegId)) {
                         if ((o.getMenuId() != ListOrderFinderActivity.DUMMY_TOTAL_MENU_ID) &&
                                 (o.getMenuId() != ListOrderFinderActivity.DUMMY_NAME_MENU_ID)) {
-                            new ConfirmOrderEndpointAsyncTask(this).execute(new Pair<Context, OrderEntity>(this, o));
+                            ConfirmOrderEndpointAsyncTask task = new ConfirmOrderEndpointAsyncTask(this);
+                            task.setOrderState(OrderState.ORDER_STATE_RECEIVE);
+                            task.execute(new Pair<Context, OrderEntity>(this, o));
                             numItemsInOrder ++;
+                        }
+                    }
+                }
+
+                return true;
+
+            case R.id.order_ready:
+                numItemsInOrder = 0;
+                numItemsConfirmed = 0;
+                op = orderList.get(info.position);
+                finderDevRegId = op.getFinderDevRegId();
+                for (OrderEntity o : orderList) {
+                    if (o.getFinderDevRegId().equals(finderDevRegId)) {
+                        if ((o.getMenuId() != ListOrderFinderActivity.DUMMY_TOTAL_MENU_ID) &&
+                                (o.getMenuId() != ListOrderFinderActivity.DUMMY_NAME_MENU_ID)) {
+                            ConfirmOrderEndpointAsyncTask task = new ConfirmOrderEndpointAsyncTask(this);
+                            task.setOrderState(OrderState.ORDER_STATE_READY);
+                            task.execute(new Pair<Context, OrderEntity>(this, o));                            numItemsInOrder ++;
                         }
                     }
                 }
@@ -176,7 +195,10 @@ public class ListOrderServerActivity extends ListActivity {
         // add dummy total
         remoteOrderList.add(getDummyTotalRow(prev));
 
-        orderList=remoteOrderList;
+        orderList.clear();
+        for (OrderEntity ro: remoteOrderList) {
+            orderList.add(ro);
+        }
 
         adapter = new ListOrderRowAdapter(this, R.layout.list_order_row,
                 orderList);
@@ -221,6 +243,15 @@ public class ListOrderServerActivity extends ListActivity {
             l.setServerId(Long.parseLong(Prefs.getServeIdPref(this)));
             l.execute();
         }
+    }
+
+    private int getOrderState(String finder) {
+        for (OrderEntity order : orderList) {
+            if (order.getFinderDevRegId().equals(finder)) {
+                return order.getOrderState();
+            }
+        }
+        return OrderState.ORDER_STATE_NEW;
     }
 
 }
