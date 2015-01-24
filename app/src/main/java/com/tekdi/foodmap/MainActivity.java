@@ -3,30 +3,52 @@ package com.tekdi.foodmap;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
 public class MainActivity extends Activity {
+
+    private LinearLayout caterLayout;
+    private LinearLayout findLayout;
+    private LinearLayout featuredLayout;
+    private LinearLayout statusLayout;
+
+    private static boolean mRegistered = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        new GcmRegistrationAsyncTask().execute(this);
+        caterLayout = (LinearLayout) findViewById(R.id.cater_food_layout);
+        findLayout = (LinearLayout) findViewById(R.id.find_food_layout);
+        featuredLayout = (LinearLayout) findViewById(R.id.featured_layout);
+        statusLayout = (LinearLayout) findViewById(R.id.status_layout);
+
+        caterLayout.setVisibility(View.INVISIBLE);
+        findLayout.setVisibility(View.INVISIBLE);
+        featuredLayout.setVisibility(View.INVISIBLE);
+
 
     }
 
-    public void onServeButtonClick(View v) {
+    @Override
+    protected void onResume() {
 
-        if (Prefs.getServeIdPref(this) == "") {
-            Intent intent = new Intent(this, EditServerActivity.class);
-            startActivity(intent);
-        } else {
-            Intent intent = new Intent(this, ServeActivity.class);
-            startActivity(intent);
+        super.onResume();
+
+        if (!mRegistered)
+            new GcmRegistrationAsyncTask(this).execute(this);
+        else {
+            caterLayout.setVisibility(View.VISIBLE);
+            findLayout.setVisibility(View.VISIBLE);
+            featuredLayout.setVisibility(View.VISIBLE);
         }
+
     }
 
     public void onFindButtonClick(View v) {
@@ -51,10 +73,6 @@ public class MainActivity extends Activity {
     public void onServerSetupButtonClick(View v) {
         Intent intent = new Intent(this, EditServerActivity.class);
         startActivity(intent);
-    }
-
-    public void onFinderSetupButtonClick(View v) {
-        Toast.makeText(this, "No Finder Setup", Toast.LENGTH_LONG).show();
     }
 
     public void onMenuListButtonClick(View v) {
@@ -82,6 +100,23 @@ public class MainActivity extends Activity {
         intent.putExtra("address","1147 n eola road aurora il");
 
         startActivity(intent);
+    }
+
+
+    public void onPostExecute(String msg) {
+        Log.v("sajid", "registration postExecute " + msg);
+
+        if (msg.contains("Error")) {
+            TextView statusView = (TextView) findViewById(R.id.status);
+            statusView.setText(msg);
+            statusLayout.setVisibility(View.VISIBLE);
+        } else {
+            Toast.makeText(this, "registered", Toast.LENGTH_LONG).show();
+            caterLayout.setVisibility(View.VISIBLE);
+            findLayout.setVisibility(View.VISIBLE);
+            featuredLayout.setVisibility(View.VISIBLE);
+            mRegistered = true;
+        }
     }
 }
 

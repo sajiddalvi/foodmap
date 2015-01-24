@@ -3,7 +3,6 @@ package com.tekdi.foodmap;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.api.client.extensions.android.http.AndroidHttp;
@@ -20,6 +19,11 @@ class GcmRegistrationAsyncTask extends AsyncTask<Context, Void, String> {
     private static Registration regService = null;
     private GoogleCloudMessaging gcm;
     private Context context;
+    private MainActivity caller;
+
+    GcmRegistrationAsyncTask(MainActivity caller) {
+        this.caller = caller;
+    }
 
     private static final String SENDER_ID = "819582423861";
 
@@ -72,7 +76,7 @@ class GcmRegistrationAsyncTask extends AsyncTask<Context, Void, String> {
 
     @Override
     protected void onPostExecute(String msg) {
-        Toast.makeText(context, "registered", Toast.LENGTH_LONG).show();
         Logger.getLogger("REGISTRATION").log(Level.INFO, msg);
+        caller.onPostExecute(msg);
     }
 }
