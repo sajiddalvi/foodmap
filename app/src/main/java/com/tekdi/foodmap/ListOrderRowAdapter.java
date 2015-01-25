@@ -71,6 +71,11 @@ public class ListOrderRowAdapter extends ArrayAdapter<OrderEntity> {
 
         holder.total = (TextView) row.findViewById(R.id.list_order_row_total);
         holder.timestamp = (TextView) row.findViewById(R.id.list_order_row_timestamp);
+        holder.buttonLayout = (LinearLayout) row.findViewById(R.id.list_order_buttons_layout);
+        holder.button1 = (TextView) row.findViewById(R.id.list_order_button1);
+        holder.button2 = (TextView) row.findViewById(R.id.list_order_button2);
+        holder.button3 = (TextView) row.findViewById(R.id.list_order_button3);
+
         holder.status = (TextView) row.findViewById(R.id.list_order_row_status);
 
         row.setTag(holder);
@@ -84,6 +89,7 @@ public class ListOrderRowAdapter extends ArrayAdapter<OrderEntity> {
             holder.status.setVisibility(View.VISIBLE);
             NumberFormat format = NumberFormat.getCurrencyInstance();
             holder.total.setText(format.format(prevTotal));
+            holder.buttonLayout.setVisibility(View.VISIBLE);
 
             String orderStatus[];
             if (iAmServer)
@@ -93,6 +99,38 @@ public class ListOrderRowAdapter extends ArrayAdapter<OrderEntity> {
 
             int orderState = order.getOrderState();
             holder.status.setText(orderStatus[orderState]);
+
+
+            if (iAmServer) {
+
+            } else {
+                switch (orderState) {
+                    case OrderState.ORDER_STATE_NEW :
+                        holder.button1.setText("Add");
+                        holder.button2.setText("Clear");
+                        holder.button3.setText("Send");
+                        break;
+                    case OrderState.ORDER_STATE_SEND :
+                        holder.button1.setText("Update");
+                        holder.button2.setVisibility(View.INVISIBLE);
+                        holder.button3.setText("Cancel");
+                        break;
+                    case OrderState.ORDER_STATE_RECEIVE :
+                        holder.button1.setText("Update");
+                        holder.button2.setVisibility(View.INVISIBLE);
+                        holder.button3.setText("Cancel");
+                        break;
+                    case OrderState.ORDER_STATE_READY :
+                        holder.button1.setText("Update");
+                        holder.button2.setVisibility(View.INVISIBLE);
+                        holder.button3.setText("Cancel");
+                        break;
+                }
+
+                holder.button1.setTag(order.getServerId());
+                holder.button2.setTag(order.getServerId());
+                holder.button3.setTag(order.getServerId());
+            }
 
             holder.border.setVisibility(View.VISIBLE);
 
@@ -143,7 +181,6 @@ public class ListOrderRowAdapter extends ArrayAdapter<OrderEntity> {
         row.border.setVisibility(View.GONE);
         row.totalLabel.setVisibility(View.GONE);
         row.total.setVisibility(View.GONE);
-
     }
 
     private String getTimeStamp(OrderEntity order) {
@@ -180,6 +217,10 @@ public class ListOrderRowAdapter extends ArrayAdapter<OrderEntity> {
         LinearLayout border;
         TextView totalLabel;
         TextView total;
+        LinearLayout buttonLayout;
+        TextView button1;
+        TextView button2;
+        TextView button3;
         TextView status;
     }
 

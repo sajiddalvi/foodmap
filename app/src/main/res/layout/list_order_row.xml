@@ -109,24 +109,95 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/list_order_buttons_layout"
+        android:orientation="horizontal"
+        android:paddingLeft="10dp"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:visibility="gone"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/list_order_button1"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="onListOrderButtonClick"
+            android:layout_weight="1"
+            android:background="#3b5998"
+            android:textColor="@color/order_list_button_text"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:gravity="center"
+            android:padding="5dp"
+            android:layout_margin="15dp"
+            android:text="Button1"
+
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/list_order_button2"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="onListOrderButtonClick"
+            android:layout_weight="1"
+            android:background="#3b5998"
+            android:textColor="@color/order_list_button_text"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:gravity="center"
+            android:padding="5dp"
+            android:layout_margin="15dp"
+            android:text="Button2"
+
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/list_order_button3"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="onListOrderButtonClick"
+            android:layout_weight="1"
+            android:background="#3b5998"
+            android:textColor="@color/order_list_button_text"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:gravity="center"
+            android:padding="5dp"
+            android:layout_margin="15dp"
+            android:text="Button3"
+            />
+
+
+    </LinearLayout>
+
     <TextView
         android:id="@+id/list_order_row_status"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
         android:textStyle="bold"
-        android:text="Status"
+        android:text="Status for ongoing transaction"
         android:textColor="#3b5998"
         android:gravity="center_horizontal"
-        android:visibility="gone"/>
+        android:visibility="gone"
+        />
 
     <LinearLayout
         android:id="@+id/list_order_border"
         android:layout_width="match_parent"
         android:layout_height="10dp"
         android:orientation="horizontal"
-        android:background="?android:attr/listDivider"
-        android:visibility="gone">
+        android:visibility="gone"
+        android:background="#dcdcdc"
+        >
     </LinearLayout>
 
 </LinearLayout>

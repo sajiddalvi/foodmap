@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.NumberPicker;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tekdi.foodmap.backend.orderEntityApi.model.OrderEntity;
@@ -38,6 +39,10 @@ public class ListOrderFinderActivity extends ListActivity {
     private String action;
 
     private static boolean pendingOrder = false;
+
+    private ArrayList<OrderEntity> displayOrderList = new ArrayList<>();
+    private ArrayList<OrderEntity> serverOrderList = new ArrayList<>();
+    private ArrayList<OrderEntity> packedServerOrderList = new ArrayList<>();
 
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -100,85 +105,6 @@ public class ListOrderFinderActivity extends ListActivity {
                 orderList);
         setListAdapter(adapter);
 
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_order, menu);
-        orderActionBarMenu = menu;
-        return true;
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        if (orderList.size() > 0) {
-            int orderState = orderList.get(0).getOrderState();
-            setupActionBarButtons(orderState);
-        }
-        return super.onPrepareOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        MenuItem menuItem;
-        switch(item.getItemId()) {
-            case R.id.order_send:
-               for (OrderEntity order : orderList) {
-                    if ((order.getMenuId() != DUMMY_TOTAL_MENU_ID) &&
-                        (order.getMenuId() != DUMMY_NAME_MENU_ID)) // dont't send total and name
-                        new OrderEndpointAsyncTask(this).execute(new Pair<Context, OrderEntity>(this, order));
-                }
-
-                pendingOrder = false;
-
-                menuItem = orderActionBarMenu.findItem(R.id.order_add);
-                menuItem.setVisible(false);
-                menuItem = orderActionBarMenu.findItem(R.id.order_send);
-                menuItem.setVisible(false);
-                menuItem = orderActionBarMenu.findItem(R.id.order_clear);
-                menuItem.setVisible(false);
-
-                adapter.notifyDataSetChanged();
-
-                break;
-
-            case R.id.order_add:
-                if ((action!= null) && action.equals("new_order"))
-                    finish();
-                else {
-                    // we've come to the ListOrder, not from ListMenu
-                    // but somewhere else (since new_order is not set),
-                    // so setup for showing ListMenuActivity
-                    OrderEntity o = orderList.get(0);
-                    Intent intent = new Intent(this, ListMenuActivity.class);
-                    intent.putExtra("serverId", o.getServerId());
-                    intent.putExtra("serverName", o.getServerName());
-                    intent.putExtra("source","finder");
-                    intent.putExtra("phone",o.getServerPhone());
-                    intent.putExtra("address",o.getServerAddress());
-
-                    startActivity(intent);
-                    finish();
-                }
-                break;
-
-            case R.id.order_clear:
-                orderList.clear();
-                pendingOrder = false;
-
-                menuItem = orderActionBarMenu.findItem(R.id.order_send);
-                menuItem.setVisible(false);
-                menuItem = orderActionBarMenu.findItem(R.id.order_clear);
-                menuItem.setVisible(false);
-
-                adapter.notifyDataSetChanged();
-
-
-                break;
-
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -340,119 +266,50 @@ public class ListOrderFinderActivity extends ListActivity {
     }
 
     private void processOrderSent() {
-        setupActionBarButtons(OrderState.ORDER_STATE_SEND);
         setTitle("Orders");
         getOrderListFromServer();
         adapter.notifyDataSetChanged();
     }
 
     private void processOrderReceived() {
-
-        getOrderListFromServer();
-        setupActionBarButtons(OrderState.ORDER_STATE_RECEIVE);
         setTitle("Orders");
+        getOrderListFromServer();
         adapter.notifyDataSetChanged();
-
     }
 
-    private void setupActionBarButtons(int orderState) {
-        MenuItem menuItem;
-        switch (orderState) {
-            case OrderState.ORDER_STATE_NEW :
-                menuItem = orderActionBarMenu.findItem(R.id.order_add);
-                menuItem.setVisible(true);
-                menuItem = orderActionBarMenu.findItem(R.id.order_send);
-                menuItem.setVisible(true);
-                menuItem = orderActionBarMenu.findItem(R.id.order_clear);
-                menuItem.setVisible(true);
-                break;
-            case OrderState.ORDER_STATE_SEND :
-                menuItem = orderActionBarMenu.findItem(R.id.order_add);
-                menuItem.setVisible(false);
-                menuItem = orderActionBarMenu.findItem(R.id.order_send);
-                menuItem.setVisible(false);
-                menuItem = orderActionBarMenu.findItem(R.id.order_clear);
-                menuItem.setVisible(false);
-                menuItem = orderActionBarMenu.findItem(R.id.order_update);
-                menuItem.setVisible(true);
-                menuItem = orderActionBarMenu.findItem(R.id.order_cancel);
-                menuItem.setVisible(true);
-                break;
-            case OrderState.ORDER_STATE_RECEIVE :
-                break;
-        }
-    }
+    public void onListOrderButtonClick(View view) {
+        long serverId = (long)view.getTag();
+        TextView buttonView = (TextView) view;
 
-    public void showOrder(List<OrderEntity> result) {
-
-        if (result == null) {
-            Toast.makeText(this, "No orders found. Lets look for food.", Toast.LENGTH_LONG).show();
-
-            Intent intent = new Intent(this, FindActivity.class);
-                startActivity(intent);
+        if (buttonView.getText().equals("Add")) {
+            // if its a new order, finish OrderActivity which will take us back to ListMenu
                 finish();
-                return;
         }
 
-        ArrayList<OrderEntity> displayOrderList = new ArrayList<>();
-        ArrayList<OrderEntity> serverOrderList = new ArrayList<>();
-        ArrayList<OrderEntity> packedServerOrderList = new ArrayList<>();
+        else if (buttonView.getText().equals("Clear")) {
+            orderList.clear();
+            pendingOrder = false;
+            finish();
+        }
 
-        serverOrderList.clear();
-        displayOrderList.clear();
+        else if (buttonView.getText().equals("Send")) {
+            for (OrderEntity order : orderList) {
+                Log.v("sajid","view serverId = " + serverId);
+                Log.v("sajid","order serverId = " + order.getServerId());
 
-        // Sort orders by servers
-        Collections.sort(result, new ComparatorFinderOrderEntity());
-
-        int displayOrderState = 0;
-
-        OrderEntity prev = result.get(0);
-        for (OrderEntity o : result) {
-            if (!o.getServerId().equals(prev.getServerId())) {
-
-                displayOrderState = 99;
-                packedServerOrderList.clear();
-
-                // if new finder found, lets setup the order for previous finder
-                // first sort by MenuNames
-
-                Collections.sort(serverOrderList, new ComparatorMenuOrderEntity());
-
-                // check for dups and if they exist, then pack them
-                OrderEntity prevPacked = null;
-                for (OrderEntity so : serverOrderList) {
-
-                    if (so.getOrderState() < displayOrderState) {
-                        displayOrderState = so.getOrderState();
-                    }
-
-                    if (packedServerOrderList.size() == 0) {
-                        packedServerOrderList.add(so);
-                        prevPacked = so;
-                    } else {
-                        if (so.getMenuId().equals(prevPacked.getMenuId())) {
-                            prevPacked.setQuantity(prevPacked.getQuantity()+so.getQuantity());
-                        } else {
-                            packedServerOrderList.add(so);
-                            prevPacked = so;
-                        }
-                    }
-
-                }
-
-                // if new finder found, copy finderList into newList
-                displayOrderList.add(getDummyNameRow(packedServerOrderList.get(0), displayOrderState));
-                displayOrderList.addAll(packedServerOrderList);
-                // add dummy total at the end
-                prev.setOrderState(displayOrderState);
-                displayOrderList.add(getDummyTotalRow(prev,displayOrderState));
-                // clean up for new finder and add current order to new finderList
-                serverOrderList.clear();
-                prev = o;
+                if ((order.getServerId() == serverId) &&      // check for serverId
+                    (order.getMenuId() != DUMMY_TOTAL_MENU_ID) &&  // don't send total
+                    (order.getMenuId() != DUMMY_NAME_MENU_ID))     // don't send name
+                        new OrderEndpointAsyncTask(this).execute(new Pair<Context, OrderEntity>(this, order));
             }
-
-            serverOrderList.add(o);
+            pendingOrder = false;
+            adapter.notifyDataSetChanged();
         }
+    }
+
+    private void addToDisplayList(OrderEntity prev) {
+
+        int displayOrderState = 99;
 
         packedServerOrderList.clear();
 
@@ -483,6 +340,42 @@ public class ListOrderFinderActivity extends ListActivity {
         displayOrderList.addAll(packedServerOrderList);
         // add dummy total at the end
         displayOrderList.add(getDummyTotalRow(prev,displayOrderState));
+    }
+
+    public void showOrder(List<OrderEntity> result) {
+
+        if (result == null) {
+            Toast.makeText(this, "No orders found. Lets look for food.", Toast.LENGTH_LONG).show();
+
+            Intent intent = new Intent(this, FindActivity.class);
+                startActivity(intent);
+                finish();
+                return;
+        }
+
+        serverOrderList.clear();
+        displayOrderList.clear();
+
+        // Sort orders by servers
+        Collections.sort(result, new ComparatorFinderOrderEntity());
+
+        OrderEntity prev = result.get(0);
+        for (OrderEntity o : result) {
+            if (!o.getServerId().equals(prev.getServerId())) {
+
+                // new server found, add the previous server
+                addToDisplayList(prev);
+
+                // clean up for new finder and add current order to new finderList
+                serverOrderList.clear();
+                prev = o;
+            }
+
+            serverOrderList.add(o);
+        }
+
+        // add the server to the list
+        addToDisplayList(prev);
 
         orderList=displayOrderList;
 
@@ -491,8 +384,6 @@ public class ListOrderFinderActivity extends ListActivity {
         setListAdapter(adapter);
 
         setTitle("Orders");
-
-        setupActionBarButtons(displayOrderState);
 
     }
 
@@ -517,6 +408,7 @@ public class ListOrderFinderActivity extends ListActivity {
     private OrderEntity getDummyNameRow(OrderEntity base, int orderState) {
         OrderEntity dummyEntity = new OrderEntity();
         dummyEntity.setFinderDevRegId("name");
+        dummyEntity.setServerId(base.getServerId());
         dummyEntity.setMenuName("aaa");
         dummyEntity.setMenuId(DUMMY_NAME_MENU_ID);
         dummyEntity.setQuantity(0);
