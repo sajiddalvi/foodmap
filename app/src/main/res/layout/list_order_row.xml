@@ -4,37 +4,70 @@
     android:layout_height="fill_parent"
     >
 
-
-
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginBottom="5dp"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        android:id="@+id/list_order_row_name_layout"
+        android:visibility="gone"
         >
 
-    <TextView
-        android:id="@+id/list_order_row_who"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="person"
-        android:padding="5dp"
-        android:textStyle="bold"
-        android:layout_weight="1"
-        android:textColor="@android:color/holo_blue_light"
-        android:visibility="gone"
-         />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="5dp"
+            >
+
+            <TextView
+                android:id="@+id/list_order_row_who"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="person"
+                android:paddingTop="5dp"
+                android:paddingLeft="20dp"
+                android:textStyle="bold"
+                android:layout_weight="1"
+                android:textColor="#3b5998"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                />
+
+            <TextView
+                android:id="@+id/list_order_row_timestamp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2015-01-14 08:25"
+                android:padding="5dp"
+                android:layout_marginRight="5dp"
+                android:textStyle="bold"
+                android:layout_weight="0"
+                />
+
+        </LinearLayout>
 
         <TextView
-            android:id="@+id/list_order_row_timestamp"
-            android:layout_width="wrap_content"
+            android:id="@+id/list_order_row_phone"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="2015-01-14 08:25"
-            android:padding="5dp"
-            android:layout_marginRight="5dp"
-            android:textStyle="bold"
-            android:layout_weight="0"
-            android:visibility="gone" />
+            android:paddingLeft="20dp"
+            android:layout_margin="1dp"
+            android:text="Phone : 123456789"
+            android:textColor="#3b5998"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:onClick="onListOrderPhoneClick"
+            />
+
+        <TextView
+            android:id="@+id/list_order_row_address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="20dp"
+            android:layout_margin="1dp"
+            android:text="Address: 1470 eola road, Aurora IL"
+            android:textColor="#3b5998"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:onClick="onListOrderAddressClick"
+            />
 
     </LinearLayout>
 
@@ -88,24 +121,24 @@
             android:orientation="horizontal"
             android:layout_weight="1"
             >
-        <TextView
-            android:id="@+id/list_order_row_total_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="20dp"
-            android:text="Total:"
-            android:textStyle="bold"
-            android:visibility="gone" />
+            <TextView
+                android:id="@+id/list_order_row_total_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="20dp"
+                android:text="Total:"
+                android:textStyle="bold"
+                android:visibility="gone" />
 
-        <TextView
-            android:id="@+id/list_order_row_total"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="$24.50"
-            android:paddingLeft="10dp"
-            android:textStyle="bold"
-            android:visibility="gone" />
-            </LinearLayout>
+            <TextView
+                android:id="@+id/list_order_row_total"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="$24.50"
+                android:paddingLeft="10dp"
+                android:textStyle="bold"
+                android:visibility="gone" />
+        </LinearLayout>
 
     </LinearLayout>
 
@@ -183,7 +216,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
-        android:textStyle="bold"
         android:text="Status for ongoing transaction"
         android:textColor="#3b5998"
         android:gravity="center_horizontal"

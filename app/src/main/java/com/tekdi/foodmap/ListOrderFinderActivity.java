@@ -11,7 +11,6 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.util.Pair;
 import android.view.ContextMenu;
-import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,9 +34,6 @@ public class ListOrderFinderActivity extends ListActivity {
     public static final long DUMMY_TOTAL_MENU_ID = 999;
     public static final long DUMMY_NAME_MENU_ID = 998;
 
-    private Menu orderActionBarMenu;
-    private String action;
-
     private static boolean pendingOrder = false;
 
     private ArrayList<OrderEntity> displayOrderList = new ArrayList<>();
@@ -45,12 +41,13 @@ public class ListOrderFinderActivity extends ListActivity {
     private ArrayList<OrderEntity> packedServerOrderList = new ArrayList<>();
 
     public void onCreate(Bundle icicle) {
+
         super.onCreate(icicle);
         setContentView(R.layout.list_order_view);
         registerForContextMenu(getListView());
 
         Intent intent = getIntent();
-        action = intent.getStringExtra("action");
+        String action = intent.getStringExtra("action");
 
         if ((action!= null) && action.equals("new_order")) {
             setTitle("New Order");
@@ -179,11 +176,6 @@ public class ListOrderFinderActivity extends ListActivity {
                 }
                 return true;
 
-            case R.id.order_call:
-                String phone = orderList.get(info.position).getServerPhone();
-                Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + phone));
-                startActivity(intent);
-
             default:
                 return super.onContextItemSelected(item);
         }
@@ -307,6 +299,19 @@ public class ListOrderFinderActivity extends ListActivity {
         }
     }
 
+    public void onListOrderPhoneClick(View view) {
+        String phone = (String)view.getTag();
+        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + phone));
+        startActivity(intent);
+    }
+
+    public void onListOrderAddressClick(View view) {
+        String serverAddress = (String) view.getTag();
+        Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
+                Uri.parse("google.navigation:q=" + serverAddress));
+        startActivity(intent);
+    }
+
     private void addToDisplayList(OrderEntity prev) {
 
         int displayOrderState = 99;
@@ -415,6 +420,7 @@ public class ListOrderFinderActivity extends ListActivity {
         dummyEntity.setPrice((float) 0);
         dummyEntity.setOrderState(orderState);
         dummyEntity.setServerPhone(base.getServerPhone());
+        dummyEntity.setServerAddress(base.getServerAddress());
         dummyEntity.setServerName(base.getServerName());
         dummyEntity.setTimestamp(base.getTimestamp());
         dummyEntity.setMenuName("dummy name");

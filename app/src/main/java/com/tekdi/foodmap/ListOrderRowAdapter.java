@@ -59,7 +59,12 @@ public class ListOrderRowAdapter extends ArrayAdapter<OrderEntity> {
 
         MyListHolder holder = null;
         holder = new MyListHolder();
+        holder.nameRowLayout = (LinearLayout) row.findViewById(R.id.list_order_row_name_layout);
         holder.who = (TextView) row.findViewById(R.id.list_order_row_who);
+        holder.timestamp = (TextView) row.findViewById(R.id.list_order_row_timestamp);
+        holder.phone = (TextView) row.findViewById(R.id.list_order_row_phone);
+        holder.address = (TextView) row.findViewById(R.id.list_order_row_address);
+
 
         holder.name = (TextView) row.findViewById(R.id.list_order_row_name);
         holder.border = (LinearLayout) row.findViewById(R.id.list_order_border);
@@ -70,7 +75,6 @@ public class ListOrderRowAdapter extends ArrayAdapter<OrderEntity> {
         holder.totalLabel = (TextView) row.findViewById(R.id.list_order_row_total_label);
 
         holder.total = (TextView) row.findViewById(R.id.list_order_row_total);
-        holder.timestamp = (TextView) row.findViewById(R.id.list_order_row_timestamp);
         holder.buttonLayout = (LinearLayout) row.findViewById(R.id.list_order_buttons_layout);
         holder.button1 = (TextView) row.findViewById(R.id.list_order_button1);
         holder.button2 = (TextView) row.findViewById(R.id.list_order_button2);
@@ -99,7 +103,6 @@ public class ListOrderRowAdapter extends ArrayAdapter<OrderEntity> {
 
             int orderState = order.getOrderState();
             holder.status.setText(orderStatus[orderState]);
-
 
             if (iAmServer) {
 
@@ -140,20 +143,30 @@ public class ListOrderRowAdapter extends ArrayAdapter<OrderEntity> {
         if (order.getMenuId() == ListOrderFinderActivity.DUMMY_NAME_MENU_ID ) {
 
             String whoStr;
+            String phone;
+            String address;
 
             if (iAmServer) {
                 whoStr = order.getFinderPhone();
+                holder.phone.setVisibility(View.GONE);
+                holder.address.setVisibility(View.GONE);
             } else {
                 whoStr = order.getServerName();
+                phone = order.getServerPhone();
+                address = order.getServerAddress();
+                holder.phone.setText("Phone: "+phone);
+                holder.address.setText("Address: "+address);
+                holder.phone.setTag(order.getServerPhone());
+                holder.address.setTag(order.getServerAddress());
             }
 
             hide_all(holder);
 
             prevFinderDevRegId = order.getFinderDevRegId();
-            holder.who.setVisibility(View.VISIBLE);
+
             holder.who.setText(whoStr);
             holder.timestamp.setText(getTimeStamp(order));
-            holder.timestamp.setVisibility(View.VISIBLE);
+            holder.nameRowLayout.setVisibility(View.VISIBLE);
 
             prevTotal = order.getPrice() * order.getQuantity();
 
@@ -172,9 +185,7 @@ public class ListOrderRowAdapter extends ArrayAdapter<OrderEntity> {
     }
 
     private void hide_all(MyListHolder row){
-        row.name.setVisibility(View.GONE);
-        row.who.setVisibility(View.GONE);
-        row.timestamp.setVisibility(View.GONE);
+        row.nameRowLayout.setVisibility(View.GONE);
         row.quantity.setVisibility(View.GONE);
         row.name.setVisibility(View.GONE);
         row.price.setVisibility(View.GONE);
@@ -209,9 +220,12 @@ public class ListOrderRowAdapter extends ArrayAdapter<OrderEntity> {
     }
 
     static class MyListHolder {
-        TextView name;
+        LinearLayout nameRowLayout;
         TextView who;
         TextView timestamp;
+        TextView phone;
+        TextView address;
+        TextView name;
         TextView quantity;
         TextView price;
         LinearLayout border;
