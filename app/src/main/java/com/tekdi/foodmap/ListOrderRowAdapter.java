@@ -127,6 +127,9 @@ public class ListOrderRowAdapter extends ArrayAdapter<OrderEntity> {
                         holder.button3.setText("Cancel");
                         break;
                 }
+                holder.button1.setTag(order.getFinderDevRegId());
+                holder.button2.setTag(order.getFinderDevRegId());
+                holder.button3.setTag(order.getFinderDevRegId());
 
             } else {
                 switch (orderState) {

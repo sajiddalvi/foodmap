@@ -13,6 +13,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tekdi.foodmap.backend.orderEntityApi.model.OrderEntity;
@@ -121,6 +122,53 @@ public class ListOrderServerActivity extends ListActivity {
 
             default:
                 return super.onContextItemSelected(item);
+        }
+    }
+
+    public void onListOrderButtonClick(View view) {
+        String finderDevRegId = (String)view.getTag();
+        TextView buttonView = (TextView) view;
+
+        if (buttonView.getText().equals("Accept")) {
+
+            numItemsInOrder = 0;
+            numItemsConfirmed = 0;
+
+            for (OrderEntity o : orderList) {
+                if (o.getFinderDevRegId().equals(finderDevRegId)) {
+                    if ((o.getMenuId() != ListOrderFinderActivity.DUMMY_TOTAL_MENU_ID) &&
+                            (o.getMenuId() != ListOrderFinderActivity.DUMMY_NAME_MENU_ID)) {
+                        ConfirmOrderEndpointAsyncTask task = new ConfirmOrderEndpointAsyncTask(this);
+                        task.setOrderState(OrderState.ORDER_STATE_RECEIVE);
+                        task.execute(new Pair<Context, OrderEntity>(this, o));
+                        numItemsInOrder ++;
+                    }
+                }
+            }
+
+        }
+
+        else if (buttonView.getText().equals("Cancel")) {
+            orderList.clear();
+            finish();
+        }
+
+        else if (buttonView.getText().equals("Ready")) {
+
+            numItemsInOrder = 0;
+            numItemsConfirmed = 0;
+
+            for (OrderEntity o : orderList) {
+                if (o.getFinderDevRegId().equals(finderDevRegId)) {
+                    if ((o.getMenuId() != ListOrderFinderActivity.DUMMY_TOTAL_MENU_ID) &&
+                            (o.getMenuId() != ListOrderFinderActivity.DUMMY_NAME_MENU_ID)) {
+                        ConfirmOrderEndpointAsyncTask task = new ConfirmOrderEndpointAsyncTask(this);
+                        task.setOrderState(OrderState.ORDER_STATE_READY);
+                        task.execute(new Pair<Context, OrderEntity>(this, o));                            numItemsInOrder ++;
+                    }
+                }
+            }
+            adapter.notifyDataSetChanged();
         }
     }
 
