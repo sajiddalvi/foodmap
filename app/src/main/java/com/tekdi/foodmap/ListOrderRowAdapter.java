@@ -105,6 +105,28 @@ public class ListOrderRowAdapter extends ArrayAdapter<OrderEntity> {
             holder.status.setText(orderStatus[orderState]);
 
             if (iAmServer) {
+                switch (orderState) {
+                    case OrderState.ORDER_STATE_NEW:
+                        holder.button1.setVisibility(View.INVISIBLE);
+                        holder.button2.setVisibility(View.INVISIBLE);
+                        holder.button3.setVisibility(View.INVISIBLE);
+                        break;
+                    case OrderState.ORDER_STATE_SEND:
+                        holder.button1.setText("Accept");
+                        holder.button2.setVisibility(View.INVISIBLE);
+                        holder.button3.setText("Cancel");
+                        break;
+                    case OrderState.ORDER_STATE_RECEIVE:
+                        holder.button1.setText("Ready");
+                        holder.button2.setVisibility(View.INVISIBLE);
+                        holder.button3.setText("Cancel");
+                        break;
+                    case OrderState.ORDER_STATE_READY:
+                        holder.button1.setText("Done");
+                        holder.button2.setVisibility(View.INVISIBLE);
+                        holder.button3.setText("Cancel");
+                        break;
+                }
 
             } else {
                 switch (orderState) {
@@ -147,8 +169,10 @@ public class ListOrderRowAdapter extends ArrayAdapter<OrderEntity> {
             String address;
 
             if (iAmServer) {
-                whoStr = order.getFinderPhone();
-                holder.phone.setVisibility(View.GONE);
+                holder.who.setText(order.getId().toString());
+                phone = order.getFinderPhone();
+                holder.phone.setText("Phone: "+phone);
+                holder.phone.setTag(phone);
                 holder.address.setVisibility(View.GONE);
             } else {
                 whoStr = order.getServerName();
@@ -156,15 +180,16 @@ public class ListOrderRowAdapter extends ArrayAdapter<OrderEntity> {
                 address = order.getServerAddress();
                 holder.phone.setText("Phone: "+phone);
                 holder.address.setText("Address: "+address);
-                holder.phone.setTag(order.getServerPhone());
-                holder.address.setTag(order.getServerAddress());
+                holder.phone.setTag(phone);
+                holder.address.setTag(address);
+                holder.who.setText(whoStr);
             }
 
             hide_all(holder);
 
             prevFinderDevRegId = order.getFinderDevRegId();
 
-            holder.who.setText(whoStr);
+
             holder.timestamp.setText(getTimeStamp(order));
             holder.nameRowLayout.setVisibility(View.VISIBLE);
 

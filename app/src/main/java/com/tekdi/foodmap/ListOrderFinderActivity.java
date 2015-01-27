@@ -414,6 +414,7 @@ public class ListOrderFinderActivity extends ListActivity {
         OrderEntity dummyEntity = new OrderEntity();
         dummyEntity.setFinderDevRegId("name");
         dummyEntity.setServerId(base.getServerId());
+        dummyEntity.setId(base.getId());
         dummyEntity.setMenuName("aaa");
         dummyEntity.setMenuId(DUMMY_NAME_MENU_ID);
         dummyEntity.setQuantity(0);

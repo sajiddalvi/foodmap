@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.util.Pair;
 import android.view.ContextMenu;
-import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,9 +24,12 @@ import java.util.List;
 public class ListOrderServerActivity extends ListActivity {
     private static ArrayList<OrderEntity> orderList = new ArrayList<OrderEntity>();
     private ListOrderRowAdapter adapter;
-    private String action;
     private int numItemsInOrder;
     private int numItemsConfirmed;
+
+    private ArrayList<OrderEntity> displayOrderList = new ArrayList<>();
+    private ArrayList<OrderEntity> finderOrderList = new ArrayList<>();
+    private ArrayList<OrderEntity> packedFinderOrderList = new ArrayList<>();
 
     public void onCreate(Bundle icicle) {
 
@@ -39,7 +41,7 @@ public class ListOrderServerActivity extends ListActivity {
         setListAdapter(adapter);
 
         Intent intent = getIntent();
-        action = intent.getStringExtra("action");
+        String action = intent.getStringExtra("action");
 
         if ( (action!= null) && action.equals("notification")) {
             Integer notificationId = intent.getIntExtra("notificationId", 0);
@@ -53,31 +55,11 @@ public class ListOrderServerActivity extends ListActivity {
 
         getOrderListFromServer();
 
-    }
+        adapter = new ListOrderRowAdapter(this, R.layout.list_order_row,
+                orderList);
+        adapter.setIAmServer(true);
+        setListAdapter(adapter);
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_order_server, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        return super.onPrepareOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        MenuItem menuItem;
-        switch(item.getItemId()) {
-            case R.id.order_list_refresh:
-                ListOrdersEndpointAsyncTask l = new ListOrdersEndpointAsyncTask(this);
-                l.setServerId(Long.parseLong(Prefs.getServeIdPref(this)));
-                l.execute();
-                break;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -156,6 +138,42 @@ public class ListOrderServerActivity extends ListActivity {
         }
     }
 
+    private void addToDisplayList(OrderEntity prev) {
+
+        int displayOrderState = 99;
+
+        packedFinderOrderList.clear();
+
+        Collections.sort(finderOrderList, new ComparatorMenuOrderEntity());
+
+        // check for dups and if they exist, then pack them
+        OrderEntity prevPacked = null;
+        for (OrderEntity so : finderOrderList) {
+            if (so.getOrderState() < displayOrderState) {
+                displayOrderState = so.getOrderState();
+            }
+
+            if (packedFinderOrderList.size() == 0) {
+                packedFinderOrderList.add(so);
+                prevPacked = so;
+            } else {
+                if (so.getMenuId().equals(prevPacked.getMenuId())) {
+                    prevPacked.setQuantity(prevPacked.getQuantity()+so.getQuantity());
+                } else {
+                    packedFinderOrderList.add(so);
+                    prevPacked = so;
+                }
+            }
+        }
+
+        // if new finder found, copy finderList into newList
+        displayOrderList.add(getDummyNameRow(packedFinderOrderList.get(0), displayOrderState));
+        displayOrderList.addAll(packedFinderOrderList);
+        // add dummy total at the end
+        displayOrderList.add(getDummyTotalRow(prev,displayOrderState));
+    }
+
+
     public void showOrder(List<OrderEntity> result) {
 
         if (result == null) {
@@ -164,55 +182,48 @@ public class ListOrderServerActivity extends ListActivity {
             return;
         }
 
-        ArrayList<OrderEntity> remoteOrderList = new ArrayList<OrderEntity>();
-        ArrayList<OrderEntity> finderOrderList = new ArrayList<OrderEntity>();
-
         finderOrderList.clear();
-        remoteOrderList.clear();
+        displayOrderList.clear();
 
-        // Sort orders by finders
-        Collections.sort(result, new ComparatorOrderEntity());
+        // Sort orders by servers
+        Collections.sort(result, new ComparatorFinderOrderEntity());
 
         OrderEntity prev = result.get(0);
         for (OrderEntity o : result) {
-            if (! o.getFinderDevRegId().equals(prev.getFinderDevRegId())) {
-                // if new finder found, copy finderList into newList
-                remoteOrderList.addAll(finderOrderList);
-                // add dummy total at the end
-                remoteOrderList.add(getDummyTotalRow(prev));
+            if (!o.getFinderDevRegId().equals(prev.getFinderDevRegId())) {
+
+                // new server found, add the previous server
+                addToDisplayList(prev);
+
                 // clean up for new finder and add current order to new finderList
                 finderOrderList.clear();
                 prev = o;
             }
-            if (finderOrderList.size() == 0) {
-                finderOrderList.add(getDummyNameRow(prev));
-            }
+
             finderOrderList.add(o);
         }
 
-        // add the last finderList to newList
-        remoteOrderList.addAll(finderOrderList);
-        // add dummy total
-        remoteOrderList.add(getDummyTotalRow(prev));
+        // add the finder to the list
+        addToDisplayList(prev);
 
-        orderList.clear();
-        for (OrderEntity ro: remoteOrderList) {
-            orderList.add(ro);
-        }
+        orderList=displayOrderList;
 
         adapter = new ListOrderRowAdapter(this, R.layout.list_order_row,
                 orderList);
         adapter.setIAmServer(true);
+
         setListAdapter(adapter);
 
         setTitle("Orders");
+
     }
 
-    private OrderEntity getDummyTotalRow(OrderEntity base) {
+    private OrderEntity getDummyTotalRow(OrderEntity base, int orderState) {
         OrderEntity dummyEntity = new OrderEntity();
         dummyEntity.setFinderDevRegId("total");
-        dummyEntity.setMenuId((long) ListOrderFinderActivity.DUMMY_TOTAL_MENU_ID);
-        dummyEntity.setOrderState(base.getOrderState());
+        dummyEntity.setMenuName("zzz");
+        dummyEntity.setMenuId(ListOrderFinderActivity.DUMMY_TOTAL_MENU_ID);
+        dummyEntity.setOrderState(orderState);
         dummyEntity.setFinderDevRegId(base.getFinderDevRegId());
         dummyEntity.setServerId(base.getServerId());
         dummyEntity.setMenuName("dummy total");
@@ -220,13 +231,20 @@ public class ListOrderServerActivity extends ListActivity {
         return dummyEntity;
     }
 
-    private OrderEntity getDummyNameRow(OrderEntity base) {
+    private OrderEntity getDummyNameRow(OrderEntity base, int orderState) {
         OrderEntity dummyEntity = new OrderEntity();
         dummyEntity.setFinderDevRegId("name");
-        dummyEntity.setMenuId((long) ListOrderFinderActivity.DUMMY_NAME_MENU_ID);
+        dummyEntity.setServerId(base.getServerId());
+        dummyEntity.setId(base.getId());
+        dummyEntity.setMenuName("aaa");
+        dummyEntity.setMenuId(ListOrderFinderActivity.DUMMY_NAME_MENU_ID);
         dummyEntity.setQuantity(0);
         dummyEntity.setPrice((float) 0);
+        dummyEntity.setOrderState(orderState);
         dummyEntity.setFinderPhone(base.getFinderPhone());
+        dummyEntity.setServerPhone(base.getServerPhone());
+        dummyEntity.setServerAddress(base.getServerAddress());
+        dummyEntity.setServerName(base.getServerName());
         dummyEntity.setTimestamp(base.getTimestamp());
         dummyEntity.setMenuName("dummy name");
 
