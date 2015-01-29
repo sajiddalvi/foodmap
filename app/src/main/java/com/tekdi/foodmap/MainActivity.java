@@ -3,8 +3,10 @@ package com.tekdi.foodmap;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.widget.ContentLoadingProgressBar;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -12,10 +14,13 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
-    private LinearLayout caterLayout;
-    private LinearLayout findLayout;
+    private LinearLayout blockLayout;
     private LinearLayout featuredLayout;
     private LinearLayout statusLayout;
+    private ContentLoadingProgressBar progressBar;
+    private TextView statusView; 
+    private ImageView mainLogoView;
+    
 
     private static boolean mRegistered = false;
 
@@ -24,15 +29,12 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        caterLayout = (LinearLayout) findViewById(R.id.cater_food_layout);
-        findLayout = (LinearLayout) findViewById(R.id.find_food_layout);
+        mainLogoView = (ImageView) findViewById(R.id.main_logo);
+        blockLayout = (LinearLayout) findViewById(R.id.block_layout);
         featuredLayout = (LinearLayout) findViewById(R.id.featured_layout);
         statusLayout = (LinearLayout) findViewById(R.id.status_layout);
-
-        caterLayout.setVisibility(View.INVISIBLE);
-        findLayout.setVisibility(View.INVISIBLE);
-        featuredLayout.setVisibility(View.INVISIBLE);
-
+        statusView = (TextView) findViewById(R.id.status);
+        progressBar = (ContentLoadingProgressBar) findViewById(R.id.progress);
 
     }
 
@@ -41,14 +43,10 @@ public class MainActivity extends Activity {
 
         super.onResume();
 
-        if (!mRegistered)
+        if (!mRegistered) {
             new GcmRegistrationAsyncTask(this).execute(this);
-        else {
-            caterLayout.setVisibility(View.VISIBLE);
-            findLayout.setVisibility(View.VISIBLE);
-            featuredLayout.setVisibility(View.VISIBLE);
+            progressBar.show();
         }
-
     }
 
     public void onFindButtonClick(View v) {
@@ -106,16 +104,16 @@ public class MainActivity extends Activity {
     public void onPostExecute(String msg) {
         Log.v("sajid", "registration postExecute " + msg);
 
+        progressBar.hide();
+        
         if (msg.contains("Error")) {
-            TextView statusView = (TextView) findViewById(R.id.status);
-            statusView.setText(msg);
             statusLayout.setVisibility(View.VISIBLE);
-        } else {
-            Toast.makeText(this, "registered", Toast.LENGTH_LONG).show();
-            caterLayout.setVisibility(View.VISIBLE);
-            findLayout.setVisibility(View.VISIBLE);
-            featuredLayout.setVisibility(View.VISIBLE);
+            statusView.setText(msg);
+        } else {            
             mRegistered = true;
+            mainLogoView.setVisibility(View.GONE);
+            blockLayout.setVisibility(View.VISIBLE);
+            featuredLayout.setVisibility(View.VISIBLE);
         }
     }
 }

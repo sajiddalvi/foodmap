@@ -1,32 +1,37 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp"
-    android:gravity="center_vertical"
-    android:orientation="vertical" >
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:orientation="vertical"
+    >
 
     <ImageView
+        android:id="@+id/main_logo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/main_logo"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="50dp"
+        />
 
     <LinearLayout
-
-        android:id="@+id/cater_food_layout"
-        android:layout_width="match_parent"
+        android:id="@+id/block_layout"
+        android:layout_width="fill_parent"
         android:layout_height="150dp"
         android:layout_marginTop="10dp"
+        android:layout_marginBottom="5dp"
         android:orientation="horizontal"
-        android:gravity="center_horizontal"
+        android:visibility="invisible"
         >
 
         <LinearLayout
-            android:layout_width="150dp"
+            android:id="@+id/cater_food_layout"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#551A8B"
             android:orientation="vertical"
+            android:layout_weight=".5"
             android:layout_marginRight="5dp"
             >
 
@@ -35,7 +40,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="Cater Food"
+                android:text="Serve Food"
                 android:id="@+id/cater_food"
                 android:gravity="center"
                 android:clickable="true"
@@ -80,11 +85,12 @@
 
         <LinearLayout
             android:id="@+id/find_food_layout"
-            android:layout_width="150dp"
-            android:layout_height="match_parent"
+            android:layout_width="fill_parent"
+            android:layout_height="150dp"
+            android:layout_weight=".5"
             android:background="#1d7808"
             android:orientation="vertical"
-            android:layout_marginRight="5dp">
+            >
 
             <TextView
                 android:layout_width="match_parent"
@@ -130,62 +136,213 @@
                     android:text="Orders"
                     android:textColor="@drawable/text_link_selector" />
             </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+    
+    <LinearLayout
+        android:id="@+id/featured_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_height="wrap_content"
+            android:background="#333333"
+            >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="3dp"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Featured"
+                android:id="@+id/featuredView"
+                android:textColor="#ffffffff"
+                android:gravity="center"
+             />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="5dp"
+            android:background="#d3d3d3"
+            >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:background="#ffffff"
+                android:layout_marginRight="2dp"
+                android:layout_marginBottom="2dp"            >
+
+                <ImageView
+                    android:layout_width="75dp"
+                    android:layout_height="75dp"
+                    android:src="@drawable/lulus_food"
+                    android:layout_weight=".05"
+                    android:layout_marginRight="10dp"
+                    />
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_weight=".95"
+                    android:layout_gravity="right"
+                    >
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textStyle="bold"
+                        android:text="Lulus Italian"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="20% off on any order above $10"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Phone : 8476625182"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Address : 1470 N Eola Dr, Aurora"/>
+                </LinearLayout>
+            </LinearLayout>
 
 
         </LinearLayout>
 
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/featured_layout"
-        android:layout_width="match_parent"
-        android:orientation="vertical"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="15dp"
-        android:background="#333333">
-
-        <TextView
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Featured"
-            android:id="@+id/featuredView"
-            android:textColor="#ffffffff"
-            android:gravity="center"
-            android:layout_margin="5dp" />
+            android:orientation="horizontal"
+            android:layout_marginTop="5dp"
+            android:background="#d3d3d3"
+            >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:background="#ffffff"
+                android:layout_marginRight="2dp"
+                android:layout_marginBottom="2dp">
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:id="@+id/banner1"
-            android:src="@drawable/lulus_banner"
-            android:clickable="true"
-            android:focusable="true"
-            android:onClick="onBannerClick"
-            android:background="#ffffff"
-            android:layout_gravity="bottom"
-            android:layout_marginBottom="2dp"
-            />
+                <ImageView
+                    android:layout_width="75dp"
+                    android:layout_height="75dp"
+                    android:src="@drawable/patel_food"
+                    android:layout_weight=".05"
+                    android:layout_marginRight="10dp"
+                    />
 
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_weight=".95"
+                    android:layout_gravity="right">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textStyle="bold"
+                        android:text="Patel Snacks"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="20% off on any order above $10"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Phone : 8476625182"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Address : 1470 N Eola Dr, Aurora"/>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="5dp"
+            android:background="#d3d3d3"
+            >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:background="#ffffff"
+                android:layout_marginRight="2dp"
+                android:layout_marginBottom="2dp">
+
+                <ImageView
+                    android:layout_width="75dp"
+                    android:layout_height="75dp"
+                    android:src="@drawable/jimmy_food"
+                    android:layout_weight=".05"
+                    android:layout_marginRight="10dp"
+                    />
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_weight=".95"
+                    android:layout_gravity="right">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textStyle="bold"
+                        android:text="Jimmy's Burgers"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="20% off on any order above $10"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Phone : 8476625182"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Address : 1470 N Eola Dr, Aurora"/>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="invisible"
         android:id="@+id/status_layout"
-        >
+        android:visibility="gone">
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#3b5998"
             android:text="Status"
             android:id="@+id/status"
             android:gravity="center"
-            android:layout_margin="5dp" />
+            android:layout_margin="5dp" 
+           />
     </LinearLayout>
 
+
+    <android.support.v4.widget.ContentLoadingProgressBar
+        android:id="@+id/progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_gravity="center_horizontal" />
+    
 </LinearLayout>
