@@ -33,9 +33,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
-/**
- * Created by fsd017 on 12/27/14.
- */
 public class EditServerActivity extends FragmentActivity
         implements OnItemSelectedListener,
         GooglePlayServicesClient.ConnectionCallbacks,
@@ -49,7 +46,6 @@ public class EditServerActivity extends FragmentActivity
     private EditText mAddress;
     private Location mLocation;
     private LocationClient mLocationClient;
-    private String mPhoneNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +61,7 @@ public class EditServerActivity extends FragmentActivity
 
 
 
-        if (Prefs.getServeIdPref(this) == "") {
+        if (Prefs.getServeIdPref(this).equals("")) {
             setTitle("Add Server");
             addingNewServer = true;
 
@@ -151,7 +147,7 @@ public class EditServerActivity extends FragmentActivity
             Toast.makeText(this, "Unable to get location.", Toast.LENGTH_SHORT).show();
         } else {
             getAddress(getWindow().getDecorView().findViewById(android.R.id.content));
-            Toast.makeText(this, "Connected " + mLocation.getLatitude() + "," + mLocation.getLongitude(), Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "Connected " + mLocation.getLatitude() + "," + mLocation.getLongitude(), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -199,13 +195,13 @@ public class EditServerActivity extends FragmentActivity
             // Sajid    // Log the error
             // Sajid    e.printStackTrace();
             // Sajid}
-        } else {
+        } //else {
             /*
              * If no resolution is available, display a dialog to the
              * user with the error.
              */
             //Sajid showErrorDialog(connectionResult.getErrorCode());
-        }
+        //}
     }
 
     // Define the callback method that receives location updates
@@ -271,10 +267,10 @@ public class EditServerActivity extends FragmentActivity
 
         Geocoder coder = new Geocoder(this);
         List<Address> addresses;
-        Double latitude = 0.0;
-        Double longitude = 0.0;
+        Double latitude;
+        Double longitude;
 
-        if (coder.isPresent()) {
+        if (Geocoder.isPresent()) {
             try {
                 addresses = coder.getFromLocationName(address, 5);
                 Address location = addresses.get(0);
@@ -342,7 +338,7 @@ public class EditServerActivity extends FragmentActivity
             // Get the current location from the input parameter list
             Location loc = params[0];
             // Create a list to contain the result address
-            List<Address> addresses = null;
+            List<Address> addresses;
             try {
                 /*
                  * Return 1 address.
@@ -373,7 +369,7 @@ public class EditServerActivity extends FragmentActivity
                  * Format the first line of address (if available),
                  * city, and country name.
                  */
-                String addressText = String.format(
+                return String.format(
                         "%s, %s, %s",
                         // If there's a street address, add it
                         address.getMaxAddressLineIndex() > 0 ?
@@ -382,8 +378,6 @@ public class EditServerActivity extends FragmentActivity
                         address.getLocality(),
                         // The country of the address
                         address.getCountryName());
-                // Return the text
-                return addressText;
             } else {
                 return "No address found";
             }

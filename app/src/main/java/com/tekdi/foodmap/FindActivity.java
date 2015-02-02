@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,7 +36,6 @@ public class FindActivity extends FragmentActivity implements
         LocationListener {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
-    private List<ServeFoodEntity> servers;
     private LocationClient mLocationClient;
     private Location mCurrentLocation;
     private ServeMap selectedServeMap;
@@ -46,7 +44,6 @@ public class FindActivity extends FragmentActivity implements
     {
         ServeFoodEntity s;
         Marker m;
-        String phone;
 
         ServeMap(ServeFoodEntity s, Marker m)
         {
@@ -55,13 +52,15 @@ public class FindActivity extends FragmentActivity implements
         }
     }
 
-    private List<ServeMap> smList = new ArrayList();
+    private ArrayList<ServeMap> smList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find);
         setUpMapIfNeeded();
+
+        smList = new ArrayList<>();
 
         mLocationClient = new LocationClient(this, this, this);
 
@@ -98,7 +97,7 @@ public class FindActivity extends FragmentActivity implements
     /**
      * Sets up the map if it is possible to do so (i.e., the Google Play services APK is correctly
      * installed) and the map has not already been instantiated.. This will ensure that we only ever
-     * call {@link #setUpMap()} once when {@link #mMap} is not null.
+     * call {@link # setUpMap()} once when {@link #mMap} is not null.
      * <p/>
      * If it isn't installed {@link SupportMapFragment} (and
      * {@link com.google.android.gms.maps.MapView MapView}) will show a prompt for the user to
@@ -153,7 +152,7 @@ public class FindActivity extends FragmentActivity implements
             Double lng = Double.parseDouble(q.getLongitude());
             LatLng currentLocation = new LatLng(lat,lng);
 
-            BitmapDescriptor flag=null;
+            BitmapDescriptor flag;
 
             if (q.getCuisine() == null) {
                 flag = BitmapDescriptorFactory.fromResource(R.drawable.ic_launcher);
@@ -189,7 +188,7 @@ public class FindActivity extends FragmentActivity implements
 
         mCurrentLocation = mLocationClient.getLastLocation();
         setUpMap(mCurrentLocation);
-        Toast.makeText(this, "Connected " + mCurrentLocation.getLatitude() + "," + mCurrentLocation.getLongitude(), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "Connected " + mCurrentLocation.getLatitude() + "," + mCurrentLocation.getLongitude(), Toast.LENGTH_SHORT).show();
     }
 
     /*
@@ -236,13 +235,13 @@ public class FindActivity extends FragmentActivity implements
             // Sajid    // Log the error
             // Sajid    e.printStackTrace();
             // Sajid}
-        } else {
+        } //else {
             /*
              * If no resolution is available, display a dialog to the
              * user with the error.
              */
             //Sajid showErrorDialog(connectionResult.getErrorCode());
-        }
+        //}
     }
 
     // Define the callback method that receives location updates
@@ -302,9 +301,6 @@ public class FindActivity extends FragmentActivity implements
 
         // Getting view from the layout file info_window_layout
         View v = getLayoutInflater().inflate(R.layout.info_window_layout, null);
-
-        // Getting the position from the marker
-        String snippet = arg0.getSnippet();
 
         // Getting reference to the TextView to set latitude
         TextView infoName = (TextView) v.findViewById(R.id.info_window_name);
