@@ -36,7 +36,6 @@ public class ListMenuActivity extends ListActivity implements Serializable {
     private String serverAddress;
 
     private ArrayList<MenuEntity> menuList = new ArrayList<MenuEntity>();
-    private ArrayList<ParcelableOrder> orderList = new ArrayList<ParcelableOrder>();
     ListMenuRowAdapter adapter = null;
 
     public void onCreate(Bundle icicle) {

@@ -9,6 +9,6 @@ public class OrderState {
     public static final int ORDER_STATE_RECEIVE = 2;
     public static final int ORDER_STATE_READY = 3;
     public static final int ORDER_STATE_RATE = 4;
-    public static final int ORDER_STATE_CLOSE = 5;
     public static final int ORDER_STATE_CANCEL = 5;
+    public static final int ORDER_STATE_CLOSE = 6;
 }

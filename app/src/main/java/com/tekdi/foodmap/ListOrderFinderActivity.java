@@ -40,6 +40,9 @@ public class ListOrderFinderActivity extends ListActivity {
     private ArrayList<OrderEntity> serverOrderList = new ArrayList<>();
     private ArrayList<OrderEntity> packedServerOrderList = new ArrayList<>();
 
+    private int numItemsInOrder;
+    private int numItemsUpdated;
+
     public void onCreate(Bundle icicle) {
 
         super.onCreate(icicle);
@@ -241,26 +244,18 @@ public class ListOrderFinderActivity extends ListActivity {
     }
 
     public void onPostExecute(String result) {
-        String statusMessage;
-
-        if (result.equals("new order success")) {
-            statusMessage = "order sent";
-            processOrderSent();
+        numItemsUpdated ++;
+        Log.v("sajid", "order tot=" + numItemsInOrder + ",updated=" + numItemsUpdated);
+        if (numItemsUpdated == numItemsInOrder) {
+            setTitle("Orders");
+            getOrderListFromServer();
+            adapter.notifyDataSetChanged();
+            Toast.makeText(this, result, Toast.LENGTH_LONG).show();
         }
-        else
-            statusMessage = "order addition failed";
-
-        Toast.makeText(this, statusMessage, Toast.LENGTH_LONG).show();
     }
 
     public void onPostExecuteListOrder(List<OrderEntity> result) {
         showOrder(result);
-    }
-
-    private void processOrderSent() {
-        setTitle("Orders");
-        getOrderListFromServer();
-        adapter.notifyDataSetChanged();
     }
 
     private void processOrderReceived() {
@@ -284,15 +279,35 @@ public class ListOrderFinderActivity extends ListActivity {
             finish();
         }
 
-        else if (buttonView.getText().equals("Send")) {
-            for (OrderEntity order : orderList) {
-                Log.v("sajid","view serverId = " + serverId);
-                Log.v("sajid","order serverId = " + order.getServerId());
+        else if ((buttonView.getText().equals("Send")) ||
+                 (buttonView.getText().equals("Cancel")) ||
+                 (buttonView.getText().equals("Undo Cancel"))) 
+        {
+            numItemsInOrder = 0;
+            numItemsUpdated = 0;
+            
+            Log.v("sajid","onListOrderButtonClick");
+            
+            for (OrderEntity o : orderList) {
+                if ((o.getServerId() == serverId) &&      // check for serverId
+                    (o.getMenuId() != DUMMY_TOTAL_MENU_ID) &&  // don't send total
+                    (o.getMenuId() != DUMMY_NAME_MENU_ID))     // don't send name
+                {
+                    UpdateOrderStateFinderEndpointAsyncTask task = new UpdateOrderStateFinderEndpointAsyncTask(this);
 
-                if ((order.getServerId() == serverId) &&      // check for serverId
-                    (order.getMenuId() != DUMMY_TOTAL_MENU_ID) &&  // don't send total
-                    (order.getMenuId() != DUMMY_NAME_MENU_ID))     // don't send name
-                        new OrderEndpointAsyncTask(this).execute(new Pair<Context, OrderEntity>(this, order));
+                    if (buttonView.getText().equals("Send")) {
+                        o.setOrderState(OrderState.ORDER_STATE_SEND);
+                    } else if (buttonView.getText().equals("Cancel")) {
+                        o.setPrevOrderState(o.getOrderState());
+                        o.setOrderState(OrderState.ORDER_STATE_CANCEL);
+                    } else if (buttonView.getText().equals("Undo Cancel")) {
+                        o.setOrderState(o.getPrevOrderState());
+                    }
+
+                    task.execute(new Pair<Context, OrderEntity>(this, o));
+                    numItemsInOrder++;
+                    Log.v("sajid","num="+numItemsInOrder);
+                }
             }
             pendingOrder = false;
             adapter.notifyDataSetChanged();

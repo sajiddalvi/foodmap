@@ -6,8 +6,8 @@
         <item>Order Received</item>
         <item>Order Ready</item>
         <item>Rate Order</item>
-        <item>Order Complete</item>
         <item>Order Cancelled</item>
+        <item>Order Complete</item>
     </string-array>
 
     <string-array name="order_button_finder">
@@ -36,8 +36,8 @@
         <item>@string/order_status_finder_receive</item>
         <item>@string/order_status_finder_ready</item>
         <item>@string/order_status_finder_rate</item>
-        <item>@string/order_status_finder_close</item>
         <item>@string/order_status_finder_cancel</item>
+        <item>@string/order_status_finder_close</item>
     </string-array>
 
     <string-array name="order_status_server">

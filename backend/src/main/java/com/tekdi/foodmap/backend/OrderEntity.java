@@ -25,6 +25,7 @@ public class OrderEntity {
     String serverAddress;
     String serverPhone;
     Integer orderState;
+    Integer prevOrderState;
     String menuName;
     Integer quantity;
     Float price;
@@ -50,6 +51,10 @@ public class OrderEntity {
 
     public Integer getOrderState() {
         return orderState;
+    }
+
+    public Integer getPrevOrderState() {
+        return prevOrderState;
     }
 
     public String getMenuName() { return menuName; }
@@ -86,6 +91,10 @@ public class OrderEntity {
 
     public void setOrderState(Integer orderState) {
         this.orderState = orderState;
+    }
+
+    public void setPrevOrderState(Integer orderState) {
+        this.prevOrderState = orderState;
     }
 
     public void setMenuName(String menuName) { this.menuName = menuName; }

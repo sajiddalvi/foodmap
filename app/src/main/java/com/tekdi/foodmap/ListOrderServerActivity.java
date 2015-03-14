@@ -84,7 +84,7 @@ public class ListOrderServerActivity extends ListActivity {
                     if (o.getFinderDevRegId().equals(finderDevRegId)) {
                         if ((o.getMenuId() != ListOrderFinderActivity.DUMMY_TOTAL_MENU_ID) &&
                                 (o.getMenuId() != ListOrderFinderActivity.DUMMY_NAME_MENU_ID)) {
-                            ConfirmOrderEndpointAsyncTask task = new ConfirmOrderEndpointAsyncTask(this);
+                            UpdateOrderStateServerEndpointAsyncTask task = new UpdateOrderStateServerEndpointAsyncTask(this);
                             task.setOrderState(OrderState.ORDER_STATE_RECEIVE);
                             task.execute(new Pair<Context, OrderEntity>(this, o));
                             numItemsInOrder ++;
@@ -103,7 +103,7 @@ public class ListOrderServerActivity extends ListActivity {
                     if (o.getFinderDevRegId().equals(finderDevRegId)) {
                         if ((o.getMenuId() != ListOrderFinderActivity.DUMMY_TOTAL_MENU_ID) &&
                                 (o.getMenuId() != ListOrderFinderActivity.DUMMY_NAME_MENU_ID)) {
-                            ConfirmOrderEndpointAsyncTask task = new ConfirmOrderEndpointAsyncTask(this);
+                            UpdateOrderStateServerEndpointAsyncTask task = new UpdateOrderStateServerEndpointAsyncTask(this);
                             task.setOrderState(OrderState.ORDER_STATE_READY);
                             task.execute(new Pair<Context, OrderEntity>(this, o));                            numItemsInOrder ++;
                         }
@@ -138,7 +138,7 @@ public class ListOrderServerActivity extends ListActivity {
                 if (o.getFinderDevRegId().equals(finderDevRegId)) {
                     if ((o.getMenuId() != ListOrderFinderActivity.DUMMY_TOTAL_MENU_ID) &&
                             (o.getMenuId() != ListOrderFinderActivity.DUMMY_NAME_MENU_ID)) {
-                        ConfirmOrderEndpointAsyncTask task = new ConfirmOrderEndpointAsyncTask(this);
+                        UpdateOrderStateServerEndpointAsyncTask task = new UpdateOrderStateServerEndpointAsyncTask(this);
                         task.setOrderState(OrderState.ORDER_STATE_RECEIVE);
                         task.execute(new Pair<Context, OrderEntity>(this, o));
                         numItemsInOrder ++;
@@ -162,9 +162,10 @@ public class ListOrderServerActivity extends ListActivity {
                 if (o.getFinderDevRegId().equals(finderDevRegId)) {
                     if ((o.getMenuId() != ListOrderFinderActivity.DUMMY_TOTAL_MENU_ID) &&
                             (o.getMenuId() != ListOrderFinderActivity.DUMMY_NAME_MENU_ID)) {
-                        ConfirmOrderEndpointAsyncTask task = new ConfirmOrderEndpointAsyncTask(this);
+                        UpdateOrderStateServerEndpointAsyncTask task = new UpdateOrderStateServerEndpointAsyncTask(this);
                         task.setOrderState(OrderState.ORDER_STATE_READY);
-                        task.execute(new Pair<Context, OrderEntity>(this, o));                            numItemsInOrder ++;
+                        task.execute(new Pair<Context, OrderEntity>(this, o));
+                        numItemsInOrder ++;
                     }
                 }
             }

@@ -15,13 +15,13 @@ import com.tekdi.foodmap.backend.orderEntityApi.model.OrderEntity;
 
 import java.io.IOException;
 
-class ConfirmOrderEndpointAsyncTask extends AsyncTask<Pair<Context, OrderEntity>, Void, String> {
+class UpdateOrderStateServerEndpointAsyncTask extends AsyncTask<Pair<Context, OrderEntity>, Void, String> {
     private static OrderEntityApi myApiService = null;
     private Context context;
     private ListOrderServerActivity caller;
     private int orderState;
 
-    ConfirmOrderEndpointAsyncTask(ListOrderServerActivity caller) {
+    UpdateOrderStateServerEndpointAsyncTask(ListOrderServerActivity caller) {
 
         this.caller = caller;
         Log.v("sajid", "in ConfirmOrderEndpointAsyncTask setting up caller");

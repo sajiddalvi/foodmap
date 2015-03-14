@@ -153,6 +153,11 @@ public class ListOrderRowAdapter extends ArrayAdapter<OrderEntity> {
                         holder.button2.setVisibility(View.INVISIBLE);
                         holder.button3.setText("Cancel");
                         break;
+                    case OrderState.ORDER_STATE_CANCEL :
+                        holder.button1.setVisibility(View.INVISIBLE);
+                        holder.button2.setVisibility(View.INVISIBLE);
+                        holder.button3.setText("Undo Cancel");
+                        break;
                 }
 
                 holder.button1.setTag(order.getServerId());
