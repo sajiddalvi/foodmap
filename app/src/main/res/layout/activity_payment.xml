@@ -1,31 +1,74 @@
-<?xml version="1.0" encoding="utf-8"?>
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                  android:layout_width="fill_parent"
-                  android:layout_height="fill_parent">
-    
-        <TextView android:id="@+id/payment_form_title"
-                  android:text="@string/addPayment"
-                  android:layout_alignParentTop="true"
-                  style="@style/Header"
-                />
-    
-        <fragment android:id="@+id/payment_form"
-                  android:layout_below="@id/payment_form_title"
-                  android:layout_width="fill_parent"
-                  android:layout_height="wrap_content"
-                  class="com.tekdi.foodmap.PaymentFormFragment"/>
-    
-        <TextView android:id="@+id/token_list_title"
-                  android:text="@string/paymentMethods"
-                  android:layout_below="@id/payment_form"
-                  android:layout_marginTop="25dp"
-                  style="@style/Header"
-                />
-    
-        <fragment android:id="@+id/token_list"
-                  android:layout_width="fill_parent"
-                  android:layout_height="fill_parent"
-                  android:layout_below="@id/token_list_title"
-                  class="com.tekdi.foodmap.TokenListFragment"/>
-    
-    </RelativeLayout>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        style="?android:attr/listSeparatorTextViewStyle"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/card_number_label"
+        android:textColor="@android:color/holo_blue_light" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/credit_card_number"
+        android:hint="Enter Credit Card Number"
+        android:inputType="number" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        style="?android:attr/listSeparatorTextViewStyle"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/card_expiry_label"
+        android:textColor="@android:color/holo_blue_light"
+        android:paddingTop="20dp" />
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingBottom="20dp"
+        android:paddingLeft="20dp">
+
+        <NumberPicker
+            android:id="@+id/credit_card_expiry_month"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+             />
+
+        <NumberPicker
+            android:id="@+id/credit_card_expiry_year"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
+
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        style="?android:attr/listSeparatorTextViewStyle"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/card_cvc_label"
+        android:textColor="@android:color/holo_blue_light"
+        android:paddingTop="20dp" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/credit_card_cvc"
+        android:hint="CVC Number"
+        android:inputType="number" />
+
+
+</LinearLayout>

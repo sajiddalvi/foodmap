@@ -1,14 +1,21 @@
 package com.tekdi.foodmap;
 
+import android.app.ListActivity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
-import com.stripe.android.Stripe;
-import com.stripe.android.TokenCallback;
-import com.stripe.android.model.Card;
-import com.stripe.android.model.Token;
+import com.stripe.model.Customer;
+import com.tekdi.foodmap.backend.menuEntityApi.model.MenuEntity;
 
-public class PaymentActivity extends FragmentActivity {
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+public class PaymentActivity extends ListActivity {
 
     /*
      * Change this to your publishable key.
@@ -16,64 +23,65 @@ public class PaymentActivity extends FragmentActivity {
      * You can get your key here: https://manage.stripe.com/account/apikeys
      */
     public static final String PUBLISHABLE_KEY = "pk_test_npiJ9fcyu48YHPFqy9LaOxeM";
-    private com.tekdi.foodmap.ProgressDialogFragment progressFragment;
+
+    List<Map<String, String>> listItems = new ArrayList<Map<String, String>>();
+
+    private Customer customer;
+
+    private ArrayList<MenuEntity> menuList = new ArrayList<MenuEntity>();
+    ListCardRowAdapter adapter = null;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_payment);
-        progressFragment = com.tekdi.foodmap.ProgressDialogFragment.newInstance(R.string.progressMessage);
-    }
 
-    public void saveCreditCard(PaymentForm form) {
-
-        Card card = new Card(
-                form.getCardNumber(),
-                form.getExpMonth(),
-                form.getExpYear(),
-                form.getCvc());
-
-        boolean validation = card.validateCard();
-        if (validation) {
-            startProgress();
-            new Stripe().createToken(
-                    card,
-                    PUBLISHABLE_KEY,
-                    new TokenCallback() {
-                        public void onSuccess(Token token) {
-                            getTokenList().addToList(token);
-                            finishProgress();
-                        }
-                        public void onError(Exception error) {
-                            handleError(error.getLocalizedMessage());
-                            finishProgress();
-                        }
-                    });
-        } else if (!card.validateNumber()) {
-            handleError("The card number that you entered is invalid");
-        } else if (!card.validateExpiryDate()) {
-            handleError("The expiration date that you entered is invalid");
-        } else if (!card.validateCVC()) {
-            handleError("The CVC code that you entered is invalid");
+        customer = Prefs.getCreditCard(this);
+        
+        if (customer == null) {
+            Intent intent = new Intent(this, AddPaymentActivity.class);
+            startActivity(intent);
         } else {
-            handleError("The card details that you entered are invalid");
+
+            // confirm payment activity
+                
+            Log.v("sajid","tokenId="+customer.getId());
         }
+
     }
 
-    private void startProgress() {
-        progressFragment.show(getSupportFragmentManager(), "progress");
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_payment, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
-    private void finishProgress() {
-        progressFragment.dismiss();
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        return super.onPrepareOptionsMenu(menu);
     }
 
-    private void handleError(String error) {
-        ErrorDialogFragment fragment = ErrorDialogFragment.newInstance(R.string.validationErrors, error);
-        fragment.show(getSupportFragmentManager(), "error");
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch(item.getItemId()) {
+            case R.id.action_save:
+                Intent intent = new Intent(this, AddPaymentActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.action_cancel:
+                finish();
+                break;
+
+        }
+        return super.onOptionsItemSelected(item);
     }
 
-    private TokenList getTokenList() {
-        return (TokenList)(getSupportFragmentManager().findFragmentById(R.id.token_list));
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
+
 }

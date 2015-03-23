@@ -70,11 +70,20 @@
     <string name="action_edit_menu">Edit Menu Item</string>
     <string name="action_remove_menu">Remove Menu Item</string>
     <string name="title_activity_payment">Payment</string>
+    <string name="card_number_label">Card Number</string>
+    <string name="card_expiry_label">Expiry</string>
+    <string name="card_cvc_label">CVC</string>
+
+
+
+
+
     <string name="addPayment">Add Payment Method</string>
     <string name="paymentMethods">Payment Methods</string>
     <string name="endingIn">Card ending in </string>
     <string name="progressMessage">Creating Token&#8230;</string>
     <string name="validationErrors">Validation Errors</string>
+   
     <string name="cardNumber">Card Number</string>
     <string name="save">Save</string>
     <string name="cvc">CVC</string>

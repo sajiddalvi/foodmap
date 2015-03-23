@@ -150,7 +150,7 @@ public class ListOrderRowAdapter extends ArrayAdapter<OrderEntity> {
                         break;
                     case OrderState.ORDER_STATE_READY :
                         holder.button1.setText("Update");
-                        holder.button2.setVisibility(View.INVISIBLE);
+                        holder.button2.setText("Pay");
                         holder.button3.setText("Cancel");
                         break;
                     case OrderState.ORDER_STATE_CANCEL :

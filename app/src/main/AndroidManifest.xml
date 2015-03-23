@@ -80,6 +80,13 @@
             android:name=".PaymentActivity"
             android:label="@string/title_activity_payment" >
         </activity>
+        <activity
+            android:name=".AddPaymentActivity"
+            android:label="@string/title_activity_payment" >
+        </activity>
+
+        <activity android:name="com.github.thiagolocatelli.stripe.StripeActivity"  />
+        
         <receiver
             android:name=".GcmBroadcastReceiver"
             android:permission="com.google.android.c2dm.permission.SEND" >

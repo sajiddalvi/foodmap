@@ -1,6 +1,5 @@
 package com.tekdi.foodmap;
 
-import android.widget.Button;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -24,6 +23,7 @@ public class PaymentFormFragment extends Fragment implements PaymentForm {
                              Bundle savedInstance) {
     View view = inflater.inflate(R.layout.payment_form_fragment, container, false);
     
+        /*
                     this.saveButton = (Button) view.findViewById(R.id.save);
             saveButton.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -31,6 +31,7 @@ public class PaymentFormFragment extends Fragment implements PaymentForm {
                             saveForm(view);
                         }
                 });
+                */
     
                     this.cardNumber = (EditText) view.findViewById(R.id.number);
             this.cvc = (EditText) view.findViewById(R.id.cvc);
@@ -52,14 +53,15 @@ public class PaymentFormFragment extends Fragment implements PaymentForm {
         
             @Override
     public Integer getExpMonth() {
-                return getInteger(this.monthSpinner);
+                return 0; //return getInteger(this.monthSpinner);
             }
         
             @Override
     public Integer getExpYear() {
-                return getInteger(this.yearSpinner);
+                return 0; //return getInteger(this.yearSpinner);
             }
         
+    /*
             public void saveForm(View button) {
                 ((PaymentActivity)getActivity()).saveCreditCard(this);
             }
@@ -71,4 +73,6 @@ public class PaymentFormFragment extends Fragment implements PaymentForm {
                     return 0;
                 }
             }
+              */
         }
+              

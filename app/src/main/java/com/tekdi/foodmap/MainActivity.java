@@ -50,8 +50,8 @@ public class MainActivity extends Activity {
     }
 
     public void onFindButtonClick(View v) {
-       // Intent intent = new Intent(this, FindActivity.class);
-        Intent intent = new Intent(this, PaymentActivity.class);
+        Intent intent = new Intent(this, FindActivity.class);
+        //Intent intent = new Intent(this, PaymentActivity.class);
         startActivity(intent);
     }
 

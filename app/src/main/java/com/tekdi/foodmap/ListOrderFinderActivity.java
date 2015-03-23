@@ -20,11 +20,16 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.stripe.exception.StripeException;
+import com.stripe.model.Charge;
+import com.stripe.model.Customer;
 import com.tekdi.foodmap.backend.orderEntityApi.model.OrderEntity;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ListOrderFinderActivity extends ListActivity {
 
@@ -43,9 +48,13 @@ public class ListOrderFinderActivity extends ListActivity {
     private int numItemsInOrder;
     private int numItemsUpdated;
 
+    private Context context;
+    
     public void onCreate(Bundle icicle) {
 
         super.onCreate(icicle);
+        
+        context = this;
         setContentView(R.layout.list_order_view);
         registerForContextMenu(getListView());
 
@@ -268,6 +277,9 @@ public class ListOrderFinderActivity extends ListActivity {
         long serverId = (long)view.getTag();
         TextView buttonView = (TextView) view;
 
+        Log.v("sajid","onListOrderButtonClick");
+
+
         if (buttonView.getText().equals("Add")) {
             // if its a new order, finish OrderActivity which will take us back to ListMenu
                 finish();
@@ -286,7 +298,6 @@ public class ListOrderFinderActivity extends ListActivity {
             numItemsInOrder = 0;
             numItemsUpdated = 0;
             
-            Log.v("sajid","onListOrderButtonClick");
             
             for (OrderEntity o : orderList) {
                 if ((o.getServerId() == serverId) &&      // check for serverId
@@ -311,6 +322,61 @@ public class ListOrderFinderActivity extends ListActivity {
             }
             pendingOrder = false;
             adapter.notifyDataSetChanged();
+        }
+        else if (buttonView.getText().equals("Pay")) {
+
+            final Customer customer = Prefs.getCreditCard(this);
+            String last4 = Prefs.getCreditCardLast4Pref(this);
+
+            if (customer == null) {
+                Intent intent = new Intent(context, AddPaymentActivity.class);
+                startActivity(intent);
+            }
+
+            final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+
+            alertDialog.setTitle("Confirm Payment");
+            
+            alertDialog.setMessage("Use Card ending with "+last4);
+            
+
+            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "CONFIRM", new DialogInterface.OnClickListener() {
+
+                public void onClick(DialogInterface dialog, int id) {
+
+                    Map<String, Object> chargeParams = new HashMap<String, Object>();
+                    chargeParams.put("amount", 400);
+                    chargeParams.put("currency", "usd");
+                    chargeParams.put("customer", customer.getId());
+
+                    try {
+                        Charge.create(chargeParams);
+                    } catch (StripeException e) {
+                        Log.e("sajid", "e.getCode() ...." + e.getCause());
+                    }
+                            
+
+                } });
+
+            alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "CANCEL", new DialogInterface.OnClickListener() {
+
+                public void onClick(DialogInterface dialog, int id) {
+
+                    alertDialog.cancel();
+
+                }});
+
+            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "CHANGE CARD", new DialogInterface.OnClickListener() {
+
+                public void onClick(DialogInterface dialog, int id) {
+
+                    Intent intent = new Intent(context, AddPaymentActivity.class);
+                    startActivity(intent);
+
+                }});
+
+            alertDialog.show();
+
         }
     }
 
