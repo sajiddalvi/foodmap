@@ -4,7 +4,9 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:padding="10dp"
-    android:clickable="true">
+    android:clickable="true"
+    android:background="#ffffffff"
+    android:onClick="onConnectStripe">
 
     <TextView
         android:layout_width="match_parent"
@@ -47,9 +49,6 @@
             android:layout_weight="0" />
 
     </LinearLayout>
-
-
-
 
     <EditText
         android:layout_width="match_parent"
@@ -115,5 +114,22 @@
         android:layout_height="wrap_content"
         android:id="@+id/cuisine_spinner"
         />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="To setup your payment please press the button below."
+        android:id="@+id/textView" />
+
+    <ImageButton
+        android:id="@+id/connectStripeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/connect_stripe_button"
+        android:alpha="1"
+        android:layout_gravity="center_horizontal"
+        android:background="#ffffff"
+        android:paddingTop="10dp" />
 
 </LinearLayout>

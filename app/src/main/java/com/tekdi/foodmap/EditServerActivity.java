@@ -1,9 +1,11 @@
 package com.tekdi.foodmap;
 
 import android.content.Context;
+import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -390,5 +392,11 @@ public class EditServerActivity extends FragmentActivity
             // Display the results of the lookup.
             mAddress.setText(address);
         }
+    }
+    
+    public void onConnectStripe(View view) {
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://connect.stripe.com/oauth/authorize?response_type=code&client_id=ca_5Wea0rWSuwNYSD77NmQ6Xzn1jbbBXHkh"));
+        startActivity(browserIntent);
+        
     }
 }
