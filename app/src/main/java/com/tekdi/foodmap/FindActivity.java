@@ -148,6 +148,10 @@ public class FindActivity extends FragmentActivity implements
 
     public void setupServers(List<ServeFoodEntity> result) {
         for (ServeFoodEntity q : result) {
+            
+            if ((q.getLatitude()==null)||(q.getLongitude()==null))
+                continue;
+            
             Double lat = Double.parseDouble(q.getLatitude());
             Double lng = Double.parseDouble(q.getLongitude());
             LatLng currentLocation = new LatLng(lat,lng);
